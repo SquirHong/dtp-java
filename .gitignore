@@ -1,0 +1,5 @@
+# Project exclude paths
+/common/target/
+/dynamic-threadpool-spring-boot-starter/target/
+/example/target/
+/server/target/
