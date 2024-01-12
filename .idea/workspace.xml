@@ -4,11 +4,44 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8162e98c-459e-40a4-b839-41d88623aa8e" name="Changes" comment="" />
+    <list default="true" id="8162e98c-459e-40a4-b839-41d88623aa8e" name="Changes" comment="初始化提交">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/adapter/ConfigAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/adapter/ConfigAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/adapter/ThreadPoolConfigAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/adapter/ThreadPoolConfigAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/common/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/common/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/config/CommonConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/config/CommonConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/config/DynamicThreadPoolAutoConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/config/DynamicThreadPoolAutoConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/config/DynamicThreadPoolProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/config/DynamicThreadPoolProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/CacheData.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/CacheData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ConfigService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ConfigService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolConfigService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolConfigService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolDynamicRefresh.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolDynamicRefresh.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolRunListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ThreadPoolRunListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/model/PoolParameterInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/model/PoolParameterInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/operation/ThreadPoolOperation.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/operation/ThreadPoolOperation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/operation/ThreadPoolSubscribeCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/operation/ThreadPoolSubscribeCallback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/toolkit/HttpClientUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/toolkit/HttpClientUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/resources/META-INF/spring.factories" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/resources/META-INF/spring.factories" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/example/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/controller/ConfigController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/controller/ConfigController.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="package.json" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -31,8 +64,15 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "vcs.Git",
     "spring.configuration.checksum": "d02924d3cac61ec863743464b8a4e685",
     "vue.rearranger.settings.migration": "true"
   }
@@ -58,6 +98,9 @@
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpringBootOptions">
+    <option name="showAdditionalConfigNotification" value="false" />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="8162e98c-459e-40a4-b839-41d88623aa8e" name="Changes" comment="" />
@@ -66,15 +109,49 @@
       <option name="presentableId" value="Default" />
       <updated>1704942693490</updated>
       <workItem from="1704942695129" duration="266000" />
+      <workItem from="1704943011322" duration="24912000" />
     </task>
+    <task id="LOCAL-00001" summary="初始化提交">
+      <created>1704944720893</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1704944720893</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
+    <MESSAGE value="初始化提交" />
+    <option name="LAST_COMMIT_MESSAGE" value="初始化提交" />
   </component>
 </project>

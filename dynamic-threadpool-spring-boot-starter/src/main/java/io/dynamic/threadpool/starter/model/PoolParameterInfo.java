@@ -15,9 +15,9 @@ public class PoolParameterInfo implements Serializable {
     private static final long serialVersionUID = -7123935122108553864L;
 
     /**
-     * 租户 Or 命名空间
+     * 命名空间
      */
-    private String tenant;
+    private String namespace;
 
     /**
      * 项目 Id

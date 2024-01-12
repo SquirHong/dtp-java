@@ -1,8 +1,11 @@
 package io.dynamic.threadpool.server.controller;
 
+import io.dynamic.threadpool.common.web.base.Result;
+import io.dynamic.threadpool.common.web.base.Results;
 import io.dynamic.threadpool.server.constant.Constants;
 import io.dynamic.threadpool.server.model.ConfigInfoBase;
 import io.dynamic.threadpool.server.service.ConfigService;
+import io.dynamic.threadpool.server.service.ConfigServletInner;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -22,13 +25,19 @@ public class ConfigController {
     @Autowired
     private ConfigService configService;
 
-    @GetMapping
-    public ConfigInfoBase detailConfigInfo(
-            @RequestParam("tdId") String tdId,
-            @RequestParam("itemId") String itemId,
-            @RequestParam(value = "namespace", required = false, defaultValue = "") String namespace) {
+    @Autowired
+    private ConfigServletInner configServletInner;
 
-        return configService.findConfigAllInfo(tdId, itemId, namespace);
+    /**
+     * 获取指定线程池配置
+     */
+    @GetMapping
+    public Result<ConfigInfoBase> detailConfigInfo(
+            @RequestParam("tpId") String tpId,
+            @RequestParam("itemId") String itemId,
+            @RequestParam(value = "namespace") String namespace) {
+
+        return Results.success(configService.findConfigAllInfo(tpId, itemId, namespace));
     }
 
     @SneakyThrows
@@ -40,8 +49,9 @@ public class ConfigController {
         if (StringUtils.isEmpty(probeModify)) {
             throw new IllegalArgumentException("invalid probeModify");
         }
-
+        
         probeModify = URLDecoder.decode(probeModify, Constants.ENCODE);
+        configServletInner.doPollingConfig(request, response, null, probeModify.length());
     }
 
 }

@@ -3,18 +3,21 @@ package io.dynamic.threadpool.starter.core;
 import com.alibaba.fastjson.JSON;
 import io.dynamic.threadpool.starter.model.PoolParameterInfo;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- *  最底层真正修改线程池参数的工具
+ * 最底层真正修改线程池参数的工具
  */
+@Slf4j
 public class ThreadPoolDynamicRefresh {
 
-    public static void refreshDynamicPool(String tpId, String content) {
+    public static void refreshDynamicPool(String content) {
+        log.info("[🔥] Start refreshing configuration. content :: {}", content);
         PoolParameterInfo parameter = JSON.parseObject(content, PoolParameterInfo.class);
-        refreshDynamicPool(tpId, parameter.getCoreSize(), parameter.getMaxSize(), parameter.getCapacity(), parameter.getKeepAliveTime());
+        refreshDynamicPool(parameter.getTpId(), parameter.getCoreSize(), parameter.getMaxSize(), parameter.getCapacity(), parameter.getKeepAliveTime());
     }
 
     public static void refreshDynamicPool(String threadPoolId, Integer coreSize, Integer maxSize, Integer capacity, Integer keepAliveTime) {

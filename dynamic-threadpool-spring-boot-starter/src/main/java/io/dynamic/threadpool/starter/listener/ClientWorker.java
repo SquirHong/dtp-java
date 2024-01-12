@@ -1,11 +1,16 @@
 package io.dynamic.threadpool.starter.listener;
 
+import com.alibaba.fastjson.JSON;
+import io.dynamic.threadpool.common.model.GlobalRemotePoolInfo;
+import io.dynamic.threadpool.common.web.base.Result;
+import io.dynamic.threadpool.starter.common.Constants;
 import io.dynamic.threadpool.starter.core.CacheData;
+import io.dynamic.threadpool.starter.remote.HttpAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,13 +24,22 @@ public class ClientWorker {
 
     private double currentLongingTaskCount = 0;
 
+    private long timeout;
+
+    private boolean isHealthServer = true;
+
+    private final HttpAgent agent;
+
     private final ScheduledExecutorService executor;
 
     private final ScheduledExecutorService executorService;
 
     private final ConcurrentHashMap<String, CacheData> cacheMap = new ConcurrentHashMap(16);
 
-    public ClientWorker() {
+    public ClientWorker(HttpAgent httpAgent) {
+        this.agent = httpAgent;
+        this.timeout = Constants.CONFIG_LONG_POLL_TIMEOUT;
+
         this.executor = Executors.newScheduledThreadPool(1, r -> {
             Thread t = new Thread(r);
             t.setName("io.dynamic.threadPool.client.Worker.executor");
@@ -119,21 +133,77 @@ public class ClientWorker {
      * @return
      */
     public List<String> checkUpdateTpIds(List<CacheData> cacheDataList) {
-        return null;
+        // 0.75 factor
+        Map<String, String> params = new HashMap(2);
+        params.put(Constants.PROBE_MODIFY_REQUEST, JSON.toJSONString(cacheDataList));
+        Map<String, String> headers = new HashMap(2);
+        headers.put(Constants.LONG_PULLING_TIMEOUT, "" + timeout);
+
+        if (StringUtils.isEmpty(cacheDataList)) {
+            return Collections.emptyList();
+        }
+        try {
+            long readTimeoutMs = timeout + (long) Math.round(timeout >> 1);
+            Result result = agent.httpPost(Constants.LISTENER_PATH, headers, params, readTimeoutMs);
+            if (result.isSuccess()) {
+                setHealthServer(true);
+                return parseUpdateDataIdResponse(result.getData().toString());
+            } else {
+                setHealthServer(false);
+                log.error("[check-update] get changed dataId error, code: {}", result.getCode());
+            }
+        } catch (Exception ex) {
+            setHealthServer(false);
+            log.error("[check-update] get changed dataId exception.", ex);
+        }
+
+        return Collections.emptyList();
     }
 
+    /**
+     * 获取服务端配置
+     *
+     * @param namespace
+     * @param itemId
+     * @param tpId
+     * @param readTimeout
+     * @return
+     */
     public String getServerConfig(String namespace, String itemId, String tpId, long readTimeout) {
+        Map<String, String> params = new HashMap(3);
+        params.put("namespace", namespace);
+        params.put("itemId", itemId);
+        params.put("tpId", tpId);
+        Result result = agent.httpGet(Constants.CONFIG_CONTROLLER_PATH, null, params, readTimeout);
+        if (result.isSuccess()) {
+            return result.getData().toString();
+        }
+
+        log.error("[sub-server-error] namespace :: {}, itemId :: {}, tpId :: {}, result code :: {}",
+                namespace, itemId, tpId, result.getCode());
+        return Constants.NULL;
+    }
+
+    /**
+     * Http 响应中获取变更的配置项
+     *
+     * @param response
+     * @return
+     */
+    public List<String> parseUpdateDataIdResponse(String response) {
         return null;
     }
 
     /**
      * CacheData 添加 Listener
      *
+     * @param namespace
+     * @param itemId
      * @param tpId
      * @param listeners
      */
-    public void addTenantListeners(String tpId, List<? extends Listener> listeners) {
-        CacheData cacheData = addCacheDataIfAbsent(tpId);
+    public void addTenantListeners(String namespace, String itemId, String tpId, List<? extends Listener> listeners) {
+        CacheData cacheData = addCacheDataIfAbsent(namespace, itemId, tpId);
         for (Listener listener : listeners) {
             cacheData.addListener(listener);
         }
@@ -142,10 +212,12 @@ public class ClientWorker {
     /**
      * CacheData 不存在则添加
      *
+     * @param namespace
+     * @param itemId
      * @param tpId
      * @return
      */
-    public CacheData addCacheDataIfAbsent(String tpId) {
+    public CacheData addCacheDataIfAbsent(String namespace, String itemId, String tpId) {
         CacheData cacheData = cacheMap.get(tpId);
         if (cacheData != null) {
             return cacheData;
@@ -153,8 +225,27 @@ public class ClientWorker {
 
         cacheData = new CacheData(tpId);
         CacheData lastCacheData = cacheMap.putIfAbsent(tpId, cacheData);
+        if (lastCacheData == null) {
+            String serverConfig = getServerConfig(namespace, itemId, tpId, 3000L);
+            GlobalRemotePoolInfo poolInfo = JSON.parseObject(serverConfig, GlobalRemotePoolInfo.class);
+            cacheData.setContent(poolInfo.getContent());
+
+            int taskId = cacheMap.size() / Constants.CONFIG_LONG_POLL_TIMEOUT;
+            cacheData.setTaskId(taskId);
+
+            lastCacheData = cacheData;
+        }
 
         return lastCacheData;
+    }
+
+
+    public boolean isHealthServer() {
+        return this.isHealthServer;
+    }
+
+    private void setHealthServer(boolean isHealthServer) {
+        this.isHealthServer = isHealthServer;
     }
 
 

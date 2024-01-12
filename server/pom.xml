@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.dynamic-threadpool</groupId>
         <artifactId>parent</artifactId>
-        <version>${revision}</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>dynamic-threadpool-server</artifactId>
@@ -41,6 +41,12 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.dynamic-threadpool</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

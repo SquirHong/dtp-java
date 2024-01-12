@@ -1,5 +1,7 @@
 spring:
-  threadpool:
-    dynamic:
+  dynamic:
+    thread-pool:
+      enabled: true
+      server-addr: http://localhost:6691
       namespace: common
-      itemId: message-center
+      item-id: message

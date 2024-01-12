@@ -3,7 +3,7 @@ package io.dynamic.threadpool.starter.config;
 import io.dynamic.threadpool.starter.adapter.ThreadPoolConfigAdapter;
 import io.dynamic.threadpool.starter.core.ConfigService;
 import io.dynamic.threadpool.starter.core.ThreadPoolConfigService;
-import io.dynamic.threadpool.starter.core.ThreadPoolRunListener;
+import io.dynamic.threadpool.starter.listener.ThreadPoolRunListener;
 import io.dynamic.threadpool.starter.operation.ThreadPoolOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +26,12 @@ public class DynamicThreadPoolAutoConfiguration {
 
     @Bean
     public ConfigService configService() {
-        return new ThreadPoolConfigService();
+        return new ThreadPoolConfigService(properties);
     }
 
     @Bean
     public ThreadPoolRunListener threadPoolRunListener() {
-        return new ThreadPoolRunListener();
+        return new ThreadPoolRunListener(properties);
     }
 
     @Bean
@@ -41,6 +41,6 @@ public class DynamicThreadPoolAutoConfiguration {
 
     @Bean
     public ThreadPoolOperation threadPoolOperation() {
-        return new ThreadPoolOperation();
+        return new ThreadPoolOperation(properties);
     }
 }
