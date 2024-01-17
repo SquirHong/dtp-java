@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Thread Pool Manager.
@@ -17,10 +18,20 @@ public class ThreadPoolManager {
 
     private Map<String, Object> lockers = new ConcurrentHashMap(8);
 
+    private static final AtomicBoolean CLOSED = new AtomicBoolean(false);
+
     private static final ThreadPoolManager INSTANCE = new ThreadPoolManager();
 
     public static ThreadPoolManager getInstance() {
         return INSTANCE;
+    }
+
+    static {
+        INSTANCE.init();
+    }
+
+    private void init() {
+        resourcesManager = new ConcurrentHashMap<String, Map<String, Set<ExecutorService>>>();
     }
 
     public void register(String namespace, String group, ExecutorService executor) {

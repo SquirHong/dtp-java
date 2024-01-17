@@ -1,16 +1,16 @@
-package io.dynamic.threadpool.starter.model;
+package io.dynamic.threadpool.common.model;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 import java.io.Serializable;
+
+import static org.apache.logging.log4j.message.MapMessage.MapFormat.JSON;
 
 /**
  * 线程池参数
  */
 @Data
-public class PoolParameterInfo implements Serializable {
+public class PoolParameterInfo implements PoolParameter, Serializable {
 
     private static final long serialVersionUID = -7123935122108553864L;
 
@@ -59,12 +59,18 @@ public class PoolParameterInfo implements Serializable {
      */
     private Integer keepAliveTime;
 
-    public void setContent(String content) {
-        JSONObject poolParam = JSON.parseObject(content);
-        this.coreSize = poolParam.getInteger("coreSize");
-        this.maxSize = poolParam.getInteger("maxSize");
-        this.capacity = poolParam.getInteger("capacity");
-        this.queueType = poolParam.getInteger("queueType");
-        this.keepAliveTime = poolParam.getInteger("keepAliveTime");
-    }
+    /**
+     * 是否告警
+     */
+    private Integer isAlarm;
+
+    /**
+     * 容量告警
+     */
+    private Integer capacityAlarm;
+
+    /**
+     * 活跃度告警
+     */
+    private Integer livenessAlarm;
 }

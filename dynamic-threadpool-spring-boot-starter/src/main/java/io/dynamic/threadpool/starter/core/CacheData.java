@@ -1,7 +1,8 @@
 package io.dynamic.threadpool.starter.core;
 
+import io.dynamic.threadpool.common.toolkit.ContentUtil;
 import io.dynamic.threadpool.common.toolkit.Md5Util;
-import io.dynamic.threadpool.starter.common.Constants;
+import io.dynamic.threadpool.common.constant.Constants;
 import io.dynamic.threadpool.starter.listener.Listener;
 import io.dynamic.threadpool.starter.wrap.ManagerListenerWrap;
 
@@ -19,6 +20,10 @@ public class CacheData {
 
     public volatile String content;
 
+    public final String namespace;
+
+    public final String itemId;
+
     public final String tpId;
 
     private int taskId;
@@ -27,10 +32,12 @@ public class CacheData {
 
     private final CopyOnWriteArrayList<ManagerListenerWrap> listeners;
 
-    public CacheData(String tpId) {
+    public CacheData(String namespace, String itemId, String tpId) {
+        this.namespace = namespace;
+        this.itemId = itemId;
         this.tpId = tpId;
         // TODO：nacos 走的本地文件获取, 这里思考下如何优雅获取
-        this.content = null;
+        this.content = ContentUtil.getPoolContent(GlobalThreadPoolManage.getPoolParameter(tpId));
         this.md5 = getMd5String(content);
         this.listeners = new CopyOnWriteArrayList();
 

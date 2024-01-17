@@ -1,5 +1,6 @@
 package io.dynamic.threadpool.server.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,6 +12,11 @@ import java.io.Serializable;
 public class ConfigInfoBase implements Serializable {
 
     private static final long serialVersionUID = -1892597426099265730L;
+
+    /**
+     * namespace
+     */
+    private String namespace;
 
     /**
      * TpId
@@ -65,10 +71,12 @@ public class ConfigInfoBase implements Serializable {
     /**
      * MD5
      */
+    @JSONField(serialize = false)
     private String md5;
 
     /**
      * 内容
      */
+    @JSONField(serialize = false)
     private String content;
 }

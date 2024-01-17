@@ -1,6 +1,8 @@
 package io.dynamic.threadpool.server.notify;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
+import io.dynamic.threadpool.server.event.Event;
+import io.dynamic.threadpool.server.event.SlowEvent;
 import io.dynamic.threadpool.server.notify.listener.Subscriber;
 
 import java.util.Map;
@@ -12,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Default Share Publisher.
  */
-public class DefaultSharePublisher {
+public class DefaultSharePublisher extends DefaultPublisher {
 
     private final Map<Class<? extends SlowEvent>, Set<Subscriber>> subMappings = new ConcurrentHashMap();
 
@@ -22,7 +24,8 @@ public class DefaultSharePublisher {
 
     /**
      * 添加订阅者
-     * @param subscriber   订阅者
+     *
+     * @param subscriber    订阅者
      * @param subscribeType 想订阅的事件
      */
     public void addSubscriber(Subscriber subscriber, Class<? extends Event> subscribeType) {

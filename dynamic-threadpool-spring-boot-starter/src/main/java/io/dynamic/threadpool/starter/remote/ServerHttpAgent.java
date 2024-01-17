@@ -1,7 +1,7 @@
 package io.dynamic.threadpool.starter.remote;
 
 import io.dynamic.threadpool.common.web.base.Result;
-import io.dynamic.threadpool.starter.config.ApplicationContextHolder;
+import io.dynamic.threadpool.common.config.ApplicationContextHolder;
 import io.dynamic.threadpool.starter.config.DynamicThreadPoolProperties;
 import io.dynamic.threadpool.starter.toolkit.HttpClientUtil;
 

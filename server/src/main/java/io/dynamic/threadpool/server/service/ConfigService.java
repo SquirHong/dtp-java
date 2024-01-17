@@ -16,4 +16,12 @@ public interface ConfigService {
      * @return 全部配置信息
      */
     ConfigAllInfo findConfigAllInfo(String tpId, String itemId, String namespace);
+
+
+    /**
+     * 新增或修改
+     *
+     * @param configAllInfo
+     */
+    void insertOrUpdate(ConfigAllInfo configAllInfo);
 }
