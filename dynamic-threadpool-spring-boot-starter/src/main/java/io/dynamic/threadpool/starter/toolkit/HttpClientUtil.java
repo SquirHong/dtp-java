@@ -193,6 +193,7 @@ public class HttpClientUtil {
 
     @SneakyThrows
     public <T> T restApiPostByThreadPool(String url, Map<String, String> headers, Map<String, String> paramValues, Long readTimeoutMs, Class<T> clazz) {
+        log.info("Calling restApiPostByThreadPool with url: {}, headers: {}, paramValues: {}, readTimeoutMs: {}, clazz: {}", url, headers, paramValues, readTimeoutMs, clazz);
         String buildUrl = buildUrl(url, paramValues);
 
         Request request = new Request.Builder()
@@ -200,7 +201,7 @@ public class HttpClientUtil {
                 .headers(Headers.of(headers))
                 .post(RequestBody.create(jsonMediaType, ""))
                 .build();
-
+        log.info("buildUrl : {},request : {}", buildUrl, request);
         Call call = okHttpClient.newCall(request);
         call.timeout().timeout(readTimeoutMs, TimeUnit.MILLISECONDS);
 

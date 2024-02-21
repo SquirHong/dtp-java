@@ -1,6 +1,9 @@
 package io.dynamic.threadpool.server.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,8 +17,15 @@ public class ConfigInfoBase implements Serializable {
     private static final long serialVersionUID = -1892597426099265730L;
 
     /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
+    private Integer id;
+
+    /**
      * namespace
      */
+    @TableField(value = "tenant_id")
     private String namespace;
 
     /**

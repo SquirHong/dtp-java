@@ -25,6 +25,10 @@ public class ContentUtil {
         poolInfo.setLivenessAlarm(parameter.getLivenessAlarm());
         return JSON.toJSONString(poolInfo);
     }
+
+    /**
+     * 拼接tpid、itemid、namespace
+     */
     public static String getGroupKey(PoolParameter parameter) {
         StringBuilder stringBuilder = new StringBuilder();
         String resultStr = stringBuilder.append(parameter.getTpId())

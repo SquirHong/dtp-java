@@ -2,6 +2,7 @@ package io.dynamic.threadpool.starter.core;
 
 import com.alibaba.fastjson.JSON;
 import io.dynamic.threadpool.common.model.PoolParameterInfo;
+import io.dynamic.threadpool.starter.toolkit.ThreadPoolChangeUtil;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,28 +16,21 @@ import java.util.concurrent.TimeUnit;
 public class ThreadPoolDynamicRefresh {
 
     public static void refreshDynamicPool(String content) {
-        log.info("[🔥] Start refreshing configuration. content :: {}", content);
+
         PoolParameterInfo parameter = JSON.parseObject(content, PoolParameterInfo.class);
-        refreshDynamicPool(parameter.getTpId(), parameter.getCoreSize(), parameter.getMaxSize(), parameter.getCapacity(), parameter.getKeepAliveTime());
+        log.info("[🔥] Start refreshing configuration. content :: {}", parameter);
+        refreshDynamicPool(parameter.getTpId(), parameter.getCoreSize(), parameter.getMaxSize(), parameter.getQueueType(), parameter.getCapacity(), parameter.getKeepAliveTime());
     }
 
-    public static void refreshDynamicPool(String threadPoolId, Integer coreSize, Integer maxSize, Integer capacity, Integer keepAliveTime) {
-        DynamicThreadPoolWrap wrap = GlobalThreadPoolManage.getExecutorService(threadPoolId);
-        ThreadPoolExecutor executor = wrap.getPool();
-        // TODO: 2024/1/10  这里设置大小，有个先后问题，后期可以引入更多的线程池类型，还可以是forkjoinpool、StandardThreadExecutor
-        if (coreSize != null) {
-            executor.setCorePoolSize(coreSize);
-        }
-        if (maxSize != null) {
-            executor.setMaximumPoolSize(maxSize);
-        }
-        if (capacity != null) {
-            ResizableCapacityLinkedBlockIngQueue queue = (ResizableCapacityLinkedBlockIngQueue) executor.getQueue();
-            queue.setCapacity(capacity);
-        }
-        if (keepAliveTime != null) {
-            executor.setKeepAliveTime(keepAliveTime, TimeUnit.SECONDS);
-        }
+    public static void refreshDynamicPool(String threadPoolId, Integer coreSize, Integer maxSize, Integer queueType, Integer capacity, Integer keepAliveTime) {
+        ThreadPoolExecutor executor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getPool();
+        log.info("[✈️] Original thread pool. coreSize :: {}, maxSize :: {}, queueType :: {}, capacity :: {}, keepAliveTime :: {}",
+                executor.getCorePoolSize(), executor.getMaximumPoolSize(), queueType, executor.getQueue().remainingCapacity(), executor.getKeepAliveTime(TimeUnit.MILLISECONDS));
+
+        ThreadPoolChangeUtil.changePool(executor, coreSize, maxSize, queueType, capacity, keepAliveTime);
+        ThreadPoolExecutor afterExecutor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getPool();
+        log.info("[🚀] Changed thread pool. coreSize :: {}, maxSize :: {}, queueType :: {}, capacity :: {}, keepAliveTime :: {}",
+                afterExecutor.getCorePoolSize(), afterExecutor.getMaximumPoolSize(), queueType, afterExecutor.getQueue().remainingCapacity(), afterExecutor.getKeepAliveTime(TimeUnit.MILLISECONDS));
     }
 
 }

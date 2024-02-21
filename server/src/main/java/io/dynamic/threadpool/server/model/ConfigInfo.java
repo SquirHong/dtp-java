@@ -10,5 +10,4 @@ public class ConfigInfo extends ConfigInfoBase {
 
     private static final long serialVersionUID = -3504960832191834675L;
 
-    private String namespace;
 }

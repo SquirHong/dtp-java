@@ -35,6 +35,6 @@ public class DynamicThreadPoolProperties {
     /**
      * 是否开启动态线程池
      */
-    private String enabled;
+    private boolean enabled;
 
 }

@@ -42,14 +42,6 @@ public class DefaultPublisher extends Thread implements EventPublisher {
 
     @Override
     public synchronized void start() {
-//        if (!initialized) {
-//            // start just called once
-//            super.start();
-//            if (queueMaxSize == -1) {
-//                queueMaxSize = NotifyCenter.ringBufferSize;
-//            }
-//            initialized = true;
-//        }
 
         super.start();
         if (queueMaxSize == -1) {
