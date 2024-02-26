@@ -1,5 +1,9 @@
 package io.dynamic.threadpool.starter.common;
 
+import io.dynamic.threadpool.common.enums.QueueTypeEnum;
+import io.dynamic.threadpool.starter.builder.ThreadPoolBuilder;
+import io.dynamic.threadpool.starter.toolkit.thread.RejectedPolicies;
+
 import java.util.concurrent.*;
 
 /**
@@ -8,20 +12,13 @@ import java.util.concurrent.*;
 public class CommonThreadPool {
 
     public static ThreadPoolExecutor getInstance(String threadPoolId) {
-        TimeUnit unit = TimeUnit.SECONDS;
-        BlockingQueue workQueue = new LinkedBlockingQueue(512);
-        ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(
-                3,
-                5,
-                10000,
-                unit,
-                workQueue,
-                r -> {
-                    Thread thread = new Thread(r);
-                    thread.setDaemon(false);
-                    thread.setName(threadPoolId);
-                    return thread;
-                });
+        ThreadPoolExecutor poolExecutor = ThreadPoolBuilder.builder()
+                .threadFactory(threadPoolId)
+                .poolThreadNum(3, 5)
+                .keepAliveTime(1000L, TimeUnit.SECONDS)
+                .rejected(RejectedPolicies.runsOldestTaskPolicy())
+                .workQueue(QueueTypeEnum.RESIZABLE_LINKED_BLOCKING_QUEUE, 512)
+                .build();
         return poolExecutor;
     }
 }

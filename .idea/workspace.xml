@@ -5,79 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8162e98c-459e-40a4-b839-41d88623aa8e" name="Changes" comment="功能完善">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a68afb45-4b11-4e74-8035-1219c01ea8a8.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a68afb45-4b11-4e74-8035-1219c01ea8a8/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a68afb45-4b11-4e74-8035-1219c01ea8a8/storage_v2/_src_/schema/information_schema.FNRwLQ.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a68afb45-4b11-4e74-8035-1219c01ea8a8/storage_v2/_src_/schema/mysql.osA4Bg.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a68afb45-4b11-4e74-8035-1219c01ea8a8/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a68afb45-4b11-4e74-8035-1219c01ea8a8/storage_v2/_src_/schema/sys.zb4BAA.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/a68afb45-4b11-4e74-8035-1219c01ea8a8/storage_v2/_src_/schema/sys.zb4BAA.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/enums/QueueTypeEnum.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/toolkit/Assert.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/toolkit/ThreadPoolChangeUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/init.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/config/MyMetaObjectHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/config/MybatisPlusConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/controller/ItemController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/controller/TenantController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/controller/ThreadPoolController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/enums/DelEnum.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/mapper/ConfigInfoMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/mapper/ItemInfoMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/mapper/TenantInfoMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/ItemInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/TenantInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/item/ItemQueryReqDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/item/ItemRespDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/item/ItemSaveReqDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/item/ItemUpdateReqDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/tenant/TenantQueryReqDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/tenant/TenantRespDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/tenant/TenantSaveReqDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/tenant/TenantUpdateReqDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/threadpool/ThreadPoolQueryReqDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/threadpool/ThreadPoolRespDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/biz/threadpool/ThreadPoolSaveOrUpdateReqDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/biz/ConfigServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/biz/ItemService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/biz/ItemServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/biz/TenantService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/biz/TenantServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/biz/ThreadPoolService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/biz/ThreadPoolServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/toolkit/BeanUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/config/CommonConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/config/CommonConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/constant/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/constant/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/toolkit/ContentUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/toolkit/ContentUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/config/DynamicThreadPoolProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/config/DynamicThreadPoolProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/common/CommonThreadPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/common/CommonThreadPool.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolDynamicRefresh.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolDynamicRefresh.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ThreadPoolRunListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ThreadPoolRunListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/remote/ServerHttpAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/remote/ServerHttpAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/toolkit/BlockingQueueUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/toolkit/BlockingQueueUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/toolkit/HttpClientUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/toolkit/HttpClientUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/resources/META-INF/addition-spring-configuration-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/resources/META-INF/addition-spring-configuration-metadata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/example/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/ServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/ServerApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/controller/ConfigController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/controller/ConfigController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/mapper/RowMapperManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/ConfigAllInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/ConfigAllInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/ConfigInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/ConfigInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/ConfigInfoBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/model/ConfigInfoBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/notify/DefaultPublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/notify/DefaultPublisher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/ConfigCacheService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/ConfigCacheService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/ConfigService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/biz/ConfigService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/LongPollingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/LongPollingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/impl/ConfigServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/toolkit/Md5ConfigUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/toolkit/Md5ConfigUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/toolkit/ThreadPoolChangeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/handle/ThreadPoolChangeUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +107,7 @@
       <workItem from="1705829385657" duration="638000" />
       <workItem from="1705830032339" duration="2786000" />
       <workItem from="1708308449842" duration="802000" />
-      <workItem from="1708323957909" duration="458000" />
+      <workItem from="1708323957909" duration="5991000" />
     </task>
     <task id="LOCAL-00001" summary="初始化提交">
       <created>1704944720893</created>
@@ -212,7 +144,14 @@
       <option name="project" value="LOCAL" />
       <updated>1705560772543</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="功能完善">
+      <created>1708503946047</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1708503946047</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

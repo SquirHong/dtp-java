@@ -2,8 +2,7 @@ package io.dynamic.threadpool.starter.core;
 
 import com.alibaba.fastjson.JSON;
 import io.dynamic.threadpool.common.model.PoolParameterInfo;
-import io.dynamic.threadpool.starter.toolkit.ThreadPoolChangeUtil;
-import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
+import io.dynamic.threadpool.starter.handle.ThreadPoolChangeUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ThreadPoolExecutor;

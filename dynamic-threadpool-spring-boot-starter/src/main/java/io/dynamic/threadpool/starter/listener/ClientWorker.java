@@ -71,7 +71,7 @@ public class ClientWorker {
             } catch (Throwable e) {
                 log.error("[sub-check] rotate check error", e);
             }
-        }, 1L, 10L, TimeUnit.SECONDS);
+        }, 1L, 1L, TimeUnit.SECONDS);
     }
 
     /**
