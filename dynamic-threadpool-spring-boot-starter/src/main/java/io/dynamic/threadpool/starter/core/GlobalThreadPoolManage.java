@@ -15,10 +15,6 @@ public class GlobalThreadPoolManage {
 
     private static final Map<String, DynamicThreadPoolWrap> EXECUTOR_MAP = new ConcurrentHashMap();
 
-    public static DynamicThreadPoolWrap getExecutorService(String tpId) {
-        return EXECUTOR_MAP.get(tpId);
-    }
-
     public static void register(String tpId, PoolParameter poolParameter, DynamicThreadPoolWrap executor) {
         registerPool(tpId, executor);
         registerPoolParameter(tpId, poolParameter);
@@ -34,6 +30,10 @@ public class GlobalThreadPoolManage {
 
     public static void remove(String tpId) {
         EXECUTOR_MAP.remove(tpId);
+    }
+
+    public static DynamicThreadPoolWrap getExecutorService(String tpId) {
+        return EXECUTOR_MAP.get(tpId);
     }
 
     public static PoolParameter getPoolParameter(String tpId) {

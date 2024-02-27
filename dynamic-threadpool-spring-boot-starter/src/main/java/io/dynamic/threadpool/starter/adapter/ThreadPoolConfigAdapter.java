@@ -43,8 +43,9 @@ public class ThreadPoolConfigAdapter extends ConfigAdapter {
                 ApplicationContextHolder.getBeansOfType(DynamicThreadPoolWrap.class);
 
         List<String> tpIdList = new ArrayList();
+        // 拿到所有线程池id
         executorMap.forEach((key, val) -> tpIdList.add(val.getTpId()));
-
+        // 订阅每个配置
         tpIdList.forEach(each -> threadPoolOperation.subscribeConfig(each, executorService,
                 config -> callbackConfig(config)));
     }

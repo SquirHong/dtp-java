@@ -5,11 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8162e98c-459e-40a4-b839-41d88623aa8e" name="Changes" comment="功能完善">
+      <change afterPath="$PROJECT_DIR$/config/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/registry/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/registry/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/common/CommonThreadPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/common/CommonThreadPool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolDynamicRefresh.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolDynamicRefresh.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/toolkit/ThreadPoolChangeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/handle/ThreadPoolChangeUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/adapter/ThreadPoolConfigAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/adapter/ThreadPoolConfigAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/GlobalThreadPoolManage.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/GlobalThreadPoolManage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/ServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/ServerApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,33 +49,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.importing&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;023b537116bd59e46d7dde17871a5b37&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "jdk.selected.JAVA_MODULE": "1.8",
+    "last_opened_file_path": "/Users/admin/Desktop/hjs/dynamicThreadPool/dtp-java",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.importing",
+    "spring.configuration.checksum": "17c84006cd763d2522150fb716ce5fef",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Spring Boot.ExampleApplication">
     <configuration name="ExampleApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="dynamic-threadpool-example" />
@@ -107,7 +115,8 @@
       <workItem from="1705829385657" duration="638000" />
       <workItem from="1705830032339" duration="2786000" />
       <workItem from="1708308449842" duration="802000" />
-      <workItem from="1708323957909" duration="5991000" />
+      <workItem from="1708323957909" duration="7908000" />
+      <workItem from="1709002818083" duration="2096000" />
     </task>
     <task id="LOCAL-00001" summary="初始化提交">
       <created>1704944720893</created>
@@ -151,7 +160,14 @@
       <option name="project" value="LOCAL" />
       <updated>1708503946047</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="功能完善">
+      <created>1708953715111</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1708953715111</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -245,7 +261,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/GlobalThreadPoolManage.java</url>
-          <line>22</line>
+          <line>18</line>
           <option name="timeStamp" value="49" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
