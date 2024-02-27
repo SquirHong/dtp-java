@@ -5,17 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8162e98c-459e-40a4-b839-41d88623aa8e" name="Changes" comment="功能完善">
-      <change afterPath="$PROJECT_DIR$/config/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/registry/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/registry/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/adapter/ThreadPoolConfigAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/adapter/ThreadPoolConfigAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/GlobalThreadPoolManage.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/GlobalThreadPoolManage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/ServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/ServerApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/CacheData.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/CacheData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolDynamicRefresh.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolDynamicRefresh.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ThreadPoolRunListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ThreadPoolRunListener.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +111,7 @@
       <workItem from="1705830032339" duration="2786000" />
       <workItem from="1708308449842" duration="802000" />
       <workItem from="1708323957909" duration="7908000" />
-      <workItem from="1709002818083" duration="2096000" />
+      <workItem from="1709002818083" duration="5438000" />
     </task>
     <task id="LOCAL-00001" summary="初始化提交">
       <created>1704944720893</created>
@@ -167,7 +162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1708953715111</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="功能完善">
+      <created>1709012116839</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1709012116839</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -211,12 +213,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java</url>
-          <line>182</line>
+          <line>183</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java</url>
-          <line>164</line>
+          <line>165</line>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -236,7 +238,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java</url>
-          <line>183</line>
+          <line>184</line>
           <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -256,7 +258,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ThreadPoolRunListener.java</url>
-          <line>54</line>
+          <line>55</line>
           <option name="timeStamp" value="48" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

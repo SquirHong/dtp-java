@@ -64,14 +64,14 @@ public class ClientWorker {
             t.setDaemon(true);
             return t;
         });
-        // 1s后，每个任务结束和开始之间的10s，任务内容：检查线程池配置
+        // 1s后，每个任务结束和开始之间的3s，任务内容：检查是否有新的线程配置需要进行长轮训
         this.executor.scheduleWithFixedDelay(() -> {
             try {
                 checkConfigInfo();
             } catch (Throwable e) {
                 log.error("[sub-check] rotate check error", e);
             }
-        }, 1L, 1L, TimeUnit.SECONDS);
+        }, 1L, 3L, TimeUnit.SECONDS);
     }
 
     /**
@@ -81,7 +81,7 @@ public class ClientWorker {
         int listenerSize = cacheMap.size();
         double perTaskConfigSize = 3000D;
         int longingTaskCount = (int) Math.ceil(listenerSize / perTaskConfigSize);
-
+        // 每3000个CacheData 一组
         if (longingTaskCount > currentLongingTaskCount) {
             for (int i = (int) currentLongingTaskCount; i < longingTaskCount; i++) {
                 executorService.execute(new LongPollingRunnable());
@@ -109,13 +109,14 @@ public class ClientWorker {
         public void run() {
             checkStatus();
 
-            List<CacheData> cacheDataList = new ArrayList();
+
             List<CacheData> queryCacheDataList = cacheMap.entrySet()
                     .stream().map(each -> each.getValue()).collect(Collectors.toList());
 
             // 变化的tpIds
             List<String> changedTpIds = checkUpdateDataIds(queryCacheDataList);
 
+            List<CacheData> cacheDataList = new ArrayList();
             if (!CollectionUtils.isEmpty(changedTpIds)) {
                 log.info("[dynamic threadPool] tpIds changed :: {}", changedTpIds);
                 for (String each : changedTpIds) {
@@ -200,7 +201,7 @@ public class ClientWorker {
      * 获取服务端配置
      */
     public String getServerConfig(String namespace, String itemId, String tpId, long readTimeout) {
-        Map<String, String> params = new HashMap(3);
+        Map<String, String> params = new HashMap(8);
         params.put("namespace", namespace);
         params.put("itemId", itemId);
         params.put("tpId", tpId);
@@ -281,6 +282,7 @@ public class ClientWorker {
         cacheData = new CacheData(namespace, itemId, tpId);
         CacheData lastCacheData = cacheMap.putIfAbsent(tpId, cacheData);
         if (lastCacheData == null) {
+            // 插入成功
             String serverConfig = null;
             try {
                 serverConfig = getServerConfig(namespace, itemId, tpId, 3000L);

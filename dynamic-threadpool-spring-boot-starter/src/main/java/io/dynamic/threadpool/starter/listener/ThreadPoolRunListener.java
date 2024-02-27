@@ -52,6 +52,7 @@ public class ThreadPoolRunListener {
             Result result = null;
             try {
                 result = httpAgent.httpGet(Constants.CONFIG_CONTROLLER_PATH, null, queryStrMap, 3000L);
+                // 如果数据库有值，则将得到的参数转化为PoolParameterInfo，         没指定的tpid，则使用默认的
                 if (result.isSuccess() && (ppi = JSON.toJavaObject((JSON) result.getData(), PoolParameterInfo.class)) != null) {
                     // 使用相关参数创建线程池
                     TimeUnit unit = TimeUnit.SECONDS;

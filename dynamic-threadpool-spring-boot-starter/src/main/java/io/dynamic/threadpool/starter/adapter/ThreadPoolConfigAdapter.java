@@ -25,14 +25,14 @@ public class ThreadPoolConfigAdapter extends ConfigAdapter {
     private ThreadPoolOperation threadPoolOperation;
 
     /**
-     * 修改配置的线程池
+     * 执行修改配置的线程池
      */
     private ExecutorService executorService = new ThreadPoolExecutor(
             2,
             4,
             0,
-            TimeUnit.MILLISECONDS,
-            new ArrayBlockingQueue(5),
+            TimeUnit.SECONDS,
+            new ArrayBlockingQueue(10),
             new ThreadFactoryBuilder().setNamePrefix("threadPool-config").build(),
             new ThreadPoolExecutor.DiscardOldestPolicy());
 
