@@ -12,7 +12,7 @@ public class ContentUtil {
 
     public static String getPoolContent(PoolParameter parameter) {
         PoolParameterInfo poolInfo = new PoolParameterInfo();
-        poolInfo.setNamespace(parameter.getNamespace());
+        poolInfo.setTenantId(parameter.getTenantId());
         poolInfo.setItemId(parameter.getItemId());
         poolInfo.setTpId(parameter.getTpId());
         poolInfo.setCoreSize(parameter.getCoreSize());
@@ -27,7 +27,7 @@ public class ContentUtil {
     }
 
     /**
-     * 拼接tpid、itemid、namespace
+     * 拼接tpid、itemid、tenantId
      */
     public static String getGroupKey(PoolParameter parameter) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -35,7 +35,7 @@ public class ContentUtil {
                 .append(Constants.GROUP_KEY_DELIMITER)
                 .append(parameter.getItemId())
                 .append(Constants.GROUP_KEY_DELIMITER)
-                .append(parameter.getNamespace())
+                .append(parameter.getTenantId())
                 .toString();
         return resultStr;
     }

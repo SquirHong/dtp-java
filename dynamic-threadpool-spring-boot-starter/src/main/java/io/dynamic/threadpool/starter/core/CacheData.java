@@ -20,7 +20,7 @@ public class CacheData {
 
     public volatile String content;
 
-    public final String namespace;
+    public final String tenantId;
 
     public final String itemId;
 
@@ -32,8 +32,8 @@ public class CacheData {
 
     private final CopyOnWriteArrayList<ManagerListenerWrap> listeners;
 
-    public CacheData(String namespace, String itemId, String tpId) {
-        this.namespace = namespace;
+    public CacheData(String tenantId, String itemId, String tpId) {
+        this.tenantId = tenantId;
         this.itemId = itemId;
         this.tpId = tpId;
         // TODO：nacos 走的本地文件获取, 这里思考下如何优雅获取

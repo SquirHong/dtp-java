@@ -2,6 +2,8 @@ package io.dynamic.threadpool.config.model.biz.threadpool;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * Thread Pool Resp DTO.
  */
@@ -11,7 +13,7 @@ public class ThreadPoolRespDTO {
     /**
      * 命名空间
      */
-    private String namespace;
+    private String tenantId;
 
     /**
      * 项目 Id
@@ -67,4 +69,14 @@ public class ThreadPoolRespDTO {
      * 活跃度告警
      */
     private Integer livenessAlarm;
+
+    /**
+     * 创建时间
+     */
+    private Date gmtCreate;
+
+    /**
+     * 修改时间
+     */
+    private Date gmtModified;
 }

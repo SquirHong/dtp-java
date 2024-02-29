@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Data
 public class DynamicThreadPoolWrap {
-    private String namespace;
+    private String tenantId;
 
     private String itemId;
 

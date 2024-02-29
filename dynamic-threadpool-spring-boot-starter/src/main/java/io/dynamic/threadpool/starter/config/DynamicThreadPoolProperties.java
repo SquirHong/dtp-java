@@ -25,7 +25,7 @@ public class DynamicThreadPoolProperties {
     /**
      * 命名空间
      */
-    private String namespace;
+    private String tenantId;
 
     /**
      * 项目 Id

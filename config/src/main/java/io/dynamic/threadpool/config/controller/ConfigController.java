@@ -3,11 +3,12 @@ package io.dynamic.threadpool.config.controller;
 import io.dynamic.threadpool.common.constant.Constants;
 import io.dynamic.threadpool.common.web.base.Result;
 import io.dynamic.threadpool.common.web.base.Results;
-import io.dynamic.threadpool.server.model.ConfigAllInfo;
-import io.dynamic.threadpool.server.model.ConfigInfoBase;
-import io.dynamic.threadpool.server.service.biz.ConfigService;
-import io.dynamic.threadpool.server.service.ConfigServletInner;
-import io.dynamic.threadpool.server.toolkit.Md5ConfigUtil;
+
+import io.dynamic.threadpool.config.model.ConfigAllInfo;
+import io.dynamic.threadpool.config.model.ConfigInfoBase;
+import io.dynamic.threadpool.config.service.ConfigServletInner;
+import io.dynamic.threadpool.config.service.biz.ConfigService;
+import io.dynamic.threadpool.config.toolkit.Md5ConfigUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,9 @@ public class ConfigController {
      * 获取指定线程池配置
      */
     @GetMapping
-    public Result<ConfigInfoBase> detailConfigInfo(@RequestParam("tpId") String tpId, @RequestParam("itemId") String itemId, @RequestParam(value = "namespace") String namespace) {
+    public Result<ConfigInfoBase> detailConfigInfo(@RequestParam("tpId") String tpId, @RequestParam("itemId") String itemId, @RequestParam(value = "tenantId") String tenantId) {
 
-        return Results.success(configService.findConfigAllInfo(tpId, itemId, namespace));
+        return Results.success(configService.findConfigAllInfo(tpId, itemId, tenantId));
     }
 
     @PostMapping

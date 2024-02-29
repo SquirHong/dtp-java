@@ -31,7 +31,7 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
     @Override
     public IPage<ThreadPoolRespDTO> queryThreadPoolPage(ThreadPoolQueryReqDTO reqDTO) {
         LambdaQueryWrapper<ConfigAllInfo> wrapper = Wrappers.lambdaQuery(ConfigAllInfo.class)
-                .eq(!StringUtils.isBlank(reqDTO.getTenantId()), ConfigAllInfo::getNamespace, reqDTO.getTenantId())
+                .eq(!StringUtils.isBlank(reqDTO.getNamespace()), ConfigAllInfo::getNamespace, reqDTO.getNamespace())
                 .eq(!StringUtils.isBlank(reqDTO.getItemId()), ConfigAllInfo::getItemId, reqDTO.getItemId())
                 .eq(!StringUtils.isBlank(reqDTO.getTpId()), ConfigAllInfo::getTpId, reqDTO.getTpId());
         return configInfoMapper.selectPage(reqDTO, wrapper).convert(each -> BeanUtil.convert(each, ThreadPoolRespDTO.class));
@@ -39,7 +39,7 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
 
     @Override
     public ThreadPoolRespDTO getThreadPool(ThreadPoolQueryReqDTO reqDTO) {
-        ConfigAllInfo configAllInfo = configService.findConfigAllInfo(reqDTO.getTpId(), reqDTO.getItemId(), reqDTO.getTenantId());
+        ConfigAllInfo configAllInfo = configService.findConfigAllInfo(reqDTO.getTpId(), reqDTO.getItemId(), reqDTO.getNamespace());
         return BeanUtil.convert(configAllInfo, ThreadPoolRespDTO.class);
     }
 

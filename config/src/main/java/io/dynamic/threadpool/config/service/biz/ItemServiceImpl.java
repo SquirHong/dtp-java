@@ -47,9 +47,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemRespDTO queryItemById(String namespace, String itemId) {
+    public ItemRespDTO queryItemById(String tenantId, String itemId) {
         LambdaQueryWrapper<ItemInfo> queryWrapper = Wrappers.lambdaQuery(ItemInfo.class)
-                .eq(ItemInfo::getTenantId, namespace)
+                .eq(ItemInfo::getTenantId, tenantId)
                 .eq(ItemInfo::getItemId, itemId);
         ItemInfo itemInfo = itemInfoMapper.selectOne(queryWrapper);
 
@@ -93,7 +93,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void deleteItem(String namespace, String itemId) {
+    public void deleteItem(String tenantId, String itemId) {
         List<ThreadPoolRespDTO> itemList = threadPoolService.getThreadPoolByItemId(itemId);
         if (CollectionUtils.isNotEmpty(itemList)) {
             throw new RuntimeException("项目包含线程池引用, 删除失败.");
@@ -101,7 +101,7 @@ public class ItemServiceImpl implements ItemService {
 
         int updateResult = itemInfoMapper.update(new ItemInfo(),
                 Wrappers.lambdaUpdate(ItemInfo.class)
-                        .eq(ItemInfo::getTenantId, namespace)
+                        .eq(ItemInfo::getTenantId, tenantId)
                         .eq(ItemInfo::getItemId, itemId)
                         .set(ItemInfo::getDelFlag, DelEnum.DELETE.getIntCode()));
         boolean retBool = SqlHelper.retBool(updateResult);

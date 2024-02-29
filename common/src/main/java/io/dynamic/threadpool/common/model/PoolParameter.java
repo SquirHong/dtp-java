@@ -5,7 +5,7 @@ package io.dynamic.threadpool.common.model;
  */
 public interface PoolParameter {
 
-    String getNamespace();
+    String getTenantId();
 
     String getItemId();
 

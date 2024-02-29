@@ -124,15 +124,15 @@ public class ClientWorker {
                     // 服务器配置信息
                     String tpId = keys[0];
                     String itemId = keys[1];
-                    String namespace = keys[2];
+                    String tenantId = keys[2];
 
                     try {
-                        String content = getServerConfig(namespace, itemId, tpId, 3000L);
+                        String content = getServerConfig(tenantId, itemId, tpId, 3000L);
                         CacheData cacheData = cacheMap.get(tpId);
                         String poolContent = ContentUtil.getPoolContent(JSON.parseObject(content, PoolParameterInfo.class));
                         cacheData.setContent(poolContent);
                         cacheDataList.add(cacheData);
-                        log.info("[data-received] namespace :: {}, itemId :: {}, tpId :: {}, md5 :: {}", namespace, itemId, tpId, cacheData.getMd5());
+                        log.info("[data-received] tenantId :: {}, itemId :: {}, tpId :: {}, md5 :: {}", tenantId, itemId, tpId, cacheData.getMd5());
                     } catch (Exception ex) {
                         // ignore
                     }
@@ -160,7 +160,7 @@ public class ClientWorker {
             sb.append(cacheData.tpId).append(WORD_SEPARATOR);
             sb.append(cacheData.itemId).append(WORD_SEPARATOR);
             sb.append(cacheData.getMd5()).append(WORD_SEPARATOR);
-            sb.append(cacheData.namespace).append(LINE_SEPARATOR);
+            sb.append(cacheData.tenantId).append(LINE_SEPARATOR);
         }
 
         return checkUpdateTpIds(sb.toString());
@@ -200,9 +200,9 @@ public class ClientWorker {
     /**
      * 获取服务端配置
      */
-    public String getServerConfig(String namespace, String itemId, String tpId, long readTimeout) {
+    public String getServerConfig(String tenantId, String itemId, String tpId, long readTimeout) {
         Map<String, String> params = new HashMap(8);
-        params.put("namespace", namespace);
+        params.put("tenantId", tenantId);
         params.put("itemId", itemId);
         params.put("tpId", tpId);
         Result result = agent.httpGet(Constants.CONFIG_CONTROLLER_PATH, null, params, readTimeout);
@@ -210,7 +210,7 @@ public class ClientWorker {
             return result.getData().toString();
         }
 
-        log.error("[sub-server-error] namespace :: {}, itemId :: {}, tpId :: {}, result code :: {}", namespace, itemId, tpId, result.getCode());
+        log.error("[sub-server-error] tenantId :: {}, itemId :: {}, tpId :: {}, result code :: {}", tenantId, itemId, tpId, result.getCode());
         return Constants.NULL;
     }
 
@@ -253,13 +253,13 @@ public class ClientWorker {
     /**
      * CacheData 添加 Listener
      *
-     * @param namespace
+     * @param tenantId
      * @param itemId
      * @param tpId
      * @param listeners
      */
-    public void addTenantListeners(String namespace, String itemId, String tpId, List<? extends Listener> listeners) {
-        CacheData cacheData = addCacheDataIfAbsent(namespace, itemId, tpId);
+    public void addTenantListeners(String tenantId, String itemId, String tpId, List<? extends Listener> listeners) {
+        CacheData cacheData = addCacheDataIfAbsent(tenantId, itemId, tpId);
         for (Listener listener : listeners) {
             cacheData.addListener(listener);
         }
@@ -268,24 +268,24 @@ public class ClientWorker {
     /**
      * CacheData 不存在则添加
      *
-     * @param namespace
+     * @param tenantId
      * @param itemId
      * @param tpId
      * @return
      */
-    public CacheData addCacheDataIfAbsent(String namespace, String itemId, String tpId) {
+    public CacheData addCacheDataIfAbsent(String tenantId, String itemId, String tpId) {
         CacheData cacheData = cacheMap.get(tpId);
         if (cacheData != null) {
             return cacheData;
         }
 
-        cacheData = new CacheData(namespace, itemId, tpId);
+        cacheData = new CacheData(tenantId, itemId, tpId);
         CacheData lastCacheData = cacheMap.putIfAbsent(tpId, cacheData);
         if (lastCacheData == null) {
             // 插入成功
             String serverConfig = null;
             try {
-                serverConfig = getServerConfig(namespace, itemId, tpId, 3000L);
+                serverConfig = getServerConfig(tenantId, itemId, tpId, 3000L);
                 PoolParameterInfo poolInfo = JSON.parseObject(serverConfig, PoolParameterInfo.class);
                 cacheData.setContent(ContentUtil.getPoolContent(poolInfo));
             } catch (Exception ex) {

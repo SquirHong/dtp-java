@@ -99,6 +99,7 @@ public class LongPollingService {
 
         String ip = RequestUtil.getRemoteIp(req);
 
+        // 异步响应的关键
         final AsyncContext asyncContext = req.startAsync();
         asyncContext.setTimeout(0L);
 

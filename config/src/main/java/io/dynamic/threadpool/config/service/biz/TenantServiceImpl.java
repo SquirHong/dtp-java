@@ -6,15 +6,15 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import io.dynamic.threadpool.config.enums.DelEnum;
 import io.dynamic.threadpool.config.mapper.TenantInfoMapper;
 import io.dynamic.threadpool.config.model.TenantInfo;
-import io.dynamic.threadpool.config.model.biz.tenant.TenantUpdateReqDTO;
-import io.dynamic.threadpool.server.enums.DelEnum;
 import io.dynamic.threadpool.config.model.biz.item.ItemQueryReqDTO;
 import io.dynamic.threadpool.config.model.biz.item.ItemRespDTO;
 import io.dynamic.threadpool.config.model.biz.tenant.TenantQueryReqDTO;
 import io.dynamic.threadpool.config.model.biz.tenant.TenantRespDTO;
 import io.dynamic.threadpool.config.model.biz.tenant.TenantSaveReqDTO;
+import io.dynamic.threadpool.config.model.biz.tenant.TenantUpdateReqDTO;
 import io.dynamic.threadpool.config.toolkit.BeanUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +36,9 @@ public class TenantServiceImpl implements TenantService {
     private TenantInfoMapper tenantInfoMapper;
 
     @Override
-    public TenantRespDTO getNameSpaceById(String namespaceId) {
+    public TenantRespDTO getTenantById(String tenantId) {
         LambdaQueryWrapper<TenantInfo> queryWrapper = Wrappers
-                .lambdaQuery(TenantInfo.class).eq(TenantInfo::getTenantId, namespaceId);
+                .lambdaQuery(TenantInfo.class).eq(TenantInfo::getTenantId, tenantId);
         TenantInfo tenantInfo = tenantInfoMapper.selectOne(queryWrapper);
 
         TenantRespDTO result = BeanUtil.convert(tenantInfo, TenantRespDTO.class);
@@ -46,7 +46,7 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public IPage<TenantRespDTO> queryNameSpacePage(TenantQueryReqDTO reqDTO) {
+    public IPage<TenantRespDTO> queryTenantPage(TenantQueryReqDTO reqDTO) {
         LambdaQueryWrapper<TenantInfo> wrapper = Wrappers.lambdaQuery(TenantInfo.class)
                 .eq(!StringUtils.isEmpty(reqDTO.getTenantId()), TenantInfo::getTenantId, reqDTO.getTenantId())
                 .eq(!StringUtils.isEmpty(reqDTO.getTenantName()), TenantInfo::getTenantName, reqDTO.getTenantName())
@@ -57,7 +57,7 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public void saveNameSpace(TenantSaveReqDTO reqDTO) {
+    public void saveTenant(TenantSaveReqDTO reqDTO) {
         TenantInfo tenantInfo = BeanUtil.convert(reqDTO, TenantInfo.class);
         int insertResult = tenantInfoMapper.insert(tenantInfo);
 
@@ -68,10 +68,10 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public void updateNameSpace(TenantUpdateReqDTO reqDTO) {
+    public void updateTenant(TenantUpdateReqDTO reqDTO) {
         TenantInfo tenantInfo = BeanUtil.convert(reqDTO, TenantInfo.class);
         int updateResult = tenantInfoMapper.update(tenantInfo, Wrappers
-                .lambdaUpdate(TenantInfo.class).eq(TenantInfo::getTenantId, reqDTO.getNamespaceId()));
+                .lambdaUpdate(TenantInfo.class).eq(TenantInfo::getTenantId, reqDTO.getTenantId()));
         boolean retBool = SqlHelper.retBool(updateResult);
         if (!retBool) {
             throw new RuntimeException("修改失败.");
@@ -79,17 +79,17 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public void deleteNameSpaceById(String namespaceId) {
-
+    public void deleteTenantById(String tenantId) {
         ItemQueryReqDTO reqDTO = new ItemQueryReqDTO();
-        reqDTO.setTenantId(namespaceId);
+        reqDTO.setTenantId(tenantId);
         List<ItemRespDTO> itemList = itemService.queryItem(reqDTO);
         if (CollectionUtils.isNotEmpty(itemList)) {
             throw new RuntimeException("业务线包含项目引用, 删除失败.");
         }
+
         int updateResult = tenantInfoMapper.update(new TenantInfo(),
                 Wrappers.lambdaUpdate(TenantInfo.class)
-                        .eq(TenantInfo::getTenantId, namespaceId)
+                        .eq(TenantInfo::getTenantId, tenantId)
                         .set(TenantInfo::getDelFlag, DelEnum.DELETE.getIntCode()));
         boolean retBool = SqlHelper.retBool(updateResult);
         if (!retBool) {

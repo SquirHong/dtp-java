@@ -4,13 +4,50 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8162e98c-459e-40a4-b839-41d88623aa8e" name="Changes" comment="功能完善">
+    <list default="true" id="8162e98c-459e-40a4-b839-41d88623aa8e" name="Changes" comment="统一入参和出参、添加报警模块、添加控制台模块">
+      <change afterPath="$PROJECT_DIR$/alarm/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/alarm/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/console/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/console/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/adapter/ThreadPoolConfigAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/adapter/ThreadPoolConfigAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/executor/ThreadPoolManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/executor/ThreadPoolManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/model/GlobalRemotePoolInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/model/GlobalRemotePoolInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/model/PoolParameter.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/model/PoolParameter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/model/PoolParameterInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/model/PoolParameterInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/toolkit/ContentUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/io/dynamic/threadpool/common/toolkit/ContentUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/controller/ConfigController.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/controller/ConfigController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/controller/ItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/console/src/main/java/io/dynamic/threadpool/console/controller/ItemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/controller/TenantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/console/src/main/java/io/dynamic/threadpool/console/controller/TenantController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/controller/ThreadPoolController.java" beforeDir="false" afterPath="$PROJECT_DIR$/console/src/main/java/io/dynamic/threadpool/console/controller/ThreadPoolController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/event/ConfigDataChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/event/ConfigDataChangeEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/ConfigInfoBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/ConfigInfoBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/item/ItemRespDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/item/ItemRespDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/item/ItemUpdateReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/item/ItemUpdateReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/tenant/TenantUpdateReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/tenant/TenantUpdateReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/threadpool/ThreadPoolQueryReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/threadpool/ThreadPoolQueryReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/threadpool/ThreadPoolRespDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/threadpool/ThreadPoolRespDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/threadpool/ThreadPoolSaveOrUpdateReqDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/model/biz/threadpool/ThreadPoolSaveOrUpdateReqDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/ConfigCacheService.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/ConfigCacheService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/LongPollingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/LongPollingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/ConfigService.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/ConfigService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/ConfigServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/ConfigServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/ItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/ItemService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/ItemServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/ItemServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/TenantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/TenantService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/TenantServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/TenantServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/ThreadPoolServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/biz/ThreadPoolServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/config/DynamicThreadPoolProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/config/DynamicThreadPoolProperties.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/CacheData.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/CacheData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolDynamicRefresh.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolDynamicRefresh.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ConfigService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ConfigService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolConfigService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/core/ThreadPoolConfigService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ThreadPoolRunListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ThreadPoolRunListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/wrap/DynamicThreadPoolWrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/wrap/DynamicThreadPoolWrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/registry/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/registry/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +58,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="package.json" />
+        <option value="package-info" />
       </list>
     </option>
   </component>
@@ -64,7 +102,7 @@
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "reference.settings.project.maven.importing",
-    "spring.configuration.checksum": "17c84006cd763d2522150fb716ce5fef",
+    "spring.configuration.checksum": "3c4c9fa6163025f726b08d7b7a6c678f",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -111,7 +149,8 @@
       <workItem from="1705830032339" duration="2786000" />
       <workItem from="1708308449842" duration="802000" />
       <workItem from="1708323957909" duration="7908000" />
-      <workItem from="1709002818083" duration="5438000" />
+      <workItem from="1709002818083" duration="7306000" />
+      <workItem from="1709018488137" duration="3566000" />
     </task>
     <task id="LOCAL-00001" summary="初始化提交">
       <created>1704944720893</created>
@@ -169,7 +208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1709012116839</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="迁移线程池">
+      <created>1709017069761</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1709017069761</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -206,7 +252,8 @@
     <MESSAGE value="更新" />
     <MESSAGE value="再更新" />
     <MESSAGE value="功能完善" />
-    <option name="LAST_COMMIT_MESSAGE" value="功能完善" />
+    <MESSAGE value="迁移线程池" />
+    <option name="LAST_COMMIT_MESSAGE" value="迁移线程池" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -222,17 +269,17 @@
           <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/controller/ConfigController.java</url>
-          <line>70</line>
+          <url>file://$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/controller/ConfigController.java</url>
+          <line>71</line>
           <option name="timeStamp" value="36" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/LongPollingService.java</url>
+          <url>file://$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/LongPollingService.java</url>
           <line>92</line>
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/service/ConfigCacheService.java</url>
+          <url>file://$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/service/ConfigCacheService.java</url>
           <line>44</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
@@ -242,8 +289,8 @@
           <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/server/src/main/java/io/dynamic/threadpool/server/controller/ConfigController.java</url>
-          <line>53</line>
+          <url>file://$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/controller/ConfigController.java</url>
+          <line>54</line>
           <option name="timeStamp" value="41" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -300,6 +347,11 @@
           <url>file://$PROJECT_DIR$/dynamic-threadpool-spring-boot-starter/src/main/java/io/dynamic/threadpool/starter/listener/ClientWorker.java</url>
           <line>81</line>
           <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/config/src/main/java/io/dynamic/threadpool/config/notify/NotifyCenter.java</url>
+          <line>73</line>
+          <option name="timeStamp" value="61" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -9,12 +9,19 @@ import lombok.Data;
 @Data
 public class ThreadPoolQueryReqDTO extends Page {
 
+    /**
+     * 命名空间
+     */
     private String tenantId;
 
+    /**
+     * 项目 ID
+     */
     private String itemId;
 
+    /**
+     * 线程池 ID
+     */
     private String tpId;
-
-    private String tpName;
 
 }

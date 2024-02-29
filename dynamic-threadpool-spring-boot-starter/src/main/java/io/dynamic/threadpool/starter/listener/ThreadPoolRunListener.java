@@ -45,7 +45,7 @@ public class ThreadPoolRunListener {
             Map<String, String> queryStrMap = new HashMap();
             queryStrMap.put("tpId", val.getTpId());
             queryStrMap.put("itemId", properties.getItemId());
-            queryStrMap.put("namespace", properties.getNamespace());
+            queryStrMap.put("tenantId", properties.getTenantId());
 
             PoolParameterInfo ppi = new PoolParameterInfo();
             HttpAgent httpAgent = new ServerHttpAgent(properties);

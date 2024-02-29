@@ -10,6 +10,7 @@
       <directory url="file://$PROJECT_DIR$/common/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/config/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/registry/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/alarm/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
@@ -17,16 +18,21 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="registry" />
-        <module name="dynamic-threadpool-server" />
-        <module name="dynamic-threadpool-spring-boot-starter" />
         <module name="dynamic-threadpool-example" />
         <module name="common" />
+        <module name="dynamic-threadpool-registry" />
+        <module name="dynamic-threadpool-server" />
+        <module name="dynamic-threadpool-console" />
+        <module name="dynamic-threadpool-spring-boot-starter" />
+        <module name="dynamic-threadpool-alarm" />
         <module name="dynamic-threadpool-config" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="alarm" target="1.8" />
       <module name="config" target="1.8" />
+      <module name="console" target="1.8" />
+      <module name="registry" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

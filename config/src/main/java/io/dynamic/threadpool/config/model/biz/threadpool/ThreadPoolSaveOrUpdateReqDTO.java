@@ -11,9 +11,9 @@ import lombok.Data;
 public class ThreadPoolSaveOrUpdateReqDTO {
 
     /**
-     * namespace
+     * tenantId
      */
-    private String namespace;
+    private String tenantId;
 
     /**
      * TpId

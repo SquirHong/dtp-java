@@ -25,12 +25,15 @@
     </properties>
 
     <modules>
+        <module>alarm</module>
         <module>server</module>
         <module>example</module>
         <module>dynamic-threadpool-spring-boot-starter</module>
         <module>common</module>
         <module>config</module>
         <module>registry</module>
+        <module>alarm</module>
+        <module>console</module>
     </modules>
 
     <dependencyManagement>
@@ -83,6 +86,12 @@
             <dependency>
                 <groupId>io.dynamic-threadpool</groupId>
                 <artifactId>dynamic-threadpool-registry</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.dynamic-threadpool</groupId>
+                <artifactId>dynamic-threadpool-console</artifactId>
                 <version>${revision}</version>
             </dependency>
 
