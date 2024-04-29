@@ -232,7 +232,9 @@ public class LongPollingService {
 
                     if (clientSub.clientMd5Map.containsKey(groupKey)) {
                         getRetainIps().put(clientSub.ip, System.currentTimeMillis());
+                        
                         ConfigCacheService.updateMd5(groupKey, ConfigCacheService.getContentMd5(groupKey), System.currentTimeMillis());
+                        
                         iter.remove();
                         clientSub.sendResponse(Arrays.asList(groupKey));
                     }

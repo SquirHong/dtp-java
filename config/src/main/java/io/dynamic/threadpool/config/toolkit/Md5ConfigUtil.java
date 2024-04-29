@@ -49,7 +49,7 @@ public class Md5ConfigUtil {
     }
 
     /**
-     * 比较客户端 Md5 与服务端是否一致
+     * 比较请求的 Md5 与服务端是否一致
      *
      * @param request
      * @param clientMd5Map

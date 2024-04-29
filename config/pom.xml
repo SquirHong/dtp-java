@@ -54,7 +54,7 @@
 
         <dependency>
             <groupId>io.dynamic-threadpool</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>dynamic-threadpool-common</artifactId>
         </dependency>
 
     </dependencies>

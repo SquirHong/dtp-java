@@ -1,7 +1,8 @@
 package io.dynamic.threadpool.config.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import io.dynamic.threadpool.server.enums.DelEnum;
+
+import io.dynamic.threadpool.config.enums.DelEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;

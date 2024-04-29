@@ -86,7 +86,8 @@ public class GroupKey {
     }
 
     /**
-     * + -> %2B % -> %25.
+     * + -> %2B
+     * % -> %25
      */
     public static void urlEncode(String str, StringBuilder sb) {
         for (int idx = 0; idx < str.length(); ++idx) {
