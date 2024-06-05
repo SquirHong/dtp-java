@@ -1,6 +1,7 @@
 package io.dynamic.threadpool.starter.toolkit.thread;
 
 import io.dynamic.threadpool.common.toolkit.Assert;
+import io.dynamic.threadpool.starter.wrap.CustomThreadPoolExecutor;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -78,6 +79,26 @@ public class AbstractBuildThreadPoolTemplate {
                         initParam.rejectedExecutionHandler);
         taskQueue.setExecutor(fastThreadPoolExecutor);
         return fastThreadPoolExecutor;
+    }
+
+    /**
+     * 构建自定义线程池
+     *
+     * @param initParam
+     * @return
+     */
+    public static CustomThreadPoolExecutor buildCustomPool(ThreadPoolInitParam initParam) {
+        Assert.notNull(initParam);
+        CustomThreadPoolExecutor executorService =
+                new CustomThreadPoolExecutor(initParam.getCorePoolNum(),
+                        initParam.getMaxPoolNum(),
+                        initParam.getKeepAliveTime(),
+                        initParam.getTimeUnit(),
+                        initParam.getWorkQueue(),
+                        initParam.getThreadFactory(),
+                        initParam.rejectedExecutionHandler);
+
+        return executorService;
     }
 
     @Data

@@ -20,14 +20,19 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
     private boolean isFastPool;
 
     /**
+     * 是否自定义线程池
+     */
+    private boolean isCustomPool;
+
+    /**
      * 核心线程数量
      */
-    private Integer corePoolNum = calculateCoreNum();
+    private Integer corePoolSize = calculateCoreNum();
 
     /**
      * 最大线程数量
      */
-    private Integer maxPoolNum = corePoolNum + (corePoolNum >> 1);
+    private Integer maxPoolSize = corePoolSize + (corePoolSize >> 1);
 
     /**
      * 线程存活时间
@@ -84,6 +89,11 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
         return this;
     }
 
+    public ThreadPoolBuilder isCustomPool(Boolean isCustomPool) {
+        this.isCustomPool = isCustomPool;
+        return this;
+    }
+
     public ThreadPoolBuilder threadFactory(String threadNamePrefix) {
         this.threadNamePrefix = threadNamePrefix;
         return this;
@@ -95,20 +105,20 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
         return this;
     }
 
-    public ThreadPoolBuilder corePoolNum(Integer corePoolNum) {
-        this.corePoolNum = corePoolNum;
+    public ThreadPoolBuilder corePoolNum(Integer corePoolSize) {
+        this.corePoolSize = corePoolSize;
         return this;
     }
 
-    public ThreadPoolBuilder maxPoolNum(Integer maxPoolNum) {
-        this.maxPoolNum = maxPoolNum;
+    public ThreadPoolBuilder maxPoolNum(Integer maxPoolSize) {
+        this.maxPoolSize = maxPoolSize;
         return this;
     }
 
 
-    public ThreadPoolBuilder poolThreadNum(Integer corePoolNum, Integer maxPoolNum) {
-        this.corePoolNum = corePoolNum;
-        this.maxPoolNum = maxPoolNum;
+    public ThreadPoolBuilder poolThreadSize(Integer corePoolNum, Integer maxPoolNum) {
+        this.corePoolSize = corePoolNum;
+        this.maxPoolSize = maxPoolNum;
         return this;
     }
 
@@ -156,6 +166,11 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
         return this;
     }
 
+    public ThreadPoolBuilder workQueue(BlockingQueue workQueue) {
+        this.workQueue = workQueue;
+        return this;
+    }
+
     /**
      * 构建
      *
@@ -163,6 +178,9 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
      */
     @Override
     public ThreadPoolExecutor build() {
+        if (isCustomPool) {
+            return buildCustomPool(this);
+        }
         return isFastPool ? buildFastPool(this) : buildPool(this);
     }
 
@@ -196,6 +214,16 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
     }
 
     /**
+     * 构建自定义线程池
+     *
+     * @param builder
+     * @return
+     */
+    private static ThreadPoolExecutor buildCustomPool(ThreadPoolBuilder builder) {
+        return AbstractBuildThreadPoolTemplate.buildCustomPool(buildInitParam(builder));
+    }
+
+    /**
      * 构建初始化参数
      *
      * @param builder
@@ -206,8 +234,8 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
         AbstractBuildThreadPoolTemplate.ThreadPoolInitParam initParam =
                 new AbstractBuildThreadPoolTemplate.ThreadPoolInitParam(builder.threadNamePrefix, builder.isDaemon);
 
-        initParam.setCorePoolNum(builder.corePoolNum)
-                .setMaxPoolNum(builder.maxPoolNum)
+        initParam.setCorePoolNum(builder.corePoolSize)
+                .setMaxPoolNum(builder.maxPoolSize)
                 .setKeepAliveTime(builder.keepAliveTime)
                 .setCapacity(builder.capacity)
                 .setRejectedExecutionHandler(builder.rejectedExecutionHandler)
@@ -215,11 +243,10 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
 
         // 快速消费线程池内置指定线程池
         if (!builder.isFastPool) {
-            BlockingQueue blockingQueue = BlockingQueueUtil.createBlockingQueue(builder.queueType.type, builder.capacity);
-            if (blockingQueue == null) {
-                blockingQueue = builder.workQueue;
+            if (builder.workQueue == null) {
+                builder.workQueue = BlockingQueueUtil.createBlockingQueue(builder.queueType.type, builder.capacity);
             }
-            initParam.setWorkQueue(blockingQueue);
+            initParam.setWorkQueue(builder.workQueue);
         }
 
         return initParam;
