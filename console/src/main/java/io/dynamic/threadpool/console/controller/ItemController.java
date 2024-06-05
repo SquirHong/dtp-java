@@ -40,7 +40,7 @@ public class ItemController {
     }
 
     @PostMapping("/item/update")
-    public Result updateItem(ItemUpdateReqDTO reqDTO) {
+    public Result updateItem(@RequestBody ItemUpdateReqDTO reqDTO) {
         itemService.updateItem(reqDTO);
         return Results.success();
     }
