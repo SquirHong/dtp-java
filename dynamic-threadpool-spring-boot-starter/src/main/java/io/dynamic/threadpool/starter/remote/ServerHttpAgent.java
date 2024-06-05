@@ -67,8 +67,8 @@ public class ServerHttpAgent implements HttpAgent {
     }
 
     @Override
-    public String getNameSpace() {
-        return dynamicThreadPoolProperties.getNamespace();
+    public String getTenantId() {
+        return dynamicThreadPoolProperties.getTenantId();
     }
 
     @Override

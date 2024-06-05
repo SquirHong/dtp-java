@@ -1,7 +1,7 @@
 package io.dynamic.threadpool.config.toolkit;
 
 /**
- * 简单读写锁.
+ * 简单读写锁. N读 || 1写
  */
 public class SimpleReadWriteLock {
 

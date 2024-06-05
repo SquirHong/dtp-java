@@ -9,6 +9,10 @@ import java.util.function.BiFunction;
  */
 public class MapUtil {
 
+    /**
+     *
+     *  如果map中的key不存在，则调用function函数并传参param1和param2，结果值存入map中
+     */
     public static Object computeIfAbsent(Map target, Object key, BiFunction mappingFunction, Object param1, Object param2) {
         Objects.requireNonNull(target, "target");
         Objects.requireNonNull(key, "key");

@@ -10,8 +10,8 @@ public class SingletonRepository<T> {
     private final ConcurrentHashMap<T, T> shared;
 
     public SingletonRepository() {
-        // 初始化大小 2^16，容器本身使用大约 50K 的内存，避免不断扩展
-        shared = new ConcurrentHashMap(1 << 16);
+        // 初始化大小 2^14，容器本身使用大约 50K 的内存，避免不断扩展
+        shared = new ConcurrentHashMap(1 << 14);
     }
 
     /**

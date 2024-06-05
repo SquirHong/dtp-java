@@ -9,7 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 快速执行任务线程池, 参考 Dubbo 线程模型 EagerThreadPoolExecutor
+ * 快速执行任务线程池, 参考 Dubbo 线程模型 EagerThreadPoolExecutor，
+ * 参考链接：https://www.cnblogs.com/learncat/p/14310339.html
  * <p>
  * 配合 {@link TaskQueue}
  */

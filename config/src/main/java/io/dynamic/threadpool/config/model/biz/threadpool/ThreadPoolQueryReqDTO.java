@@ -10,7 +10,7 @@ import lombok.Data;
 public class ThreadPoolQueryReqDTO extends Page {
 
     /**
-     * 命名空间
+     * 租户 ID
      */
     private String tenantId;
 

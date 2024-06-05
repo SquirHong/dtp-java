@@ -44,7 +44,6 @@ public class Md5ConfigUtil {
                 .append(config.getCapacityAlarm())
                 .append(config.getLivenessAlarm())
                 .toString();
-//        String targetStr = stringBuilder.toString();
         return DigestUtil.md5Hex(targetStr);
     }
 

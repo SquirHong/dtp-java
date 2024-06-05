@@ -6,9 +6,10 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import io.dynamic.threadpool.config.enums.DelEnum;
 import io.dynamic.threadpool.config.model.biz.item.ItemQueryReqDTO;
 import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolRespDTO;
-import io.dynamic.threadpool.server.enums.DelEnum;
+
 import io.dynamic.threadpool.config.mapper.ItemInfoMapper;
 import io.dynamic.threadpool.config.model.ItemInfo;
 import io.dynamic.threadpool.config.model.biz.item.ItemRespDTO;
@@ -83,7 +84,7 @@ public class ItemServiceImpl implements ItemService {
         ItemInfo itemInfo = BeanUtil.convert(reqDTO, ItemInfo.class);
         int updateResult = itemInfoMapper.update(itemInfo, Wrappers
                 .lambdaUpdate(ItemInfo.class)
-                .eq(ItemInfo::getTenantId, reqDTO.getNamespace())
+                .eq(ItemInfo::getTenantId, reqDTO.getTenantId())
                 .eq(ItemInfo::getItemId, reqDTO.getItemId()));
 
         boolean retBool = SqlHelper.retBool(updateResult);

@@ -37,6 +37,8 @@ public class CacheData {
         this.itemId = itemId;
         this.tpId = tpId;
         // TODO：nacos 走的本地文件获取, 这里思考下如何优雅获取
+        // todo：nacos原逻辑是考虑到宕机重启会再次为CacheMap添加CacheData，而content就可以 复用！ 先前的 failover和Snapshot文件
+        // todo：当前逻辑为在 order1024处 为GlobalThreadPoolManage添加content，这里再获取，这里是order1025
         this.content = ContentUtil.getPoolContent(GlobalThreadPoolManage.getPoolParameter(tpId));
         this.md5 = getMd5String(content);
         this.listeners = new CopyOnWriteArrayList();
