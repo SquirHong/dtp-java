@@ -17,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -102,7 +103,7 @@ public class LongPollingService {
         // 异步响应的关键
         final AsyncContext asyncContext = req.startAsync();
         asyncContext.setTimeout(0L);
-
+        log.info("最长监听配置是否改变的时间为：{}ms", timeout);
         ConfigExecutor.executeLongPolling(new ClientLongPolling(asyncContext, clientMd5Map, ip, probeRequestSize, timeout, appName));
     }
 
@@ -155,6 +156,7 @@ public class LongPollingService {
         @Override
         public void run() {
             asyncTimeoutFuture = ConfigExecutor.scheduleLongPolling(() -> {
+                log.info("------------------超时时间到了---------------------");
                 try {
                     getRetainIps().put(ClientLongPolling.this.ip, System.currentTimeMillis());
                     allSubs.remove(ClientLongPolling.this);
@@ -191,7 +193,15 @@ public class LongPollingService {
         private void generateResponse(List<String> changedGroups) {
             if (null == changedGroups) {
                 // Tell web container to send http response.
+                HttpServletResponse response = (HttpServletResponse) asyncContext.getResponse();
+                try {
+                    response.getWriter().println("");
+                    log.info("返回空值");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 asyncContext.complete();
+                log.info("----------------------------------期间无配置修改------------------------------------------");
                 return;
             }
 

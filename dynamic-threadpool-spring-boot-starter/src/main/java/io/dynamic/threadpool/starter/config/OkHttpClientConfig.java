@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
  * OkHttp3 bean
  */
 @Slf4j
-@Configuration
 public class OkHttpClientConfig {
 
     /**

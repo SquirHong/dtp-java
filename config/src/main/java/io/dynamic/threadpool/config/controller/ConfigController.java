@@ -38,7 +38,7 @@ public class ConfigController {
      * 获取指定线程池配置
      */
     @GetMapping
-    public Result<ConfigInfoBase> detailConfigInfo(@RequestParam("tpId") String tpId, @RequestParam("itemId") String itemId, @RequestParam(value = "tenantId") String tenantId) {
+    public Result<ConfigInfoBase> detailConfigInfo(@RequestParam("tpId") String tpId, @RequestParam("itemId") String itemId, @RequestParam(value = "tenantId", required = false) String tenantId) {
 
         return Results.success(configService.findConfigAllInfo(tpId, itemId, tenantId));
     }

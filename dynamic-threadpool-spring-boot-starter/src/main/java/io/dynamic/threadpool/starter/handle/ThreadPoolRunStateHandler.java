@@ -14,7 +14,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * 线程池运行状态组件.
  */
-@Component
 public class ThreadPoolRunStateHandler {
 
     private static InetAddress addr;
@@ -28,7 +27,7 @@ public class ThreadPoolRunStateHandler {
         }
     }
 
-    public PoolRunStateInfo getPoolRunState(String tpId) {
+    public static PoolRunStateInfo getPoolRunState(String tpId) {
         DynamicThreadPoolWrap executorService = GlobalThreadPoolManage.getExecutorService(tpId);
         ThreadPoolExecutor pool = executorService.getPool();
 

@@ -32,9 +32,4 @@ public class DynamicThreadPoolProperties {
      */
     private String itemId;
 
-    /**
-     * 是否开启动态线程池
-     */
-    private boolean enabled;
-
 }

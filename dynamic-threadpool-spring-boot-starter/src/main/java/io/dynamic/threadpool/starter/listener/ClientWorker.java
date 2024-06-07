@@ -100,7 +100,7 @@ public class ClientWorker {
             // 服务端状态不正常睡眠 30s
             if (!isHealthServer) {
                 log.error("[Check config] Error. exception message, Thread sleep 30 s.");
-                Thread.sleep(30000);
+                Thread.sleep(10000);
             }
         }
 
@@ -202,6 +202,9 @@ public class ClientWorker {
      */
     public String getServerConfig(String tenantId, String itemId, String tpId, long readTimeout) {
         Map<String, String> params = new HashMap(8);
+        if ("null".equals(tenantId)) {
+            tenantId = null;
+        }
         params.put("tenantId", tenantId);
         params.put("itemId", itemId);
         params.put("tpId", tpId);

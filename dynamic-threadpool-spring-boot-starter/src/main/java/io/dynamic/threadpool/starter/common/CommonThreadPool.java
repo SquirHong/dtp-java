@@ -1,7 +1,8 @@
 package io.dynamic.threadpool.starter.common;
 
-import io.dynamic.threadpool.common.enums.QueueTypeEnum;
+
 import io.dynamic.threadpool.starter.builder.ThreadPoolBuilder;
+import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
 import io.dynamic.threadpool.starter.toolkit.thread.RejectedPolicies;
 
 import java.util.concurrent.*;

@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/dynamic_threadPool?characterEncoding=UTF-8
     username: root
-    password: 618020Hjs!
+    password: 618020Hjs
     hikari:
       connectionTimeout: 60000
       idleTimeout: 60000

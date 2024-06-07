@@ -45,7 +45,11 @@ public class ConfigCacheService {
             configService = ApplicationContextHolder.getBean(ConfigService.class);
         }
         String[] split = groupKey.split("\\+");
-
+        if (split.length == 3) {
+            if ("null".equals(split[2])) {
+                split[2] = "";
+            }
+        }
         ConfigAllInfo config = configService.findConfigAllInfo(split[0], split[1], split[2]);
         if (config != null && !StringUtils.isEmpty(config.getTpId())) {
             String md5 = Md5Util.getTpContentMd5(config);

@@ -15,12 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PoolRunStateController {
 
-    @Autowired
-    private ThreadPoolRunStateHandler threadPoolRunStateHandler;
-
     @GetMapping("/run/state/{tpId}")
     public Result<PoolRunStateInfo> getPoolRunState(@PathVariable("tpId") String tpId) {
-        PoolRunStateInfo poolRunState = threadPoolRunStateHandler.getPoolRunState(tpId);
+        PoolRunStateInfo poolRunState = ThreadPoolRunStateHandler.getPoolRunState(tpId);
         return Results.success(poolRunState);
     }
 }

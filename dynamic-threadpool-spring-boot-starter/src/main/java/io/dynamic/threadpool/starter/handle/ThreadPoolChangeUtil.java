@@ -1,7 +1,8 @@
 package io.dynamic.threadpool.starter.handle;
 
-import io.dynamic.threadpool.common.enums.QueueTypeEnum;
+
 import io.dynamic.threadpool.starter.core.ResizableCapacityLinkedBlockIngQueue;
+import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;

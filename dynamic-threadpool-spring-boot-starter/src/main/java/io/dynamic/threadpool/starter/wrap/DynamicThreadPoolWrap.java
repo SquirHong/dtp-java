@@ -26,7 +26,7 @@ public class DynamicThreadPoolWrap {
      * @param threadPoolId
      */
     public DynamicThreadPoolWrap(String threadPoolId) {
-        this(threadPoolId, null);
+        this(threadPoolId, CommonThreadPool.getInstance(threadPoolId));
     }
 
     /**

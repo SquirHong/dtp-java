@@ -76,11 +76,11 @@ INSERT IGNORE INTO `config_info` (`id`, `tenant_id`, `item_id`, `tp_id`, `core_s
                                   `queue_type`, `capacity`, `keep_alive_time`,
                                   `content`, `md5`, `is_alarm`, `capacity_alarm`,
                                   `liveness_alarm`, `gmt_create`, `gmt_modified`, `del_flag`)
-VALUES ('1', 'prescription', 'dynamic-threadpool-example', 'message-consume', '5', '10', '9',
+VALUES ('1', 'prescription', 'message-center', 'message-consume', '5', '10', '9',
         '1024', '9999',
         '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"message-consume\",\"coreSize\":5,\"maxSize\":10,\"queueType\":9,\"capacity\":1024,\"keepAliveTime\":9999,\"rejectedType\":2,\"isAlarm\":0,\"capacityAlarm\":80,\"livenessAlarm\":80,\"allowCoreThreadTimeOut\":0}',
         'f80ea89044889fb6cec20e1a517f2ec3', '0', '80', '80', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0'),
-       ('2', 'prescription', 'dynamic-threadpool-example', 'message-produce', '5', '15', '9',
+       ('2', 'prescription', 'message-center', 'message-produce', '5', '15', '9',
         '1024', '9999',
         '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"message-produce\",\"coreSize\":5,\"maxSize\":15,\"queueType\":9,\"capacity\":1024,\"keepAliveTime\":9999,\"rejectedType\":1,\"isAlarm\":0,\"capacityAlarm\":30,\"livenessAlarm\":30,\"allowCoreThreadTimeOut\":0}',
         '525e1429468bcfe98df7e70a75710051', '0', '30', '30', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0');
