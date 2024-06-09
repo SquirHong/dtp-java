@@ -40,8 +40,10 @@ public class ConfigServiceImpl implements ConfigService {
     public void insertOrUpdate(ConfigAllInfo configAllInfo) {
         try {
             addConfigInfo(configAllInfo);
+            log.info("发布配置成功，即将发布LocalDataChangeEvent content :: {}", configAllInfo.getContent());
         } catch (Exception ex) {
             updateConfigInfo(configAllInfo);
+            log.info("修改配置成功，即将发布LocalDataChangeEvent content :: {}", configAllInfo.getContent());
         }
         ConfigChangePublisher
                 .notifyConfigChange(new LocalDataChangeEvent(ContentUtil.getGroupKey(configAllInfo)));

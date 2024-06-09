@@ -21,6 +21,8 @@ public interface PoolParameter {
 
     Integer getKeepAliveTime();
 
+    Integer getRejectedType();
+
     Integer getIsAlarm();
 
     Integer getCapacityAlarm();

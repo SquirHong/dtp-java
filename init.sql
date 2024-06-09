@@ -57,6 +57,7 @@ CREATE TABLE `config_info`
     `max_size`        int(11)      DEFAULT NULL COMMENT '最大线程数',
     `queue_type`      int(11)      DEFAULT NULL COMMENT '队列类型...',
     `capacity`        int(11)      DEFAULT NULL COMMENT '队列大小',
+    `rejected_type`   int(11)      DEFAULT NULL COMMENT '拒绝策略',
     `keep_alive_time` int(11)      DEFAULT NULL COMMENT '线程存活时间（秒）',
     `content`         longtext COMMENT '线程池内容',
     `md5`             varchar(32)         NOT NULL COMMENT 'MD5',
@@ -67,23 +68,27 @@ CREATE TABLE `config_info`
     `gmt_modified`    datetime     DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
     `del_flag`        tinyint(1)   DEFAULT NULL COMMENT '是否删除',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `id` (`id`)
+    UNIQUE KEY uk_tenant_item_tp (tenant_id, item_id, tp_id) -- 添加复合唯一键约束
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4 COMMENT ='线程池配置表';
 
 INSERT IGNORE INTO `config_info` (`id`, `tenant_id`, `item_id`, `tp_id`, `core_size`, `max_size`,
-                                  `queue_type`, `capacity`, `keep_alive_time`,
+                                  `queue_type`, `capacity`, `rejected_type`, `keep_alive_time`,
                                   `content`, `md5`, `is_alarm`, `capacity_alarm`,
                                   `liveness_alarm`, `gmt_create`, `gmt_modified`, `del_flag`)
-VALUES ('1', 'prescription', 'message-center', 'message-consume', '5', '10', '9',
-        '1024', '9999',
+VALUES ('1', 'common', 'message-center', 'message-consume', '5', '10', '9',
+        '1024', '2', '9999',
         '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"message-consume\",\"coreSize\":5,\"maxSize\":10,\"queueType\":9,\"capacity\":1024,\"keepAliveTime\":9999,\"rejectedType\":2,\"isAlarm\":0,\"capacityAlarm\":80,\"livenessAlarm\":80,\"allowCoreThreadTimeOut\":0}',
         'f80ea89044889fb6cec20e1a517f2ec3', '0', '80', '80', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0'),
-       ('2', 'prescription', 'message-center', 'message-produce', '5', '15', '9',
-        '1024', '9999',
+       ('2', 'common', 'message-center', 'message-produce', '5', '15', '9',
+        '1024', '2', '9999',
         '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"message-produce\",\"coreSize\":5,\"maxSize\":15,\"queueType\":9,\"capacity\":1024,\"keepAliveTime\":9999,\"rejectedType\":1,\"isAlarm\":0,\"capacityAlarm\":30,\"livenessAlarm\":30,\"allowCoreThreadTimeOut\":0}',
-        '525e1429468bcfe98df7e70a75710051', '0', '30', '30', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0');
+        '525e1429468bcfe98df7e70a75710051', '0', '30', '30', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0'),
+       ('3', 'common', 'message-center', 'custom-pool', '3', '10', '9',
+        '1024', '2', '9999',
+        '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"custom-pool\",\"coreSize\":3,\"maxSize\":10,\"queueType\":9,\"capacity\":1024,\"keepAliveTime\":9999,\"rejectedType\":1,\"isAlarm\":0,\"capacityAlarm\":30,\"livenessAlarm\":30,\"allowCoreThreadTimeOut\":0}',
+        '525e1429468bcfe98df7e70a7532111', '0', '30', '30', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0');
 
 
 

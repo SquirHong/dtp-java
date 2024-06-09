@@ -1,9 +1,7 @@
-package io.dynamic.threadpool.starter.operation;
+package io.dynamic.threadpool.starter.core;
 
 import io.dynamic.threadpool.starter.config.DynamicThreadPoolProperties;
-import io.dynamic.threadpool.starter.core.ConfigService;
 import io.dynamic.threadpool.starter.listener.Listener;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.util.concurrent.Executor;

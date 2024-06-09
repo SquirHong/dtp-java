@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 长轮询服务
@@ -58,6 +59,7 @@ public class LongPollingService {
                 } else {
                     if (event instanceof LocalDataChangeEvent) {
                         LocalDataChangeEvent evt = (LocalDataChangeEvent) event;
+                        log.info("接收到配置变更事件，groupKey :: {}", evt.groupKey);
                         ConfigExecutor.executeLongPolling(new DataChangeTask(evt.groupKey));
                     }
                 }
@@ -193,13 +195,6 @@ public class LongPollingService {
         private void generateResponse(List<String> changedGroups) {
             if (null == changedGroups) {
                 // Tell web container to send http response.
-                HttpServletResponse response = (HttpServletResponse) asyncContext.getResponse();
-                try {
-                    response.getWriter().println("");
-                    log.info("返回空值");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
                 asyncContext.complete();
                 log.info("----------------------------------期间无配置修改------------------------------------------");
                 return;
@@ -239,13 +234,16 @@ public class LongPollingService {
             try {
                 for (Iterator<ClientLongPolling> iter = allSubs.iterator(); iter.hasNext(); ) {
                     ClientLongPolling clientSub = iter.next();
-
+                    String mapAsString = clientSub.clientMd5Map.entrySet().stream().map(entry -> "Key: " + entry.getKey() + ", Value: " + entry.getValue())
+                            .collect(Collectors.joining("\n"));
+                    log.info("DataChangeTask事件 打印clientMd5Map:\n{}", mapAsString);
                     if (clientSub.clientMd5Map.containsKey(groupKey)) {
                         getRetainIps().put(clientSub.ip, System.currentTimeMillis());
-                        
+
                         ConfigCacheService.updateMd5(groupKey, ConfigCacheService.getContentMd5(groupKey), System.currentTimeMillis());
-                        
+
                         iter.remove();
+                        log.info("移除客户端长轮询，groupKey :: {}", groupKey);
                         clientSub.sendResponse(Arrays.asList(groupKey));
                     }
                 }

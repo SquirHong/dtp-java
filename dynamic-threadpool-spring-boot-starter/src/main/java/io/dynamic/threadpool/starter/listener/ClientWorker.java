@@ -113,7 +113,7 @@ public class ClientWorker {
             List<CacheData> queryCacheDataList = cacheMap.entrySet()
                     .stream().map(each -> each.getValue()).collect(Collectors.toList());
 
-            // 变化的tpIds
+            // 开始向服务端发请求检查chacheData是否有更新
             List<String> changedTpIds = checkUpdateDataIds(queryCacheDataList);
 
             List<CacheData> cacheDataList = new ArrayList();
@@ -162,7 +162,7 @@ public class ClientWorker {
             sb.append(cacheData.getMd5()).append(WORD_SEPARATOR);
             sb.append(cacheData.tenantId).append(LINE_SEPARATOR);
         }
-
+        log.info("[check-update] checkUpdateDataIds :: {}", sb);
         return checkUpdateTpIds(sb.toString());
     }
 
@@ -182,12 +182,9 @@ public class ClientWorker {
         try {
             long readTimeoutMs = timeout + (long) Math.round(timeout >> 1);
             Result result = agent.httpPost(Constants.LISTENER_PATH, headers, params, readTimeoutMs);
-            if (result == null || result.isFail()) {
-                log.warn("[check-update] get changed dataId error, code: {}", result == null ? "error" : result.getCode());
-            } else {
+            if (result != null && result.isSuccess()) {
                 setHealthServer(true);
                 return parseUpdateDataIdResponse(result.getData().toString());
-
             }
         } catch (Exception ex) {
             setHealthServer(false);
@@ -283,6 +280,7 @@ public class ClientWorker {
         }
 
         cacheData = new CacheData(tenantId, itemId, tpId);
+        log.info("[Cache Data] Add CacheData. content = {},md5 = {}", cacheData.content, cacheData.md5);
         CacheData lastCacheData = cacheMap.putIfAbsent(tpId, cacheData);
         if (lastCacheData == null) {
             // 插入成功

@@ -1,9 +1,7 @@
-package io.dynamic.threadpool.starter.builder;
+package io.dynamic.threadpool.starter.toolkit.thread;
 
 
 import io.dynamic.threadpool.common.toolkit.Assert;
-import io.dynamic.threadpool.starter.toolkit.thread.AbstractBuildThreadPoolTemplate;
-import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
 
 import java.math.BigDecimal;
 import java.util.concurrent.*;
@@ -36,7 +34,7 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
     /**
      * 线程存活时间
      */
-    private Long keepAliveTime = 30000L;
+    private Integer keepAliveTime = 30000;
 
     /**
      * 线程存活时间单位
@@ -121,12 +119,12 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
         return this;
     }
 
-    public ThreadPoolBuilder keepAliveTime(Long keepAliveTime) {
+    public ThreadPoolBuilder keepAliveTime(Integer keepAliveTime) {
         this.keepAliveTime = keepAliveTime;
         return this;
     }
 
-    public ThreadPoolBuilder keepAliveTime(Long keepAliveTime, TimeUnit timeUnit) {
+    public ThreadPoolBuilder keepAliveTime(Integer keepAliveTime, TimeUnit timeUnit) {
         this.keepAliveTime = keepAliveTime;
         this.timeUnit = timeUnit;
         return this;

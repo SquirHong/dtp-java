@@ -8,6 +8,7 @@ import io.dynamic.threadpool.config.event.LocalDataChangeEvent;
 import io.dynamic.threadpool.config.model.CacheItem;
 import io.dynamic.threadpool.config.model.ConfigAllInfo;
 import io.dynamic.threadpool.config.notify.NotifyCenter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.Objects;
@@ -16,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Config Cache Service.
  */
+@Slf4j
 public class ConfigCacheService {
 
     static ConfigService configService = null;
@@ -40,7 +42,7 @@ public class ConfigCacheService {
         if (cacheItem != null) {
             return cacheItem.md5;
         }
-
+        log.info("服务端缓存中没有找到对应的配置，将从数据库中获取配置并计算 MD5 值---groupKey:{}", groupKey);
         if (configService == null) {
             configService = ApplicationContextHolder.getBean(ConfigService.class);
         }
@@ -53,6 +55,7 @@ public class ConfigCacheService {
         ConfigAllInfo config = configService.findConfigAllInfo(split[0], split[1], split[2]);
         if (config != null && !StringUtils.isEmpty(config.getTpId())) {
             String md5 = Md5Util.getTpContentMd5(config);
+            log.info("计算 MD5 值成功---groupKey:{}, md5:{}", groupKey, md5);
             cacheItem = new CacheItem(groupKey, md5);
             CACHE.put(groupKey, cacheItem);
         }

@@ -20,6 +20,7 @@ public class ContentUtil {
         poolInfo.setQueueType(parameter.getQueueType());
         poolInfo.setCapacity(parameter.getCapacity());
         poolInfo.setKeepAliveTime(parameter.getKeepAliveTime());
+        poolInfo.setRejectedType(parameter.getRejectedType());
         poolInfo.setIsAlarm(parameter.getIsAlarm());
         poolInfo.setCapacityAlarm(parameter.getCapacityAlarm());
         poolInfo.setLivenessAlarm(parameter.getLivenessAlarm());

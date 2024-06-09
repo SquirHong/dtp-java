@@ -1,7 +1,7 @@
-package io.dynamic.threadpool.starter.common;
+package io.dynamic.threadpool.starter.config;
 
 
-import io.dynamic.threadpool.starter.builder.ThreadPoolBuilder;
+import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolBuilder;
 import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
 import io.dynamic.threadpool.starter.toolkit.thread.RejectedPolicies;
 
@@ -17,7 +17,7 @@ public class CommonThreadPool {
                 .isCustomPool(true)
                 .threadFactory(threadPoolId)
                 .poolThreadSize(3, 5)
-                .keepAliveTime(1000L, TimeUnit.SECONDS)
+                .keepAliveTime(1000, TimeUnit.SECONDS)
                 .rejected(RejectedPolicies.runsOldestTaskPolicy())
                 .workQueue(QueueTypeEnum.RESIZABLE_LINKED_BLOCKING_QUEUE, 512)
                 .build();

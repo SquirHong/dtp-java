@@ -1,5 +1,6 @@
 package io.dynamic.threadpool.common.model;
 
+import com.alibaba.fastjson.annotation.JSONType;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,6 +11,8 @@ import static org.apache.logging.log4j.message.MapMessage.MapFormat.JSON;
  * 线程池参数
  */
 @Data
+@JSONType(orders={"tenantId", "itemId", "tpId", "content", "coreSize", "maxSize",
+        "queueType", "capacity", "keepAliveTime", "rejectedType", "isAlarm", "capacityAlarm", "livenessAlarm"})
 public class PoolParameterInfo implements PoolParameter, Serializable {
 
     private static final long serialVersionUID = -7123935122108553864L;
@@ -58,6 +61,11 @@ public class PoolParameterInfo implements PoolParameter, Serializable {
      * 线程存活时长
      */
     private Integer keepAliveTime;
+
+    /**
+     * 拒绝策略类型
+     */
+    private Integer rejectedType;
 
     /**
      * 是否告警

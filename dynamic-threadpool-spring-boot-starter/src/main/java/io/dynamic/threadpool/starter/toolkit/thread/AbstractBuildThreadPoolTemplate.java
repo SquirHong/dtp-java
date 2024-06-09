@@ -118,7 +118,7 @@ public class AbstractBuildThreadPoolTemplate {
         /**
          * 线程存活时间
          */
-        private Long keepAliveTime;
+        private Integer keepAliveTime;
 
         /**
          * 线程存活时间单位

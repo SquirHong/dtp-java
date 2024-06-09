@@ -2,7 +2,7 @@ package io.dynamic.threadpool.starter.listener;
 
 import com.alibaba.fastjson.JSON;
 import io.dynamic.threadpool.common.web.base.Result;
-import io.dynamic.threadpool.starter.common.CommonThreadPool;
+import io.dynamic.threadpool.starter.config.CommonThreadPool;
 import io.dynamic.threadpool.common.constant.Constants;
 import io.dynamic.threadpool.common.config.ApplicationContextHolder;
 import io.dynamic.threadpool.starter.config.DynamicThreadPoolProperties;
@@ -11,6 +11,8 @@ import io.dynamic.threadpool.common.model.PoolParameterInfo;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
 import io.dynamic.threadpool.starter.remote.ServerHttpAgent;
 import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
+import io.dynamic.threadpool.starter.toolkit.thread.RejectedTypeEnum;
+import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolBuilder;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
@@ -19,6 +21,7 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -55,10 +58,17 @@ public class ThreadPoolRunListener {
                 // 如果数据库有值，则将得到的参数转化为PoolParameterInfo，         没指定的tpid，则使用默认的
                 if (result.isSuccess() && (ppi = JSON.toJavaObject((JSON) result.getData(), PoolParameterInfo.class)) != null) {
                     // 使用相关参数创建线程池
-                    TimeUnit unit = TimeUnit.SECONDS;
                     BlockingQueue workQueue = QueueTypeEnum.createBlockingQueue(ppi.getQueueType(), ppi.getCapacity());
-                    ThreadPoolExecutor resultTpe = new ThreadPoolExecutor(ppi.getCoreSize(), ppi.getMaxSize(), ppi.getKeepAliveTime(), unit, workQueue);
-                    val.setPool(resultTpe);
+                    RejectedExecutionHandler rejectedExecutionHandler = RejectedTypeEnum.createPolicy(ppi.getRejectedType());
+                    ThreadPoolExecutor poolExecutor = ThreadPoolBuilder.builder()
+                            .isCustomPool(true)
+                            .poolThreadSize(ppi.getCoreSize(), ppi.getMaxSize())
+                            .keepAliveTime(ppi.getKeepAliveTime(), TimeUnit.SECONDS)
+                            .workQueue(workQueue)
+                            .threadFactory(val.getTpId())
+                            .rejected(rejectedExecutionHandler)
+                            .build();
+                    val.setPool(poolExecutor);
                 } else if (val.getPool() == null) {
                     val.setPool(CommonThreadPool.getInstance(val.getTpId()));
                 }
@@ -68,6 +78,7 @@ public class ThreadPoolRunListener {
             }
 
             GlobalThreadPoolManage.register(val.getTpId(), ppi, val);
+            log.info("[Init pool] Thread pool initialization completed. tpId :: {},ppi :: {}", val.getTpId(),ppi);
         });
     }
 

@@ -1,8 +1,7 @@
-package io.dynamic.threadpool.starter.adapter;
+package io.dynamic.threadpool.starter.core;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import io.dynamic.threadpool.common.config.ApplicationContextHolder;
-import io.dynamic.threadpool.starter.operation.ThreadPoolOperation;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
 import org.springframework.core.annotation.Order;
 

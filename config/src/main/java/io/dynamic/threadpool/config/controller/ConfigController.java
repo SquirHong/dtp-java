@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 服务端配置控制器
@@ -65,6 +66,9 @@ public class ConfigController {
         Map<String, String> clientMd5Map;
         try {
             clientMd5Map = Md5ConfigUtil.getClientMd5Map(probeModify);
+            String mapAsString = clientMd5Map.entrySet().stream().map(entry -> "Key: " + entry.getKey() + ", Value: " + entry.getValue())
+                    .collect(Collectors.joining("\n"));
+            log.info("Map content:\n{}", mapAsString);
         } catch (Throwable e) {
             throw new IllegalArgumentException("invalid probeModify");
         }
