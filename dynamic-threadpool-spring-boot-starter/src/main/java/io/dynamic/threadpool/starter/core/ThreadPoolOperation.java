@@ -1,7 +1,6 @@
 package io.dynamic.threadpool.starter.core;
 
-import io.dynamic.threadpool.starter.config.DynamicThreadPoolProperties;
-import io.dynamic.threadpool.starter.listener.Listener;
+import io.dynamic.threadpool.starter.config.BootstrapProperties;
 
 import javax.annotation.Resource;
 import java.util.concurrent.Executor;
@@ -11,13 +10,13 @@ import java.util.concurrent.Executor;
  */
 public class ThreadPoolOperation {
 
-    @Resource
-    private ConfigService configService;
+    private final ConfigService configService;
 
-    private final DynamicThreadPoolProperties properties;
+    private final BootstrapProperties properties;
 
-    public ThreadPoolOperation(DynamicThreadPoolProperties properties) {
+    public ThreadPoolOperation(BootstrapProperties properties, ConfigService configService) {
         this.properties = properties;
+        this.configService = configService;
     }
 
     public Listener subscribeConfig(String tpId, Executor executor, ThreadPoolSubscribeCallback threadPoolSubscribeCallback) {

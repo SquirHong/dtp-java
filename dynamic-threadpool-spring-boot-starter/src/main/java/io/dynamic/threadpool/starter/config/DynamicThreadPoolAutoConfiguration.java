@@ -1,13 +1,15 @@
 package io.dynamic.threadpool.starter.config;
 
-import io.dynamic.threadpool.common.config.CommonConfiguration;
-import io.dynamic.threadpool.starter.core.ThreadPoolConfigAdapter;
+import io.dynamic.threadpool.common.config.ApplicationContextHolder;
 import io.dynamic.threadpool.starter.controller.PoolRunStateController;
 import io.dynamic.threadpool.starter.core.ConfigService;
+import io.dynamic.threadpool.starter.core.DynamicThreadPoolPostProcessor;
+
 import io.dynamic.threadpool.starter.core.ThreadPoolConfigService;
-import io.dynamic.threadpool.starter.enable.DynamicThreadPoolMarkerConfiguration;
-import io.dynamic.threadpool.starter.listener.ThreadPoolRunListener;
+
 import io.dynamic.threadpool.starter.core.ThreadPoolOperation;
+import io.dynamic.threadpool.starter.enable.MarkerConfiguration;
+import io.dynamic.threadpool.starter.remote.HttpAgent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -15,6 +17,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 /**
  * 动态线程池自动装配类
@@ -22,31 +25,32 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 @AllArgsConstructor
-@EnableConfigurationProperties(DynamicThreadPoolProperties.class)
-@ConditionalOnBean(DynamicThreadPoolMarkerConfiguration.Marker.class)
-@ImportAutoConfiguration({OkHttpClientConfig.class, CommonConfiguration.class})
+@EnableConfigurationProperties(BootstrapProperties.class)
+// 动态线程池启用的开关
+@ConditionalOnBean(MarkerConfiguration.Marker.class)
+@ImportAutoConfiguration({HttpClientConfig.class, DiscoveryConfig.class})
 public class DynamicThreadPoolAutoConfiguration {
 
-    private final DynamicThreadPoolProperties properties;
+    private final BootstrapProperties properties;
 
     @Bean
-    public ConfigService configService() {
-        return new ThreadPoolConfigService(properties);
+    public ApplicationContextHolder applicationContextHolder() {
+        return new ApplicationContextHolder();
     }
 
     @Bean
-    public ThreadPoolRunListener threadPoolRunListener() {
-        return new ThreadPoolRunListener(properties);
+    public ConfigService configService(HttpAgent httpAgent) {
+        return new ThreadPoolConfigService(httpAgent);
     }
 
     @Bean
-    public ThreadPoolConfigAdapter threadPoolConfigAdapter() {
-        return new ThreadPoolConfigAdapter();
+    public ThreadPoolOperation threadPoolOperation(ConfigService configService) {
+        return new ThreadPoolOperation(properties, configService);
     }
 
     @Bean
-    public ThreadPoolOperation threadPoolOperation() {
-        return new ThreadPoolOperation(properties);
+    public DynamicThreadPoolPostProcessor threadPoolBeanPostProcessor(HttpAgent httpAgent, ThreadPoolOperation threadPoolOperation) {
+        return new DynamicThreadPoolPostProcessor(properties, httpAgent, threadPoolOperation);
     }
 
     @Bean

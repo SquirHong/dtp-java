@@ -1,11 +1,9 @@
 package io.dynamic.threadpool.starter.core;
 
 
-import io.dynamic.threadpool.starter.config.DynamicThreadPoolProperties;
+import io.dynamic.threadpool.starter.config.BootstrapProperties;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
 import io.dynamic.threadpool.starter.remote.ServerHttpAgent;
-import io.dynamic.threadpool.starter.listener.ClientWorker;
-import io.dynamic.threadpool.starter.listener.Listener;
 
 import java.util.Arrays;
 
@@ -18,8 +16,8 @@ public class ThreadPoolConfigService implements ConfigService {
 
     private final HttpAgent httpAgent;
 
-    public ThreadPoolConfigService(DynamicThreadPoolProperties properties) {
-        httpAgent = new ServerHttpAgent(properties);
+    public ThreadPoolConfigService(HttpAgent httpAgent) {
+        this.httpAgent = httpAgent;
         clientWorker = new ClientWorker(httpAgent);
     }
 

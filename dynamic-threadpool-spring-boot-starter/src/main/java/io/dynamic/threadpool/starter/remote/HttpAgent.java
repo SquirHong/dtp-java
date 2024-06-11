@@ -1,21 +1,19 @@
 package io.dynamic.threadpool.starter.remote;
 
+
 import io.dynamic.threadpool.common.web.base.Result;
 
 import java.util.Map;
 
-/**
- * Http Agent.
- */
 public interface HttpAgent {
 
     /**
-     * 开始获取 NacosIp 集合
+     * 开始获取服务集合
      */
     void start();
 
     /**
-     * 获取命名空间
+     * 获取租户id
      *
      * @return
      */
@@ -29,39 +27,36 @@ public interface HttpAgent {
     String getEncode();
 
     /**
-     * 发起 Http Get 请求
-     *
-     * @param path
-     * @param headers
-     * @param paramValues
-     * @param readTimeoutMs
+     * @param url
+     * @param body
      * @return
      */
-    Result httpGet(String path, Map<String, String> headers, Map<String, String> paramValues,
-                   long readTimeoutMs);
+    Result httpPostByDiscovery(String url, Object body);
 
     /**
-     * 发起 Http Post 请求
-     *
      * @param path
      * @param headers
      * @param paramValues
      * @param readTimeoutMs
      * @return
      */
-    Result httpPost(String path, Map<String, String> headers, Map<String, String> paramValues,
-                    long readTimeoutMs);
-
+    Result httpGetByConfig(String path, Map<String, String> headers, Map<String, String> paramValues, long readTimeoutMs);
 
     /**
-     * 发起 Http Delete 请求
-     *
      * @param path
      * @param headers
      * @param paramValues
      * @param readTimeoutMs
      * @return
      */
-    Result httpDelete(String path, Map<String, String> headers, Map<String, String> paramValues,
-                      long readTimeoutMs);
+    Result httpPostByConfig(String path, Map<String, String> headers, Map<String, String> paramValues, long readTimeoutMs);
+
+    /**
+     * @param path
+     * @param headers
+     * @param paramValues
+     * @param readTimeoutMs
+     * @return
+     */
+    Result httpDeleteByConfig(String path, Map<String, String> headers, Map<String, String> paramValues, long readTimeoutMs);
 }

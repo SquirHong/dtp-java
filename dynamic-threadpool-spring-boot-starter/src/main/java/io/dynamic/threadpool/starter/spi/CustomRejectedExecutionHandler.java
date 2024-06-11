@@ -1,4 +1,4 @@
-package io.dynamic.threadpool.starter.spi.rejected;
+package io.dynamic.threadpool.starter.spi;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

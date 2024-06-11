@@ -1,4 +1,4 @@
-package io.dynamic.threadpool.starter.spi.Exception;
+package io.dynamic.threadpool.starter.spi;
 
 /**
  * Service loader instantiation exception.

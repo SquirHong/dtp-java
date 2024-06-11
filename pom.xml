@@ -25,7 +25,6 @@
     </properties>
 
     <modules>
-        <module>alarm</module>
         <module>server</module>
         <module>example</module>
         <module>dynamic-threadpool-spring-boot-starter</module>

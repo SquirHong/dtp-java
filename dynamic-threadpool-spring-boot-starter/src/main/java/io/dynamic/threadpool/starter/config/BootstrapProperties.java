@@ -8,11 +8,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * 动态线程池配置
  */
-@Slf4j
 @Getter
 @Setter
-@ConfigurationProperties(prefix = DynamicThreadPoolProperties.PREFIX)
-public class DynamicThreadPoolProperties {
+@ConfigurationProperties(prefix = BootstrapProperties.PREFIX)
+public class BootstrapProperties {
 
     public static final String PREFIX = "spring.dynamic.thread-pool";
 

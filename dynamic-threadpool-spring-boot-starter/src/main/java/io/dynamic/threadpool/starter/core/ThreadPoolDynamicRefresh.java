@@ -24,13 +24,26 @@ public class ThreadPoolDynamicRefresh {
     }
 
     public static void refreshDynamicPool(String threadPoolId, Integer coreSize, Integer maxSize, Integer queueType, Integer capacity, Integer keepAliveTime, Integer rejectedType) {
-        ThreadPoolExecutor executor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getPool();
-        log.info("[✈] Original thread pool. coreSize :: {}, maxSize :: {}, queueType :: {}, capacity :: {}, keepAliveTime :: {}, rejectedType:: {}", executor.getCorePoolSize(), executor.getMaximumPoolSize(), queueType, executor.getQueue().remainingCapacity(), executor.getKeepAliveTime(TimeUnit.MILLISECONDS), executor.getRejectedExecutionHandler().toString());
+        ThreadPoolExecutor beforeExecutor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getPool();
+        int originalCoreSize = beforeExecutor.getCorePoolSize();
+        int originalMaximumPoolSize = beforeExecutor.getMaximumPoolSize();
+        // TODO: 2024/6/11 后续待修改
+        int originalQueryType = -1;
+        int originalCapacity = beforeExecutor.getQueue().remainingCapacity() + beforeExecutor.getQueue().size();
+        long originalKeepAliveTime = beforeExecutor.getKeepAliveTime(TimeUnit.MILLISECONDS);
+        int originalRejectedType = rejectedType;
 
-        changePoolInfo(executor, coreSize, maxSize, queueType, capacity, keepAliveTime, rejectedType);
+        changePoolInfo(beforeExecutor, coreSize, maxSize, queueType, capacity, keepAliveTime, rejectedType);
 
         ThreadPoolExecutor afterExecutor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getPool();
-        log.info("[🚀] Changed thread pool. coreSize :: {}, maxSize :: {}, queueType :: {}, capacity :: {}, keepAliveTime :: {}, rejectedType:: {}", afterExecutor.getCorePoolSize(), afterExecutor.getMaximumPoolSize(), queueType, afterExecutor.getQueue().remainingCapacity(), afterExecutor.getKeepAliveTime(TimeUnit.MILLISECONDS), afterExecutor.getRejectedExecutionHandler().toString());
+        log.info("[🔥 {}] Changed thread pool. coreSize :: [{}], maxSize :: [{}], queueType :: [{}], capacity :: [{}], keepAliveTime :: [{}], rejectedType :: [{}]",
+                threadPoolId.toUpperCase(),
+                String.format("%s=>%s", originalCoreSize, afterExecutor.getCorePoolSize()),
+                String.format("%s=>%s", originalMaximumPoolSize, afterExecutor.getMaximumPoolSize()),
+                String.format("%s=>%s", originalQueryType, queueType),
+                String.format("%s=>%s", originalCapacity, (afterExecutor.getQueue().remainingCapacity() + afterExecutor.getQueue().size())),
+                String.format("%s=>%s", originalKeepAliveTime, afterExecutor.getKeepAliveTime(TimeUnit.MILLISECONDS)),
+                String.format("%s=>%s", originalRejectedType, rejectedType));
     }
 
     public static void changePoolInfo(ThreadPoolExecutor executor, Integer coreSize, Integer maxSize, Integer queueType, Integer capacity, Integer keepAliveTime, Integer rejectedType) {

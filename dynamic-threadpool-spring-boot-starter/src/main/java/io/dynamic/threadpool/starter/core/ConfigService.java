@@ -1,6 +1,5 @@
 package io.dynamic.threadpool.starter.core;
 
-import io.dynamic.threadpool.starter.listener.Listener;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,4 +1,4 @@
-package io.dynamic.threadpool.starter.listener;
+package io.dynamic.threadpool.starter.core;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
@@ -7,7 +7,6 @@ import io.dynamic.threadpool.common.toolkit.ContentUtil;
 import io.dynamic.threadpool.common.toolkit.GroupKey;
 import io.dynamic.threadpool.common.web.base.Result;
 import io.dynamic.threadpool.common.constant.Constants;
-import io.dynamic.threadpool.starter.core.CacheData;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -181,7 +180,7 @@ public class ClientWorker {
         }
         try {
             long readTimeoutMs = timeout + (long) Math.round(timeout >> 1);
-            Result result = agent.httpPost(Constants.LISTENER_PATH, headers, params, readTimeoutMs);
+            Result result = agent.httpPostByConfig(Constants.LISTENER_PATH, headers, params, readTimeoutMs);
             if (result != null && result.isSuccess()) {
                 setHealthServer(true);
                 return parseUpdateDataIdResponse(result.getData().toString());
@@ -205,7 +204,7 @@ public class ClientWorker {
         params.put("tenantId", tenantId);
         params.put("itemId", itemId);
         params.put("tpId", tpId);
-        Result result = agent.httpGet(Constants.CONFIG_CONTROLLER_PATH, null, params, readTimeout);
+        Result result = agent.httpGetByConfig(Constants.CONFIG_CONTROLLER_PATH, null, params, readTimeout);
         if (result.isSuccess()) {
             return result.getData().toString();
         }

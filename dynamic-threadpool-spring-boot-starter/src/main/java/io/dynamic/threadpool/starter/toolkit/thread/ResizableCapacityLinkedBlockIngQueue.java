@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * 可调整大小的阻塞队列
  */
 @Slf4j
-public class ResizableCapacityLinkedBlockIngQueue extends LinkedBlockingQueue {
+public class ResizableCapacityLinkedBlockIngQueue<E> extends LinkedBlockingQueue<E> {
 
     public ResizableCapacityLinkedBlockIngQueue(int capacity) {
         super(capacity);
@@ -18,7 +18,7 @@ public class ResizableCapacityLinkedBlockIngQueue extends LinkedBlockingQueue {
     /**
      *  修改队列大小
      */
-    public boolean setCapacity(Integer capacity) {
+    public synchronized boolean setCapacity(Integer capacity) {
         boolean successFlag = true;
         try {
             ReflectUtil.setFieldValue(this, "capacity", capacity);

@@ -2,9 +2,8 @@ package io.dynamic.threadpool.starter.handle;
 
 import io.dynamic.threadpool.common.model.PoolRunStateInfo;
 import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
-import io.dynamic.threadpool.starter.wrap.CustomThreadPoolExecutor;
+import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
-import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

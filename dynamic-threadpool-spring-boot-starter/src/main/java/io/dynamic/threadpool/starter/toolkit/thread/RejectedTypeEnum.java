@@ -2,7 +2,7 @@ package io.dynamic.threadpool.starter.toolkit.thread;
 
 
 import io.dynamic.threadpool.starter.spi.DynamicThreadPoolServiceLoader;
-import io.dynamic.threadpool.starter.spi.rejected.CustomRejectedExecutionHandler;
+import io.dynamic.threadpool.starter.spi.CustomRejectedExecutionHandler;
 
 import java.util.*;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -57,6 +57,11 @@ public enum RejectedTypeEnum {
     RejectedTypeEnum(Integer type, RejectedExecutionHandler rejectedHandler) {
         this.type = type;
         this.rejectedHandler = rejectedHandler;
+    }
+
+    // 将所有实现的 CustomRejectedExecutionHandler 注册到 DynamicThreadPoolServiceLoader
+    static {
+        DynamicThreadPoolServiceLoader.register(CustomRejectedExecutionHandler.class);
     }
 
     public static RejectedExecutionHandler createPolicy(Integer type) {

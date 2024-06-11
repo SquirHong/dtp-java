@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
  * 动态线程池标记配置类
  */
 @Configuration(proxyBeanMethods = false)
-public class DynamicThreadPoolMarkerConfiguration {
+public class MarkerConfiguration {
 
     @Bean
-    public Marker dynamicThreadPoolMarkerBean() {
+    public Marker MarkerBean() {
         return new Marker();
     }
 

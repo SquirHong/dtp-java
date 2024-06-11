@@ -1,5 +1,6 @@
-package io.dynamic.threadpool.starter.wrap;
+package io.dynamic.threadpool.starter.toolkit.thread;
 
+import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolExecutorTemplate;
 import lombok.Getter;
 
 import java.security.AccessControlContext;
@@ -16,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Custom Thread Pool Wrap.
  */
 @Getter
-public final class CustomThreadPoolExecutor extends ThreadPoolExecutor {
+public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
 
     // 记录拒绝策略触发的次数
     private final AtomicInteger regectCount = new AtomicInteger();

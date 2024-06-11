@@ -2,7 +2,7 @@ package io.dynamic.threadpool.starter.remote;
 
 import io.dynamic.threadpool.common.web.base.Result;
 import io.dynamic.threadpool.common.config.ApplicationContextHolder;
-import io.dynamic.threadpool.starter.config.DynamicThreadPoolProperties;
+import io.dynamic.threadpool.starter.config.BootstrapProperties;
 import io.dynamic.threadpool.starter.toolkit.HttpClientUtil;
 
 
@@ -13,14 +13,15 @@ import java.util.Map;
  */
 public class ServerHttpAgent implements HttpAgent {
 
-    private final DynamicThreadPoolProperties dynamicThreadPoolProperties;
+    private final BootstrapProperties dynamicThreadPoolProperties;
 
     private final ServerListManager serverListManager;
 
-    private HttpClientUtil httpClientUtil = ApplicationContextHolder.getBean(HttpClientUtil.class);
+    private final HttpClientUtil httpClientUtil;
 
-    public ServerHttpAgent(DynamicThreadPoolProperties properties) {
+    public ServerHttpAgent(BootstrapProperties properties, HttpClientUtil httpClientUtil) {
         this.dynamicThreadPoolProperties = properties;
+        this.httpClientUtil = httpClientUtil;
         this.serverListManager = new ServerListManager(dynamicThreadPoolProperties);
     }
 
@@ -30,17 +31,22 @@ public class ServerHttpAgent implements HttpAgent {
     }
 
     @Override
-    public Result httpGet(String path, Map<String, String> headers, Map<String, String> paramValues, long readTimeoutMs) {
+    public Result httpPostByDiscovery(String url, Object body) {
+        return httpClientUtil.restApiPost(url, body, Result.class);
+    }
+
+    @Override
+    public Result httpGetByConfig(String path, Map<String, String> headers, Map<String, String> paramValues, long readTimeoutMs) {
         return httpClientUtil.restApiGetByThreadPool(buildUrl(path), headers, paramValues, readTimeoutMs, Result.class);
     }
 
     @Override
-    public Result httpPost(String path, Map<String, String> headers, Map<String, String> paramValues, long readTimeoutMs) {
+    public Result httpPostByConfig(String path, Map<String, String> headers, Map<String, String> paramValues, long readTimeoutMs) {
         return httpClientUtil.restApiPostByThreadPool(buildUrl(path), headers, paramValues, readTimeoutMs, Result.class);
     }
 
     @Override
-    public Result httpDelete(String path, Map<String, String> headers, Map<String, String> paramValues, long readTimeoutMs) {
+    public Result httpDeleteByConfig(String path, Map<String, String> headers, Map<String, String> paramValues, long readTimeoutMs) {
         return null;
     }
 
