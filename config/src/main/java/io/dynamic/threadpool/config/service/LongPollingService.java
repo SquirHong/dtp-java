@@ -1,6 +1,7 @@
 package io.dynamic.threadpool.config.service;
 
 import com.alibaba.fastjson.JSON;
+import io.dynamic.threadpool.common.constant.Constants;
 import io.dynamic.threadpool.common.toolkit.Md5Util;
 import io.dynamic.threadpool.common.web.base.Results;
 import io.dynamic.threadpool.config.toolkit.Md5ConfigUtil;
@@ -88,6 +89,7 @@ public class LongPollingService {
         String str = req.getHeader(LONG_POLLING_HEADER);
         String appName = req.getHeader(CLIENT_APPNAME_HEADER);
         int delayTime = SwitchService.getSwitchInteger(SwitchService.FIXED_DELAY_TIME, 500);
+        String noHangUpFlag = req.getHeader(Constants.LONG_PULLING_TIMEOUT_NO_HANGUP);
 
         long timeout = Math.max(10000, Long.parseLong(str) - delayTime);
         if (isFixedPolling()) {
@@ -96,6 +98,9 @@ public class LongPollingService {
             List<String> changedGroups = Md5ConfigUtil.compareMd5(req, clientMd5Map);
             if (changedGroups.size() > 0) {
                 generateResponse(rsp, changedGroups);
+                return;
+            } else if (noHangUpFlag != null && noHangUpFlag.equalsIgnoreCase("true")) {
+                log.info("no hang up flag is true, no hang up");
                 return;
             }
         }

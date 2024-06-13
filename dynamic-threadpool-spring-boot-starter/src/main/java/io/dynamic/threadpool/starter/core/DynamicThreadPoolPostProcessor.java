@@ -48,7 +48,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
             return bean;
         }
         DynamicThreadPoolWrap dynamicThreadPoolWrap = (DynamicThreadPoolWrap) bean;
-
+        log.info("[Init pool] Start to initialize thread pool configuration. tpId :: {}", dynamicThreadPoolWrap.getTpId());
         // 根据 TpId 向 Server 端发起请求，查询是否有远程配置
         fillPoolAndRegister(dynamicThreadPoolWrap);
         // 订阅 Server 端配置
@@ -84,10 +84,11 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                         .build();
                 dynamicThreadPoolWrap.setPool(poolExecutor);
             } else if (dynamicThreadPoolWrap.getPool() == null) {
+                log.info("[Init pool] No thread pool configuration found in DB ,Enhance the default provided thread pool.. tpId :: {}", tpId);
                 dynamicThreadPoolWrap.setPool(CommonThreadPool.getInstance(tpId));
             }
         } catch (Exception ex) {
-            log.error("[Init pool] Failed to initialize thread pool configuration. error message :: {}", ex.getMessage());
+            log.error("[Init pool] Failed to initialize thread pool configuration. error message :: {},Enhance the default provided thread pool.. ", ex.getMessage());
             dynamicThreadPoolWrap.setPool(CommonThreadPool.getInstance(tpId));
         }
 

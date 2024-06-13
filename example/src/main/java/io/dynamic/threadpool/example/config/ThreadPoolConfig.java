@@ -37,39 +37,44 @@ public class ThreadPoolConfig {
     }
 
     @Bean
+    public DynamicThreadPoolWrap messageCenterhjsThreadPool() {
+        return new DynamicThreadPoolWrap("hjs-pool");
+    }
+
+    @Bean
     public DynamicThreadPoolWrap customPool() {
         return new DynamicThreadPoolWrap(customPoolPrefix);
     }
 
-    @PostConstruct
-    public void testExecuteTask() {
-        log.info("测试线程池运行时状态接口, 30s 后开始触发拒绝策略...");
-        ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
-        scheduledThreadPool.scheduleAtFixedRate(() -> {
-            DynamicThreadPoolWrap executorService = GlobalThreadPoolManage.getExecutorService(customPoolPrefix);
-            ThreadPoolExecutor pool = executorService.getPool();
-            try {
-                pool.execute(() -> {
-                    log.info("线程池名称 :: {}, 正在执行即将进入阻塞...", Thread.currentThread().getName());
-                    try {
-                        int maxRandom = 10;
-                        int temp = 2;
-                        Random random = new Random();
-                        // 这里为了赋值线程池 completedTaskCount
-                        if (random.nextInt(maxRandom) % temp == 0) {
-                            Thread.sleep(10241024);
-                        } else {
-                            Thread.sleep(3000);
-                        }
-                    } catch (InterruptedException e) {
-                        // ignore
-                    }
-                });
-            } catch (Exception ex) {
-                // ignore
-            }
-        }, 5, 2, TimeUnit.SECONDS);
-    }
+//    @PostConstruct
+//    public void testExecuteTask() {
+//        log.info("测试线程池运行时状态接口, 30s 后开始触发拒绝策略...");
+//        ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
+//        scheduledThreadPool.scheduleAtFixedRate(() -> {
+//            DynamicThreadPoolWrap executorService = GlobalThreadPoolManage.getExecutorService(customPoolPrefix);
+//            ThreadPoolExecutor pool = executorService.getPool();
+//            try {
+//                pool.execute(() -> {
+//                    log.info("线程池名称 :: {}, 正在执行即将进入阻塞...", Thread.currentThread().getName());
+//                    try {
+//                        int maxRandom = 10;
+//                        int temp = 2;
+//                        Random random = new Random();
+//                        // 这里为了赋值线程池 completedTaskCount
+//                        if (random.nextInt(maxRandom) % temp == 0) {
+//                            Thread.sleep(10241024);
+//                        } else {
+//                            Thread.sleep(3000);
+//                        }
+//                    } catch (InterruptedException e) {
+//                        // ignore
+//                    }
+//                });
+//            } catch (Exception ex) {
+//                // ignore
+//            }
+//        }, 5, 2, TimeUnit.SECONDS);
+//    }
 
 
 }

@@ -145,8 +145,8 @@ public class AbstractBuildThreadPoolTemplate {
 
         public ThreadPoolInitParam(String threadNamePrefix, boolean isDaemon) {
             this.threadFactory = new ThreadFactoryBuilder()
-                    .setNamePrefix(threadNamePrefix + "-")
-                    .setDaemon(isDaemon)
+                    .prefix(threadNamePrefix + "-")
+                    .daemon(isDaemon)
                     .build();
         }
     }

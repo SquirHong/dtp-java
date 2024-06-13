@@ -36,5 +36,7 @@ public class Constants {
 
     public static final String LISTENING_CONFIGS = "Listening-Configs";
 
+    public static final String LONG_PULLING_TIMEOUT_NO_HANGUP = "Long-Pulling-Timeout-No-Hangup";
+
     public static final String GROUP_KEY_DELIMITER = "+";
 }

@@ -108,14 +108,13 @@ public class ClientWorker {
         public void run() {
             checkStatus();
 
-
-            List<CacheData> queryCacheDataList = cacheMap.entrySet()
+            List<CacheData> cacheDatas = cacheMap.entrySet()
                     .stream().map(each -> each.getValue()).collect(Collectors.toList());
+            List<String> inInitializingCacheList = new ArrayList<String>();
 
             // 开始向服务端发请求检查chacheData是否有更新
-            List<String> changedTpIds = checkUpdateDataIds(queryCacheDataList);
+            List<String> changedTpIds = checkUpdateDataIds(cacheDatas, inInitializingCacheList);
 
-            List<CacheData> cacheDataList = new ArrayList();
             if (!CollectionUtils.isEmpty(changedTpIds)) {
                 log.info("[dynamic threadPool] tpIds changed :: {}", changedTpIds);
                 for (String each : changedTpIds) {
@@ -130,18 +129,22 @@ public class ClientWorker {
                         CacheData cacheData = cacheMap.get(tpId);
                         String poolContent = ContentUtil.getPoolContent(JSON.parseObject(content, PoolParameterInfo.class));
                         cacheData.setContent(poolContent);
-                        cacheDataList.add(cacheData);
                         log.info("[data-received] tenantId :: {}, itemId :: {}, tpId :: {}, md5 :: {}", tenantId, itemId, tpId, cacheData.getMd5());
                     } catch (Exception ex) {
                         // ignore
                     }
                 }
 
-                for (CacheData each : cacheDataList) {
-                    each.checkListenerMd5();
+                for (CacheData cacheData : cacheDatas) {
+                    if (!cacheData.isInitializing() || inInitializingCacheList
+                            .contains(GroupKey.getKeyTenant(cacheData.tpId, cacheData.itemId, cacheData.tenantId))) {
+                        cacheData.checkListenerMd5();
+                        cacheData.setInitializing(false);
+                    }
                 }
-            }
 
+            }
+            inInitializingCacheList.clear();
             executorService.execute(this);
         }
     }
@@ -153,27 +156,39 @@ public class ClientWorker {
      * @param cacheDataList
      * @return
      */
-    private List<String> checkUpdateDataIds(List<CacheData> cacheDataList) {
+    private List<String> checkUpdateDataIds(List<CacheData> cacheDataList, List<String> inInitializingCacheList) {
         StringBuilder sb = new StringBuilder();
         for (CacheData cacheData : cacheDataList) {
             sb.append(cacheData.tpId).append(WORD_SEPARATOR);
             sb.append(cacheData.itemId).append(WORD_SEPARATOR);
             sb.append(cacheData.getMd5()).append(WORD_SEPARATOR);
             sb.append(cacheData.tenantId).append(LINE_SEPARATOR);
+
+            if (cacheData.isInitializing()) {
+                // cacheData 首次出现在cacheMap中&首次check更新
+                inInitializingCacheList
+                        .add(GroupKey.getKeyTenant(cacheData.tpId, cacheData.itemId, cacheData.tenantId));
+            }
         }
+        boolean isInitializingCacheList = !inInitializingCacheList.isEmpty();
         log.info("[check-update] checkUpdateDataIds :: {}", sb);
-        return checkUpdateTpIds(sb.toString());
+        return checkUpdateTpIds(sb.toString(), isInitializingCacheList);
     }
 
     /**
      * 检查修改的线程池 ID
      */
-    public List<String> checkUpdateTpIds(String probeUpdateString) {
+    public List<String> checkUpdateTpIds(String probeUpdateString, boolean isInitializingCacheList) {
         // 0.75 factor
         Map<String, String> params = new HashMap(2);
         params.put(Constants.PROBE_MODIFY_REQUEST, probeUpdateString);
         Map<String, String> headers = new HashMap(2);
         headers.put(Constants.LONG_PULLING_TIMEOUT, "" + timeout);
+
+        // told server do not hang me up if new initializing cacheData added in
+        if (isInitializingCacheList) {
+            headers.put("Long-Pulling-Timeout-No-Hangup", "true");
+        }
 
         if (StringUtils.isEmpty(probeUpdateString)) {
             return Collections.emptyList();
