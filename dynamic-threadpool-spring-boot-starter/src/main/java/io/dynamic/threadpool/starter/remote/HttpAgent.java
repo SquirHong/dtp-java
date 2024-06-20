@@ -27,11 +27,11 @@ public interface HttpAgent {
     String getEncode();
 
     /**
-     * @param url
+     * @param path
      * @param body
      * @return
      */
-    Result httpPostByDiscovery(String url, Object body);
+    Result httpPostByDiscovery(String path, Object body);
 
     /**
      * @param path

@@ -30,9 +30,9 @@
         <module>dynamic-threadpool-spring-boot-starter</module>
         <module>common</module>
         <module>config</module>
-        <module>registry</module>
         <module>alarm</module>
         <module>console</module>
+        <module>registry</module>
     </modules>
 
     <dependencyManagement>

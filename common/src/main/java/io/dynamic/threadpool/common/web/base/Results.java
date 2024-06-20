@@ -1,14 +1,11 @@
 package io.dynamic.threadpool.common.web.base;
 
 
-import io.dynamic.threadpool.common.web.exception.ErrorCode;
+import io.dynamic.threadpool.common.web.exception.ErrorCodeEnum;
 import io.dynamic.threadpool.common.web.exception.ServiceException;
 
 /**
  * Result 工具类
- *
- * @author chen.ma
- * @date 2021/3/19 16:12
  */
 public final class Results {
 
@@ -24,7 +21,7 @@ public final class Results {
     }
 
     public static <T> Result<T> failure(ServiceException serviceException) {
-        return new Result<T>().setCode(ErrorCode.SERVICE_ERROR.getCode())
+        return new Result<T>().setCode(ErrorCodeEnum.SERVICE_ERROR.getCode())
                 .setMessage(serviceException.getMessage());
     }
 
@@ -32,6 +29,12 @@ public final class Results {
         return new Result<T>()
                 .setCode(code)
                 .setMessage(message);
+    }
+
+    public static <T> Result<T> failure(ErrorCodeEnum errorCode) {
+        return new Result<T>()
+                .setCode(errorCode.getCode())
+                .setMessage(errorCode.getMessage());
     }
 
 }

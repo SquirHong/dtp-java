@@ -50,7 +50,7 @@ public class ClientWorker {
 
         this.executor = Executors.newScheduledThreadPool(1, r -> {
             Thread t = new Thread(r);
-            t.setName("io.dynamic.threadPool.client.Worker.executor");
+            t.setName("client.Worker.executor");
             t.setDaemon(true);
             return t;
         });
@@ -59,7 +59,7 @@ public class ClientWorker {
         this.executorService = Executors.newScheduledThreadPool(threadSize, r -> {
             Thread t = new Thread(r);
             // 长轮训
-            t.setName("io.dynamic.threadPool.client.Worker.longPolling.executor");
+            t.setName("client.Worker.longPolling.executor");
             t.setDaemon(true);
             return t;
         });

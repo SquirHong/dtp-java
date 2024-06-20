@@ -2,6 +2,7 @@ package io.dynamic.threadpool.starter.toolkit.thread;
 
 import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolExecutorTemplate;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.security.AccessControlContext;
 import java.security.AccessController;
@@ -919,22 +920,28 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
                 "]";
     }
 
+    // 计算每个任务的执行耗时
+    private ConcurrentHashMap<String, Date> statisticsTime = new ConcurrentHashMap(16);
+
+
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
+        statisticsTime.put(String.valueOf(r.hashCode()), new Date());
     }
 
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
+        Date startDate = statisticsTime.remove(String.valueOf(r.hashCode()));
+        Date finishDate = new Date();
+        long diff = finishDate.getTime() - startDate.getTime();
     }
 
     @Override
     protected void terminated() {
     }
 
+    @NoArgsConstructor
     public static class CallerRunsPolicy implements RejectedExecutionHandler {
-
-        public CallerRunsPolicy() {
-        }
 
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
@@ -944,10 +951,8 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
         }
     }
 
+    @NoArgsConstructor
     public static class AbortPolicy implements RejectedExecutionHandler {
-
-        public AbortPolicy() {
-        }
 
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
@@ -957,20 +962,16 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
         }
     }
 
+    @NoArgsConstructor
     public static class DiscardPolicy implements RejectedExecutionHandler {
-
-        public DiscardPolicy() {
-        }
 
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
         }
     }
 
+    @NoArgsConstructor
     public static class DiscardOldestPolicy implements RejectedExecutionHandler {
-
-        public DiscardOldestPolicy() {
-        }
 
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {

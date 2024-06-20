@@ -11,6 +11,9 @@
 
     <artifactId>dynamic-threadpool-registry</artifactId>
 
+    <name>${project.artifactId}</name>
+    <description>${project.artifactId}</description>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -19,8 +22,18 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dynamic-threadpool</groupId>
+            <artifactId>dynamic-threadpool-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>29.0-jre</version>
         </dependency>
     </dependencies>
 

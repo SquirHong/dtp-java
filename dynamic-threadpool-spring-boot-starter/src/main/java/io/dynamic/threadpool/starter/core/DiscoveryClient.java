@@ -1,7 +1,11 @@
 package io.dynamic.threadpool.starter.core;
 
 
+import io.dynamic.threadpool.common.constant.Constants;
+import io.dynamic.threadpool.common.model.InstanceInfo;
 import io.dynamic.threadpool.common.web.base.Result;
+import io.dynamic.threadpool.common.web.base.Results;
+import io.dynamic.threadpool.common.web.exception.ErrorCodeEnum;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
 import io.dynamic.threadpool.starter.toolkit.thread.ThreadFactoryBuilder;
 import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolBuilder;
@@ -22,21 +26,22 @@ public class DiscoveryClient {
 
     private static final String PREFIX = "DiscoveryClient_";
 
-    private String appPathIdentifier;
+    private final String appPathIdentifier;
 
-    private final InstanceConfig instanceConfig;
+    private final InstanceInfo instanceInfo;
 
-    public DiscoveryClient(HttpAgent httpAgent, InstanceConfig instanceConfig) {
+    public DiscoveryClient(HttpAgent httpAgent, InstanceInfo instanceInfo) {
         this.httpAgent = httpAgent;
-        this.instanceConfig = instanceConfig;
-        heartbeatExecutor = ThreadPoolBuilder.builder()
+        this.instanceInfo = instanceInfo;
+        this.appPathIdentifier = instanceInfo.getAppName().toUpperCase() + "/" + instanceInfo.getInstanceId();
+        this.heartbeatExecutor = ThreadPoolBuilder.builder()
                 .poolThreadSize(1, 5)
                 .keepAliveTime(0, TimeUnit.SECONDS)
                 .workQueue(new SynchronousQueue())
                 .threadFactory("DiscoveryClient-HeartbeatExecutor", true)
                 .build();
 
-        scheduler = Executors.newScheduledThreadPool(
+        this.scheduler = Executors.newScheduledThreadPool(
                 2, ThreadFactoryBuilder.builder().daemon(true).prefix("DiscoveryClient-Scheduler")
                         .build());
 
@@ -51,30 +56,30 @@ public class DiscoveryClient {
      * @return
      */
     boolean register() {
-        log.info("{} {} :: registering service...", PREFIX, appPathIdentifier);
+        log.info("{}{} - registering service...", PREFIX, appPathIdentifier);
 
-        String urlPath = "/apps/" + appPathIdentifier;
+        String urlPath = Constants.BASE_PATH + "/apps/register/";
 
         Result registerResult = null;
         try {
-            registerResult = httpAgent.httpPostByDiscovery(urlPath, instanceConfig);
+            registerResult = httpAgent.httpPostByDiscovery(urlPath, instanceInfo);
         } catch (Exception ex) {
-            log.warn("{} {} - registration failed :: {}.", PREFIX, appPathIdentifier, ex.getMessage(), ex);
-            throw ex;
+            registerResult = Results.failure(ErrorCodeEnum.SERVICE_ERROR);
+            log.error("{}{} - registration failed :: {}", PREFIX, appPathIdentifier, ex.getMessage(), ex);
         }
 
         if (log.isInfoEnabled()) {
-            log.info("{} {} - registration status: {}.", PREFIX, appPathIdentifier, registerResult.getCode());
+            log.info("{}{} - registration status :: {}", PREFIX, appPathIdentifier, registerResult.isSuccess() ? "success" : "fail");
         }
 
         return registerResult.isSuccess();
     }
 
     /**
-     * 初始化心跳任务
+     * 初始化心跳任务 30s一次
      */
     private void initScheduledTasks() {
-        scheduler.schedule(new HeartbeatThread(), 30, TimeUnit.SECONDS);
+        scheduler.scheduleWithFixedDelay(new HeartbeatThread(), 30, 30, TimeUnit.SECONDS);
     }
 
 
@@ -98,6 +103,29 @@ public class DiscoveryClient {
      * @return
      */
     boolean renew() {
-        return true;
+        Result renewResult = null;
+        try {
+            InstanceInfo.InstanceRenew instanceRenew = new InstanceInfo.InstanceRenew()
+                    .setAppName(instanceInfo.getAppName())
+                    .setInstanceId(instanceInfo.getInstanceId())
+                    .setLastDirtyTimestamp(instanceInfo.getLastDirtyTimestamp().toString())
+                    .setStatus(instanceInfo.getStatus().toString());
+
+            renewResult = httpAgent.httpPostByDiscovery(Constants.BASE_PATH + "/apps/renew", instanceRenew);
+
+            if (renewResult.getCode() == ErrorCodeEnum.NOT_FOUND.getCode()) {
+                long timestamp = instanceInfo.setIsDirtyWithTime();
+                boolean success = register();
+                if (success) {
+                    instanceInfo.unsetIsDirty(timestamp);
+                }
+                return success;
+            }
+            return renewResult.isSuccess();
+        } catch (Exception ex) {
+            log.error(PREFIX + "{} - was unable to send heartbeat!", appPathIdentifier, ex);
+            return false;
+        }
     }
+
 }

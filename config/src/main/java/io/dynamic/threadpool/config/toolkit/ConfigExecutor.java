@@ -16,9 +16,7 @@ public class ConfigExecutor {
     // 执行长轮训任务的 Executor
     private static final ScheduledExecutorService LONG_POLLING_EXECUTOR = ExecutorFactory.Managed
             .newSingleScheduledExecutorService("default group",
-                    ThreadFactoryBuilder.create()
-                            .setNamePrefix("io.dynamic.threadPool.config.LongPolling")
-                            .build());
+                    r -> new Thread(r, "long-polling"));
 
     public static void executeLongPolling(Runnable runnable) {
         LONG_POLLING_EXECUTOR.execute(runnable);
