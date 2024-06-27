@@ -71,7 +71,7 @@ public class ConfigInfoBase implements Serializable {
     /**
      * 是否告警
      */
-    private Integer isAlarm;
+    private Boolean isAlarm;
 
     /**
      * 容量告警

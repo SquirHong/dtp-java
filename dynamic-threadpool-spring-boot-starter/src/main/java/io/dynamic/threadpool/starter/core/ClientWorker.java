@@ -135,15 +135,16 @@ public class ClientWorker {
                     }
                 }
 
-                for (CacheData cacheData : cacheDatas) {
-                    if (!cacheData.isInitializing() || inInitializingCacheList
-                            .contains(GroupKey.getKeyTenant(cacheData.tpId, cacheData.itemId, cacheData.tenantId))) {
-                        cacheData.checkListenerMd5();
-                        cacheData.setInitializing(false);
-                    }
-                }
-
             }
+
+            for (CacheData cacheData : cacheDatas) {
+                if (!cacheData.isInitializing() || inInitializingCacheList
+                        .contains(GroupKey.getKeyTenant(cacheData.tpId, cacheData.itemId, cacheData.tenantId))) {
+                    cacheData.checkListenerMd5();
+                    cacheData.setInitializing(false);
+                }
+            }
+
             inInitializingCacheList.clear();
             executorService.execute(this);
         }

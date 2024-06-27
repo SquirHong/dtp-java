@@ -1,8 +1,13 @@
 package io.dynamic.threadpool.starter.toolkit.thread;
 
+import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarm;
+import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarmManage;
+import io.dynamic.threadpool.starter.toolkit.CalculateUtil;
 import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolExecutorTemplate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import java.security.AccessControlContext;
 import java.security.AccessController;
@@ -14,14 +19,20 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static io.dynamic.threadpool.starter.alarm.ThreadPoolAlarmManage.SEND_MESSAGE_SERVICE;
+
 /**
  * Custom Thread Pool Wrap.
  */
+@Slf4j
 @Getter
-public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
+public final class CustomThreadPoolExecutor extends ThreadPoolExecutor {
 
     // 记录拒绝策略触发的次数
-    private final AtomicInteger regectCount = new AtomicInteger();
+    private final AtomicInteger rejectCount = new AtomicInteger();
+    private String threadPoolId;
+    private volatile ThreadPoolAlarm threadPoolAlarm;
+
     private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
 
     private static final int COUNT_BITS = Integer.SIZE - 3;
@@ -70,8 +81,8 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
         } while (!compareAndDecrementWorkerCount(ctl.get()));
     }
 
-    public Integer getRegectCount() {
-        return regectCount.get();
+    public Integer getRejectCount() {
+        return rejectCount.get();
     }
 
     private final BlockingQueue<Runnable> workQueue;
@@ -274,7 +285,10 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
     private static final boolean ONLY_ONE = true;
 
     final void reject(Runnable command) {
-        regectCount.incrementAndGet();
+        // 记录 reject 次数
+        rejectCount.incrementAndGet();
+        // 发生拒绝策略，告警通知
+        ThreadPoolAlarmManage.checkPoolRejectAlarm(this);
         handler.rejectedExecution(command, this);
     }
 
@@ -329,7 +343,8 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
                 }
             }
         }
-
+        // 活跃度告警
+        ThreadPoolAlarmManage.checkPoolLivenessAlarm(core, this);
         boolean workerStarted = false;
         boolean workerAdded = false;
         Worker w = null;
@@ -496,43 +511,15 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
             processWorkerExit(w, completedAbruptly);
         }
     }
-
     public CustomThreadPoolExecutor(int corePoolSize,
                                     int maximumPoolSize,
                                     long keepAliveTime,
                                     TimeUnit unit,
-                                    BlockingQueue<Runnable> workQueue) {
-        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
-                Executors.defaultThreadFactory(), defaultHandler);
-    }
-
-    public CustomThreadPoolExecutor(int corePoolSize,
-                                    int maximumPoolSize,
-                                    long keepAliveTime,
-                                    TimeUnit unit,
-                                    BlockingQueue<Runnable> workQueue,
-                                    ThreadFactory threadFactory) {
-        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
-                threadFactory, defaultHandler);
-    }
-
-    public CustomThreadPoolExecutor(int corePoolSize,
-                                    int maximumPoolSize,
-                                    long keepAliveTime,
-                                    TimeUnit unit,
-                                    BlockingQueue<Runnable> workQueue,
-                                    RejectedExecutionHandler handler) {
-        this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
-                Executors.defaultThreadFactory(), handler);
-    }
-
-    public CustomThreadPoolExecutor(int corePoolSize,
-                                    int maximumPoolSize,
-                                    long keepAliveTime,
-                                    TimeUnit unit,
-                                    BlockingQueue<Runnable> workQueue,
-                                    ThreadFactory threadFactory,
-                                    RejectedExecutionHandler handler) {
+                                    @NonNull BlockingQueue<Runnable> workQueue,
+                                    @NonNull String threadPoolId,
+                                    @NonNull ThreadFactory threadFactory,
+                                    @NonNull ThreadPoolAlarm threadPoolAlarm,
+                                    @NonNull RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
         if (corePoolSize < 0 ||
                 maximumPoolSize <= 0 ||
@@ -540,25 +527,21 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
                 keepAliveTime < 0) {
             throw new IllegalArgumentException();
         }
-        if (workQueue == null || threadFactory == null || handler == null) {
-            throw new NullPointerException();
-        }
-        this.acc = System.getSecurityManager() == null ?
-                null :
-                AccessController.getContext();
+
         this.corePoolSize = corePoolSize;
         this.maximumPoolSize = maximumPoolSize;
         this.workQueue = workQueue;
+        this.threadPoolId = threadPoolId;
         this.keepAliveTime = unit.toNanos(keepAliveTime);
         this.threadFactory = threadFactory;
         this.handler = handler;
+        this.threadPoolAlarm = threadPoolAlarm;
+        this.acc = System.getSecurityManager() == null ? null : AccessController.getContext();
     }
 
     @Override
-    public void execute(Runnable command) {
-        if (command == null) {
-            throw new NullPointerException();
-        }
+    public void execute(@NonNull Runnable command) {
+        log.info("Execute command to pool, threadPoolId :: {}", threadPoolId);
         int c = ctl.get();
         if (workerCountOf(c) < corePoolSize) {
             if (addWorker(command, true)) {
@@ -566,7 +549,10 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
             }
             c = ctl.get();
         }
+        // 要放入队列 or 创建超过核心线程数的线程
         if (isRunning(c) && workQueue.offer(command)) {
+            // 容量告警
+            ThreadPoolAlarmManage.checkPoolCapacityAlarm(this);
             int recheck = ctl.get();
             if (!isRunning(recheck) && remove(command)) {
                 reject(command);
@@ -911,7 +897,7 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
         String rs = (runStateLessThan(c, SHUTDOWN) ? "Running" :
                 (runStateAtLeast(c, TERMINATED) ? "Terminated" :
                         "Shutting down"));
-        return super.toString() +
+        return
                 "[" + rs +
                 ", pool size = " + nworkers +
                 ", active threads = " + nactive +
@@ -920,19 +906,21 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutorTemplate {
                 "]";
     }
 
-    // 计算每个任务的执行耗时
+    // 计算每个任务的执行耗时，这里可以知道最大的容量有多大，就是当前线程池的最大线程数
     private ConcurrentHashMap<String, Date> statisticsTime = new ConcurrentHashMap(16);
 
 
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
-        statisticsTime.put(String.valueOf(r.hashCode()), new Date());
+        log.info("------r={}", r.hashCode()+t.hashCode());
+        statisticsTime.put(String.valueOf(r.hashCode()+t.hashCode()), new Date());
     }
 
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
-        Date startDate = statisticsTime.remove(String.valueOf(r.hashCode()));
+        Date startDate = statisticsTime.remove(String.valueOf(r.hashCode()+Thread.currentThread().hashCode()));
         Date finishDate = new Date();
+        log.info("Task execute time finishDate={},startDate={}", finishDate, startDate);
         long diff = finishDate.getTime() - startDate.getTime();
     }
 

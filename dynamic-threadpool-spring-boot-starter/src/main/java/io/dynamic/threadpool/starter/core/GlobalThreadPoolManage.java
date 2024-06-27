@@ -4,6 +4,8 @@ import io.dynamic.threadpool.common.model.PoolParameter;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
 
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -38,5 +40,29 @@ public class GlobalThreadPoolManage {
 
     public static PoolParameter getPoolParameter(String tpId) {
         return POOL_PARAMETER.get(tpId);
+    }
+
+    // 添加一个静态块或一个初始化方法来启动定时任务
+//    static {
+//        startPeriodicPrinting();
+//    }
+
+    private static void startPeriodicPrinting() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                printExecutorMap();
+            }
+        };
+
+        Timer timer = new Timer("ExecutorMapPrinter");
+        // 每隔5000毫秒（即5秒）执行一次
+        timer.schedule(task, 30L, 5000L);
+    }
+
+    private static void printExecutorMap() {
+        for (Map.Entry<String, DynamicThreadPoolWrap> entry : EXECUTOR_MAP.entrySet()) {
+            System.out.println("Thread Pool ID: " + entry.getKey() + ", Executor: " + entry.getValue());
+        }
     }
 }

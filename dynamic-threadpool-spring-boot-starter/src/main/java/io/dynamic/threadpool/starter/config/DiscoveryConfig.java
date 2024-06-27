@@ -23,7 +23,7 @@ public class DiscoveryConfig {
     public InstanceInfo instanceInfo() {
         InstanceInfo instanceInfo = new InstanceInfo();
         instanceInfo.setInstanceId(CloudCommonIdUtil.getDefaultInstanceId(environment));
-
+        instanceInfo.setIpApplicationName(CloudCommonIdUtil.getIpApplicationName(environment));
         instanceInfo.setAppName(environment.getProperty("spring.application.name"));
         instanceInfo.setHostName(InetAddress.getLocalHost().getHostAddress());
 

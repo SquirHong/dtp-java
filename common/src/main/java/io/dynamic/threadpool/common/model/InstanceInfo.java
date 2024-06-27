@@ -3,6 +3,7 @@ package io.dynamic.threadpool.common.model;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Setter
+@ToString
 public class InstanceInfo {
 
     private static final String UNKNOWN = "unknown";
@@ -19,6 +21,8 @@ public class InstanceInfo {
     private String hostName;
 
     private String instanceId;
+
+    private String ipApplicationName;
 
     private volatile String vipAddress;
 

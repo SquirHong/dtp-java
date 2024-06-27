@@ -88,6 +88,10 @@ VALUES ('1', 'common', 'message-center', 'message-consume', '5', '10', '9',
        ('3', 'common', 'message-center', 'custom-pool', '3', '10', '9',
         '1024', '2', '9999',
         '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"custom-pool\",\"coreSize\":3,\"maxSize\":10,\"queueType\":9,\"capacity\":1024,\"keepAliveTime\":9999,\"rejectedType\":1,\"isAlarm\":0,\"capacityAlarm\":30,\"livenessAlarm\":30,\"allowCoreThreadTimeOut\":0}',
+        '525e1429468bcfe98df7e70a7532111', '0', '30', '30', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0'),
+       ('4', 'common', 'message-center', 'hjs-pool', '11', '111', '9',
+        '111111', '2', '99991',
+        '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"hjs-pool\",\"coreSize\":11,\"maxSize\":111,\"queueType\":9,\"capacity\":111111,\"keepAliveTime\":99991,\"rejectedType\":1,\"isAlarm\":0,\"capacityAlarm\":30,\"livenessAlarm\":30,\"allowCoreThreadTimeOut\":0}',
         '525e1429468bcfe98df7e70a7532111', '0', '30', '30', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0');
 
 

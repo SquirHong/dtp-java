@@ -22,6 +22,7 @@
         <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <dozer.version>6.5.0</dozer.version>
+        <dingtalk-sdk.version>2.0.0</dingtalk-sdk.version>
     </properties>
 
     <modules>
@@ -83,6 +84,12 @@
             </dependency>
 
             <dependency>
+                <groupId>io.github.dynamic-threadpool</groupId>
+                <artifactId>dynamic-threadpool-alarm</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.dynamic-threadpool</groupId>
                 <artifactId>dynamic-threadpool-registry</artifactId>
                 <version>${revision}</version>
@@ -105,6 +112,13 @@
                 <artifactId>dozer-core</artifactId>
                 <version>${dozer.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>alibaba-dingtalk-service-sdk</artifactId>
+                <version>${dingtalk-sdk.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

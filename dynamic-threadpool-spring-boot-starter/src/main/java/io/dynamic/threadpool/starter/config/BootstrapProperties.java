@@ -1,9 +1,12 @@
 package io.dynamic.threadpool.starter.config;
 
+import io.dynamic.threadpool.starter.alarm.AlarmConfig;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.List;
 
 /**
  * 动态线程池配置
@@ -30,5 +33,10 @@ public class BootstrapProperties {
      * 项目 Id
      */
     private String itemId;
+
+    /**
+     * alarms
+     */
+    private List<AlarmConfig> alarms;
 
 }

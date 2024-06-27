@@ -2,6 +2,7 @@ package io.dynamic.threadpool.starter.toolkit.thread;
 
 
 import io.dynamic.threadpool.common.toolkit.Assert;
+import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarm;
 
 import java.math.BigDecimal;
 import java.util.concurrent.*;
@@ -70,6 +71,26 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
      * 线程名称前缀
      */
     private String threadNamePrefix;
+
+    /**
+     * 线程池 ID
+     */
+    private String threadPoolId;
+
+    /**
+     * 是否告警
+     */
+    private boolean isAlarm = false;
+
+    /**
+     * 容量告警
+     */
+    private Integer capacityAlarm;
+
+    /**
+     * 活跃度告警
+     */
+    private Integer livenessAlarm;
 
     /**
      * 计算公式：CPU 核数 / (1 - 阻塞系数 0.8)
@@ -168,6 +189,18 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
         return this;
     }
 
+    public ThreadPoolBuilder threadPoolId(String threadPoolId) {
+        this.threadPoolId = threadPoolId;
+        return this;
+    }
+
+    public ThreadPoolBuilder alarmConfig(boolean isAlarm, int capacityAlarm, int livenessAlarm) {
+        this.isAlarm = isAlarm;
+        this.capacityAlarm = capacityAlarm;
+        this.livenessAlarm = livenessAlarm;
+        return this;
+    }
+
     /**
      * 构建
      *
@@ -237,6 +270,12 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
                 .setCapacity(builder.capacity)
                 .setRejectedExecutionHandler(builder.rejectedExecutionHandler)
                 .setTimeUnit(builder.timeUnit);
+
+        if (builder.isCustomPool) {
+            initParam.setThreadPoolId(builder.threadPoolId);
+            ThreadPoolAlarm threadPoolAlarm = new ThreadPoolAlarm(builder.isAlarm, builder.capacityAlarm, builder.livenessAlarm);
+            initParam.setThreadPoolAlarm(threadPoolAlarm);
+        }
 
         // 快速消费线程池内置指定线程池
         if (!builder.isFastPool) {

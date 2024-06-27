@@ -79,7 +79,7 @@ public enum RejectedTypeEnum {
                     .map(each -> each.generateRejected())
                     .findFirst();
 
-            return customRejected.orElse(ABORT_POLICY.rejectedHandler);
+            return customRejected.orElse(CALLER_RUNS_POLICY.rejectedHandler);
         });
 
         return resultRejected;

@@ -12,6 +12,7 @@ import static org.apache.logging.log4j.message.MapMessage.MapFormat.JSON;
  * 线程池参数
  */
 @Data
+// 不按照此order顺序，则json序列化时会按照字母顺序
 @JSONType(orders={"tenantId", "itemId", "tpId", "content", "coreSize", "maxSize",
         "queueType", "capacity", "keepAliveTime", "rejectedType", "isAlarm", "capacityAlarm", "livenessAlarm"})
 @Accessors(chain = true)
@@ -72,7 +73,7 @@ public class PoolParameterInfo implements PoolParameter, Serializable {
     /**
      * 是否告警
      */
-    private Integer isAlarm;
+    private Boolean isAlarm;
 
     /**
      * 容量告警

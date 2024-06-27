@@ -7,6 +7,7 @@ import io.dynamic.threadpool.common.web.base.Result;
 import io.dynamic.threadpool.starter.common.CommonThreadPool;
 import io.dynamic.threadpool.starter.config.BootstrapProperties;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
+import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
 import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
 import io.dynamic.threadpool.starter.toolkit.thread.RejectedTypeEnum;
 import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolBuilder;
@@ -28,7 +29,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
     private final HttpAgent httpAgent;
 
     public DynamicThreadPoolPostProcessor(BootstrapProperties properties, HttpAgent httpAgent,
-                                       ThreadPoolOperation threadPoolOperation) {
+                                          ThreadPoolOperation threadPoolOperation) {
         this.properties = properties;
         this.httpAgent = httpAgent;
         this.threadPoolOperation = threadPoolOperation;
@@ -68,19 +69,22 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
         Result result = null;
 
         try {
+            log.info("[Init pool] Query thread pool configuration from server. ,queryStrMap :: {}", queryStrMap);
             result = httpAgent.httpGetByConfig(Constants.CONFIG_CONTROLLER_PATH, null, queryStrMap, 3000L);
             // 如果数据库有值，则将得到的参数转化为PoolParameterInfo，         没指定的tpid，则使用默认的
             if (result.isSuccess() && (ppi = JSON.toJavaObject((JSON) result.getData(), PoolParameterInfo.class)) != null) {
                 // 使用相关参数创建线程池
                 BlockingQueue workQueue = QueueTypeEnum.createBlockingQueue(ppi.getQueueType(), ppi.getCapacity());
                 RejectedExecutionHandler rejectedExecutionHandler = RejectedTypeEnum.createPolicy(ppi.getRejectedType());
-                ThreadPoolExecutor poolExecutor = ThreadPoolBuilder.builder()
+                CustomThreadPoolExecutor poolExecutor = (CustomThreadPoolExecutor) ThreadPoolBuilder.builder()
                         .isCustomPool(true)
                         .poolThreadSize(ppi.getCoreSize(), ppi.getMaxSize())
                         .keepAliveTime(ppi.getKeepAliveTime(), TimeUnit.SECONDS)
                         .workQueue(workQueue)
+                        .threadPoolId(tpId)
                         .threadFactory(tpId)
                         .rejected(rejectedExecutionHandler)
+                        .alarmConfig(ppi.getIsAlarm(), ppi.getCapacityAlarm(), ppi.getLivenessAlarm())
                         .build();
                 dynamicThreadPoolWrap.setPool(poolExecutor);
             } else if (dynamicThreadPoolWrap.getPool() == null) {
@@ -91,9 +95,8 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
             log.error("[Init pool] Failed to initialize thread pool configuration. error message :: {},Enhance the default provided thread pool.. ", ex.getMessage());
             dynamicThreadPoolWrap.setPool(CommonThreadPool.getInstance(tpId));
         }
-
+        log.info("[Init pool] Thread pool initialization completed. tpId :: {},ppi :: {},dynamicThreadPoolWrap :: {}", tpId, ppi, dynamicThreadPoolWrap);
         GlobalThreadPoolManage.register(tpId, ppi, dynamicThreadPoolWrap);
-        log.info("[Init pool] Thread pool initialization completed. tpId :: {},ppi :: {}", tpId, ppi);
     }
 
     private void subscribeConfig(DynamicThreadPoolWrap dynamicThreadPoolWrap) {

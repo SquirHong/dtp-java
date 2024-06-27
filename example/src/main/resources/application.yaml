@@ -1,6 +1,14 @@
 spring:
+  application:
+    name: dynamic-threadpool-example
+  profiles:
+    active: dev
   dynamic:
     thread-pool:
       server-addr: http://localhost:6691
       tenantId: common
       item-id: message-center
+      alarms:
+        - type: DING
+          url: https://oapi.dingtalk.com/robot/send?access_token=
+          token: 77fcf4d71ca59c7ccd6b66f09ddee44847ab276ebcf0d9e6b5ab56bae69f8468

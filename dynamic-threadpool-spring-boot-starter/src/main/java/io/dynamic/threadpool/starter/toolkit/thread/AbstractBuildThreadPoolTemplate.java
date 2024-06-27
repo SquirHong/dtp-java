@@ -1,6 +1,7 @@
 package io.dynamic.threadpool.starter.toolkit.thread;
 
 import io.dynamic.threadpool.common.toolkit.Assert;
+import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarm;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -93,9 +94,10 @@ public class AbstractBuildThreadPoolTemplate {
                         initParam.getKeepAliveTime(),
                         initParam.getTimeUnit(),
                         initParam.getWorkQueue(),
+                        initParam.getThreadPoolId(),
                         initParam.getThreadFactory(),
-                        initParam.rejectedExecutionHandler);
-
+                        initParam.getThreadPoolAlarm(),
+                        initParam.getRejectedExecutionHandler());
         return executorService;
     }
 
@@ -143,7 +145,18 @@ public class AbstractBuildThreadPoolTemplate {
          */
         private ThreadFactory threadFactory;
 
+        /**
+         * 线程 ID
+         */
+        private String threadPoolId;
+
+        /**
+         * 报警策略
+         */
+        private ThreadPoolAlarm threadPoolAlarm;
+
         public ThreadPoolInitParam(String threadNamePrefix, boolean isDaemon) {
+            this.threadPoolId = threadNamePrefix;
             this.threadFactory = new ThreadFactoryBuilder()
                     .prefix(threadNamePrefix + "-")
                     .daemon(isDaemon)
