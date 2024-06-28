@@ -3,6 +3,7 @@ package io.dynamic.threadpool.starter.toolkit.thread;
 import io.dynamic.threadpool.starter.spi.DynamicThreadPoolServiceLoader;
 import io.dynamic.threadpool.starter.spi.CustomBlockingQueue;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,42 +20,46 @@ public enum QueueTypeEnum {
     /**
      * {@link java.util.concurrent.ArrayBlockingQueue}
      */
-    ARRAY_BLOCKING_QUEUE(1),
+    ARRAY_BLOCKING_QUEUE(1, "ArrayBlockingQueue"),
 
     /**
      * {@link java.util.concurrent.LinkedBlockingQueue}
      */
-    LINKED_BLOCKING_QUEUE(2),
+    LINKED_BLOCKING_QUEUE(2, "LinkedBlockingQueue"),
 
     /**
      * {@link java.util.concurrent.LinkedBlockingDeque}
      */
-    LINKED_BLOCKING_DEQUE(3),
+    LINKED_BLOCKING_DEQUE(3, "LinkedBlockingDeque"),
 
     /**
      * {@link java.util.concurrent.SynchronousQueue}
      */
-    SYNCHRONOUS_QUEUE(4),
+    SYNCHRONOUS_QUEUE(4, "SynchronousQueue"),
 
     /**
      * {@link java.util.concurrent.LinkedTransferQueue}
      */
-    LINKED_TRANSFER_QUEUE(5),
+    LINKED_TRANSFER_QUEUE(5, "LinkedTransferQueue"),
 
     /**
      * {@link java.util.concurrent.PriorityBlockingQueue}
      */
-    PRIORITY_BLOCKING_QUEUE(6),
+    PRIORITY_BLOCKING_QUEUE(6, "PriorityBlockingQueue"),
 
     /**
      * {@link "io.dynamic.threadpool.starter.toolkit.thread.ResizableCapacityLinkedBlockIngQueue"}
      */
-    RESIZABLE_LINKED_BLOCKING_QUEUE(9);
+    RESIZABLE_LINKED_BLOCKING_QUEUE(9, "ResizableCapacityLinkedBlockIngQueue");
+
 
     public Integer type;
 
-    QueueTypeEnum(int type) {
+    public String name;
+
+    QueueTypeEnum(int type, String name) {
         this.type = type;
+        this.name = name;
     }
 
     static {
@@ -89,4 +94,13 @@ public enum QueueTypeEnum {
 
         return blockingQueue;
     }
+
+    public static String getBlockingQueueNameByType(Integer type) {
+        Optional<QueueTypeEnum> queueTypeEnum = Arrays.stream(QueueTypeEnum.values())
+                .filter(each -> each.type == type)
+                .findFirst();
+
+        return queueTypeEnum.map(each -> each.name).orElse("");
+    }
+
 }

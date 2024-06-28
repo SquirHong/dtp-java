@@ -2,6 +2,7 @@ package io.dynamic.threadpool.starter.alarm;
 
 
 
+import io.dynamic.threadpool.common.model.PoolParameterInfo;
 import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
 
 import java.util.List;
@@ -16,11 +17,19 @@ public interface SendMessageHandler {
     String getType();
 
     /**
-     * sendMessage.
+     * Send alarm message.
      *
      * @param alarmConfigs
      * @param threadPoolExecutor
      */
-    void sendMessage(List<AlarmConfig> alarmConfigs, CustomThreadPoolExecutor threadPoolExecutor);
+    void sendAlarmMessage(List<AlarmConfig> alarmConfigs, CustomThreadPoolExecutor threadPoolExecutor);
+
+    /**
+     * Send change message.
+     *
+     * @param alarmConfigs
+     * @param parameter
+     */
+    void sendChangeMessage(List<AlarmConfig> alarmConfigs, PoolParameterInfo parameter);
 
 }

@@ -2,6 +2,7 @@ package io.dynamic.threadpool.starter.alarm;
 
 import cn.hutool.log.Log;
 import io.dynamic.threadpool.common.config.ApplicationContextHolder;
+import io.dynamic.threadpool.common.model.PoolParameterInfo;
 import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +34,23 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
     }
 
     @Override
-    public void sendMessage(CustomThreadPoolExecutor threadPoolExecutor) {
+    public void sendAlarmMessage(CustomThreadPoolExecutor threadPoolExecutor) {
         for (SendMessageHandler messageHandler : sendMessageHandlers) {
             try {
-                messageHandler.sendMessage(alarmConfigs, threadPoolExecutor);
+                messageHandler.sendAlarmMessage(alarmConfigs, threadPoolExecutor);
             } catch (Exception ex) {
-                // ignore
+                log.warn("Failed to send thread pool alarm notification.", ex);
+            }
+        }
+    }
+
+    @Override
+    public void sendChangeMessage(PoolParameterInfo parameter) {
+        for (SendMessageHandler messageHandler : sendMessageHandlers) {
+            try {
+                messageHandler.sendChangeMessage(alarmConfigs, parameter);
+            } catch (Exception ex) {
+                log.warn("Failed to send thread pool change notification.", ex);
             }
         }
     }

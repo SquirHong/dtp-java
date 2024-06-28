@@ -1,6 +1,7 @@
 package io.dynamic.threadpool.starter.alarm;
 
 import io.dynamic.threadpool.common.config.ApplicationContextHolder;
+import io.dynamic.threadpool.common.model.PoolParameterInfo;
 import io.dynamic.threadpool.starter.toolkit.CalculateUtil;
 import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
 import io.dynamic.threadpool.starter.toolkit.thread.ResizableCapacityLinkedBlockIngQueue;
@@ -31,7 +32,7 @@ public class ThreadPoolAlarmManage {
         int divide = CalculateUtil.divide(queueSize, capacity);
         if (divide > threadPoolAlarm.getCapacityAlarm()) {
             log.info("要发送线程池队列容量告警");
-            SEND_MESSAGE_SERVICE.sendMessage(threadPoolExecutor);
+            SEND_MESSAGE_SERVICE.sendAlarmMessage(threadPoolExecutor);
 
         }
     }
@@ -53,7 +54,7 @@ public class ThreadPoolAlarmManage {
             int divide = CalculateUtil.divide(activeCount, maximumPoolSize);
             if (divide > threadPoolExecutor.getThreadPoolAlarm().getLivenessAlarm()) {
                 log.info("要发送线程池活跃度告警");
-                SEND_MESSAGE_SERVICE.sendMessage(threadPoolExecutor);
+                SEND_MESSAGE_SERVICE.sendAlarmMessage(threadPoolExecutor);
 
             }
         } catch (Exception e) {
@@ -70,8 +71,18 @@ public class ThreadPoolAlarmManage {
      */
     public static void checkPoolRejectAlarm(CustomThreadPoolExecutor threadPoolExecutor) {
         log.info("要发送线程池拒绝告警");
-        SEND_MESSAGE_SERVICE.sendMessage(threadPoolExecutor);
+        SEND_MESSAGE_SERVICE.sendAlarmMessage(threadPoolExecutor);
 
+    }
+
+    /**
+     * Send thread pool configuration change message.
+     *
+     * @param parameter
+     */
+    public static void sendPoolConfigChange(PoolParameterInfo parameter) {
+        log.info("Send thread pool configuration change message, parameter :: {}", parameter);
+        SEND_MESSAGE_SERVICE.sendChangeMessage(parameter);
     }
 
 }

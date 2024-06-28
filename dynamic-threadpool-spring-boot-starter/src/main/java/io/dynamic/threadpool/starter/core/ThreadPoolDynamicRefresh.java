@@ -2,7 +2,9 @@ package io.dynamic.threadpool.starter.core;
 
 import com.alibaba.fastjson.JSON;
 import io.dynamic.threadpool.common.model.PoolParameterInfo;
+import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarmManage;
 import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
+import io.dynamic.threadpool.starter.toolkit.thread.RejectedTypeEnum;
 import io.dynamic.threadpool.starter.toolkit.thread.ResizableCapacityLinkedBlockIngQueue;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,53 +21,60 @@ public class ThreadPoolDynamicRefresh {
     public static void refreshDynamicPool(String content) {
 
         PoolParameterInfo parameter = JSON.parseObject(content, PoolParameterInfo.class);
-        log.info("[🔥] Start refreshing configuration. content :: {}", parameter);
-        refreshDynamicPool(parameter.getTpId(), parameter.getCoreSize(), parameter.getMaxSize(), parameter.getQueueType(), parameter.getCapacity(), parameter.getKeepAliveTime(), parameter.getRejectedType());
+        ThreadPoolAlarmManage.sendPoolConfigChange(parameter);
+        refreshDynamicPool(parameter);
     }
 
-    public static void refreshDynamicPool(String threadPoolId, Integer coreSize, Integer maxSize, Integer queueType, Integer capacity, Integer keepAliveTime, Integer rejectedType) {
+    public static void refreshDynamicPool(PoolParameterInfo parameter) {
+        String threadPoolId = parameter.getTpId();
         ThreadPoolExecutor beforeExecutor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getPool();
+
         int originalCoreSize = beforeExecutor.getCorePoolSize();
         int originalMaximumPoolSize = beforeExecutor.getMaximumPoolSize();
-        // TODO: 2024/6/11 后续待修改
-        int originalQueryType = -1;
+        int originalQueryType = parameter.getQueueType();
         int originalCapacity = beforeExecutor.getQueue().remainingCapacity() + beforeExecutor.getQueue().size();
         long originalKeepAliveTime = beforeExecutor.getKeepAliveTime(TimeUnit.MILLISECONDS);
-        int originalRejectedType = rejectedType;
+        int originalRejectedType = parameter.getRejectedType();
 
-        changePoolInfo(beforeExecutor, coreSize, maxSize, queueType, capacity, keepAliveTime, rejectedType);
+        changePoolInfo(beforeExecutor, parameter);
 
         ThreadPoolExecutor afterExecutor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getPool();
         log.info("[🔥 {}] Changed thread pool. coreSize :: [{}], maxSize :: [{}], queueType :: [{}], capacity :: [{}], keepAliveTime :: [{}], rejectedType :: [{}]",
                 threadPoolId.toUpperCase(),
                 String.format("%s=>%s", originalCoreSize, afterExecutor.getCorePoolSize()),
                 String.format("%s=>%s", originalMaximumPoolSize, afterExecutor.getMaximumPoolSize()),
-                String.format("%s=>%s", originalQueryType, queueType),
+                String.format("%s=>%s", originalQueryType, parameter.getQueueType()),
                 String.format("%s=>%s", originalCapacity, (afterExecutor.getQueue().remainingCapacity() + afterExecutor.getQueue().size())),
                 String.format("%s=>%s", originalKeepAliveTime, afterExecutor.getKeepAliveTime(TimeUnit.MILLISECONDS)),
-                String.format("%s=>%s", originalRejectedType, rejectedType));
+                String.format("%s=>%s", originalRejectedType, parameter.getRejectedType()));
     }
 
-    public static void changePoolInfo(ThreadPoolExecutor executor, Integer coreSize, Integer maxSize, Integer queueType, Integer capacity, Integer keepAliveTime, Integer rejectedType) {
-        if (coreSize != null) {
-            executor.setCorePoolSize(coreSize);
+    public static void changePoolInfo(ThreadPoolExecutor executor, PoolParameterInfo parameter) {
+        if (parameter.getCoreSize() != null) {
+            executor.setCorePoolSize(parameter.getCoreSize());
         }
 
-        if (maxSize != null) {
-            executor.setMaximumPoolSize(maxSize);
+        if (parameter.getMaxSize() != null) {
+            executor.setMaximumPoolSize(parameter.getMaxSize());
         }
 
-        if (capacity != null && Objects.equals(QueueTypeEnum.RESIZABLE_LINKED_BLOCKING_QUEUE.type, queueType)) {
+        if (parameter.getCapacity() != null && Objects.equals(QueueTypeEnum.RESIZABLE_LINKED_BLOCKING_QUEUE.type, parameter.getQueueType())) {
+            // TODO: 2024/6/28 这里会出现tpye是 RESIZABLE_LINKED_BLOCKING_QUEUE，但是实际上队列不是 ResizableCapacityLinkedBlockIngQueue 的情况？
             if (executor.getQueue() instanceof ResizableCapacityLinkedBlockIngQueue) {
                 ResizableCapacityLinkedBlockIngQueue queue = (ResizableCapacityLinkedBlockIngQueue) executor.getQueue();
-                queue.setCapacity(capacity);
+                queue.setCapacity(parameter.getCapacity());
             } else {
                 log.warn("[Pool change] The queue length cannot be modified. Queue type mismatch. Current queue type :: {}", executor.getQueue().getClass().getSimpleName());
             }
         }
 
-        if (keepAliveTime != null) {
-            executor.setKeepAliveTime(keepAliveTime, TimeUnit.SECONDS);
+        if (parameter.getKeepAliveTime() != null) {
+            executor.setKeepAliveTime(parameter.getKeepAliveTime(), TimeUnit.SECONDS);
         }
+
+        if (parameter.getRejectedType() != null) {
+            executor.setRejectedExecutionHandler(RejectedTypeEnum.createPolicy(parameter.getRejectedType()));
+        }
+
     }
 }

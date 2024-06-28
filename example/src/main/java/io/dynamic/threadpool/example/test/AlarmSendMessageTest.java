@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class AlarmSendMessageTest {
 
-    @PostConstruct
+//    @PostConstruct
     @SuppressWarnings("all")
     public void alarmSendMessageTest() {
         ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();

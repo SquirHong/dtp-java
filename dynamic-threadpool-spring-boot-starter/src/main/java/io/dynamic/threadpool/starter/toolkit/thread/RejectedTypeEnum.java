@@ -85,4 +85,11 @@ public enum RejectedTypeEnum {
         return resultRejected;
     }
 
+    public static String getRejectedNameByType(Integer type) {
+        Optional<RejectedTypeEnum> rejectedTypeEnum = Arrays.stream(RejectedTypeEnum.values())
+                .filter(each -> each.type == type).findFirst();
+
+        return rejectedTypeEnum.map(each -> each.rejectedHandler.getClass().getSimpleName()).orElse("");
+    }
+
 }
