@@ -9,7 +9,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dynamic-threadpool-common</artifactId>
+    <artifactId>common</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>

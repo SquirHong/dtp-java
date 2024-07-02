@@ -97,6 +97,7 @@ public class LongPollingService {
         } else {
             List<String> changedGroups = Md5ConfigUtil.compareMd5(req, clientMd5Map);
             if (changedGroups.size() > 0) {
+                log.info("配置已经改变，直接返回,不进入异步servlet,changedGroups:{}", changedGroups);
                 generateResponse(rsp, changedGroups);
                 return;
             } else if (noHangUpFlag != null && noHangUpFlag.equalsIgnoreCase("true")) {

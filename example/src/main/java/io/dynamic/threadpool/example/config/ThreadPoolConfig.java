@@ -23,25 +23,29 @@ public class ThreadPoolConfig {
 
     private String customPoolPrefix = "custom-pool";
 
-    @Bean
-    public DynamicThreadPoolWrap messageCenterConsumeThreadPool() {
-        return new DynamicThreadPoolWrap(messageConsumePrefix);
-    }
+//    @Bean
+//    public DynamicThreadPoolWrap messageCenterConsumeThreadPool() {
+//        return new DynamicThreadPoolWrap(messageConsumePrefix);
+//    }
+//
+//    @Bean
+//    public DynamicThreadPoolWrap messageCenterProduceThreadPool() {
+//        return new DynamicThreadPoolWrap(messageProducePrefix);
+//    }
+//
+//    @Bean
+//    public DynamicThreadPoolWrap messageCenterhjsThreadPool() {
+//        return new DynamicThreadPoolWrap("hjs-pool");
+//    }
+//
+//    @Bean
+//    public DynamicThreadPoolWrap customPool() {
+//        return new DynamicThreadPoolWrap(customPoolPrefix);
+//    }
 
     @Bean
-    public DynamicThreadPoolWrap messageCenterProduceThreadPool() {
-        return new DynamicThreadPoolWrap(messageProducePrefix);
+    public DynamicThreadPoolWrap MMMMMMMMThreadPool() {
+        return new DynamicThreadPoolWrap("MMMMMMMM");
     }
-
-    @Bean
-    public DynamicThreadPoolWrap messageCenterhjsThreadPool() {
-        return new DynamicThreadPoolWrap("hjs-pool");
-    }
-
-    @Bean
-    public DynamicThreadPoolWrap customPool() {
-        return new DynamicThreadPoolWrap(customPoolPrefix);
-    }
-
 
 }

@@ -59,6 +59,7 @@ public class ConfigCacheService {
             cacheItem = new CacheItem(groupKey, md5);
             CACHE.put(groupKey, cacheItem);
         }
+        // TODO: 2024/6/30 nacos的配置是以控制台为准，即使客户端使用服务端未定义的groupkey，仍然进行长轮训，但当前业务更适用于C、S两端都可以定义groupkey。
         return (cacheItem != null) ? cacheItem.md5 : Constants.NULL;
     }
 

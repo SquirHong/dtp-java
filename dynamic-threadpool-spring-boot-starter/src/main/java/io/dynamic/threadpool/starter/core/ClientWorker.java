@@ -127,11 +127,12 @@ public class ClientWorker {
                     try {
                         String content = getServerConfig(tenantId, itemId, tpId, 3000L);
                         CacheData cacheData = cacheMap.get(tpId);
+                        // 这里nacos的源码中，nacos的配置content是可以为空的，但是这里的content为空时，程序会挂掉
                         String poolContent = ContentUtil.getPoolContent(JSON.parseObject(content, PoolParameterInfo.class));
                         cacheData.setContent(poolContent);
                         log.info("[data-received] tenantId :: {}, itemId :: {}, tpId :: {}, md5 :: {}", tenantId, itemId, tpId, cacheData.getMd5());
                     } catch (Exception ex) {
-                        // ignore
+                        log.error("[data-received] Error. Service Unavailable :: {}", ex.getMessage());
                     }
                 }
 
@@ -220,8 +221,10 @@ public class ClientWorker {
         params.put("tenantId", tenantId);
         params.put("itemId", itemId);
         params.put("tpId", tpId);
+        log.info("[get-server-config] tenantId :: {}, itemId :: {}, tpId :: {}, readTimeOut :: {}", tenantId, itemId, tpId, readTimeout);
         Result result = agent.httpGetByConfig(Constants.CONFIG_CONTROLLER_PATH, null, params, readTimeout);
-        if (result.isSuccess()) {
+        log.info("[get-server-config] result :: {}", result);
+        if (result.isSuccess() && result.getData() != null) {
             return result.getData().toString();
         }
 
@@ -291,6 +294,7 @@ public class ClientWorker {
     public CacheData addCacheDataIfAbsent(String tenantId, String itemId, String tpId) {
         CacheData cacheData = cacheMap.get(tpId);
         if (cacheData != null) {
+            log.info("cacheDatas中已存在CacheData. tpId = {}", tpId);
             return cacheData;
         }
 

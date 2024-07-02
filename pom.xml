@@ -73,31 +73,31 @@
 
             <dependency>
                 <groupId>io.dynamic-threadpool</groupId>
-                <artifactId>dynamic-threadpool-common</artifactId>
+                <artifactId>common</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.dynamic-threadpool</groupId>
-                <artifactId>dynamic-threadpool-config</artifactId>
+                <artifactId>config</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.dynamic-threadpool</groupId>
-                <artifactId>dynamic-threadpool-alarm</artifactId>
+                <artifactId>alarm</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.dynamic-threadpool</groupId>
-                <artifactId>dynamic-threadpool-registry</artifactId>
+                <artifactId>registry</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.dynamic-threadpool</groupId>
-                <artifactId>dynamic-threadpool-console</artifactId>
+                <artifactId>console</artifactId>
                 <version>${revision}</version>
             </dependency>
 

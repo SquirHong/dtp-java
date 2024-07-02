@@ -9,7 +9,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dynamic-threadpool-server</artifactId>
+    <artifactId>server</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -18,12 +18,12 @@
     <dependencies>
         <dependency>
             <groupId>io.dynamic-threadpool</groupId>
-            <artifactId>dynamic-threadpool-config</artifactId>
+            <artifactId>config</artifactId>
         </dependency>
 
         <dependency>
             <groupId>io.dynamic-threadpool</groupId>
-            <artifactId>dynamic-threadpool-registry</artifactId>
+            <artifactId>registry</artifactId>
         </dependency>
     </dependencies>
 
