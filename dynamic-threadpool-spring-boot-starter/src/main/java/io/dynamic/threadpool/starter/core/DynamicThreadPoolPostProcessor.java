@@ -17,6 +17,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 @Slf4j
@@ -66,6 +67,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
         queryStrMap.put("tenantId", properties.getTenantId());
 
         PoolParameterInfo ppi = new PoolParameterInfo();
+        boolean isSubscribe = false;
         Result result = null;
 
         try {
@@ -87,19 +89,23 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                         .alarmConfig(ppi.getIsAlarm(), ppi.getCapacityAlarm(), ppi.getLivenessAlarm())
                         .build();
                 dynamicThreadPoolWrap.setPool(poolExecutor);
-            } else if (dynamicThreadPoolWrap.getPool() == null) {
-                log.info("[Init pool] No thread pool configuration found in DB ,Enhance the default provided thread pool.. tpId :: {}", tpId);
-                dynamicThreadPoolWrap.setPool(CommonThreadPool.getInstance(tpId));
+                isSubscribe = true;
             }
         } catch (Exception ex) {
             log.error("[Init pool] Failed to initialize thread pool configuration. error message :: {},Enhance the default provided thread pool.. ", ex.getMessage());
             dynamicThreadPoolWrap.setPool(CommonThreadPool.getInstance(tpId));
+        }finally {
+            // 设置是否订阅远端线程池配置
+            dynamicThreadPoolWrap.setSubscribeFlag(isSubscribe);
         }
         log.info("[Init pool] Thread pool initialization completed. tpId :: {},ppi :: {},dynamicThreadPoolWrap :: {}", tpId, ppi, dynamicThreadPoolWrap);
         GlobalThreadPoolManage.register(tpId, ppi, dynamicThreadPoolWrap);
     }
 
     private void subscribeConfig(DynamicThreadPoolWrap dynamicThreadPoolWrap) {
-        threadPoolOperation.subscribeConfig(dynamicThreadPoolWrap.getTpId(), executorService, config -> ThreadPoolDynamicRefresh.refreshDynamicPool(config));
+        // 只有数据库有对应的线程池数据才会去订阅
+        if (dynamicThreadPoolWrap.isSubscribeFlag()) {
+            threadPoolOperation.subscribeConfig(dynamicThreadPoolWrap.getTpId(), executorService, config -> ThreadPoolDynamicRefresh.refreshDynamicPool(config));
+        }
     }
 }

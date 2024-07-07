@@ -19,6 +19,8 @@ public class DynamicThreadPoolWrap {
 
     private String tpId;
 
+    private boolean subscribeFlag;
+
     private CustomThreadPoolExecutor pool;
 
     /**
