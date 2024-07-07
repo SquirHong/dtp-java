@@ -8,6 +8,8 @@ public class Constants {
 
     public static final String ITEM_ID = "itemId";
 
+    public static final String TENANT_ID = "tenantId";
+
     public static final String DEFAULT_NAMESPACE_ID = "public";
 
     public static final String NULL = "";

@@ -54,7 +54,8 @@ public class DynamicThreadPoolAutoConfiguration {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE + 2)
-    public DynamicThreadPoolPostProcessor threadPoolBeanPostProcessor(HttpAgent httpAgent, ThreadPoolOperation threadPoolOperation) {
+    public DynamicThreadPoolPostProcessor threadPoolBeanPostProcessor(HttpAgent httpAgent, ThreadPoolOperation threadPoolOperation,
+                                                                      ApplicationContextHolder applicationContextHolder) {
         return new DynamicThreadPoolPostProcessor(properties, httpAgent, threadPoolOperation);
     }
 
