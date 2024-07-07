@@ -12,6 +12,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static io.dynamic.threadpool.example.constant.GlobalTestConstant.MESSAGE_PRODUCE;
+
 
 @Slf4j
 @Component
@@ -22,7 +24,7 @@ public class AlarmSendMessageTest {
     public void alarmSendMessageTest() {
         ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
         scheduledThreadPool.scheduleWithFixedDelay(() -> {
-            DynamicThreadPoolWrap executorService = GlobalThreadPoolManage.getExecutorService("custom-pool");
+            DynamicThreadPoolWrap executorService = GlobalThreadPoolManage.getExecutorService(MESSAGE_PRODUCE);
             ThreadPoolExecutor poolExecutor = executorService.getPool();
             try {
                 poolExecutor.execute(() -> ThreadUtil.sleep(10241024));

@@ -12,7 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static io.dynamic.threadpool.example.test.GlobalTestConstant.TEST_THREAD_POOL_ID;
+import static io.dynamic.threadpool.example.constant.GlobalTestConstant.MESSAGE_PRODUCE;
 
 @Slf4j
 @Component
@@ -25,7 +25,7 @@ public class RunStateHandlerTest {
 
         ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
         scheduledThreadPool.scheduleAtFixedRate(() -> {
-            DynamicThreadPoolWrap executorService = GlobalThreadPoolManage.getExecutorService(TEST_THREAD_POOL_ID);
+            DynamicThreadPoolWrap executorService = GlobalThreadPoolManage.getExecutorService(MESSAGE_PRODUCE);
             ThreadPoolExecutor pool = executorService.getPool();
             try {
                 pool.execute(() -> {
