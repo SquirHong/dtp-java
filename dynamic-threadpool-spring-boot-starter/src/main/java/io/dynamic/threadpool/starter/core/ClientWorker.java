@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static io.dynamic.threadpool.common.constant.Constants.LINE_SEPARATOR;
@@ -34,7 +35,7 @@ public class ClientWorker {
 
     private long timeout;
 
-    private boolean isHealthServer = true;
+    private AtomicBoolean isHealthServer = new AtomicBoolean(true);
 
     private final HttpAgent agent;
 
@@ -81,6 +82,7 @@ public class ClientWorker {
         double perTaskConfigSize = 3000D;
         int longingTaskCount = (int) Math.ceil(listenerSize / perTaskConfigSize);
         // 每3000个CacheData 一组
+        log.info("当前常轮训数量 currentLongingTaskCount：{},listenerSize：{}", currentLongingTaskCount, listenerSize);
         if (longingTaskCount > currentLongingTaskCount) {
             for (int i = (int) currentLongingTaskCount; i < longingTaskCount; i++) {
                 executorService.execute(new LongPollingRunnable());
@@ -96,10 +98,11 @@ public class ClientWorker {
 
         @SneakyThrows
         private void checkStatus() {
-            // 服务端状态不正常睡眠 30s
-            if (!isHealthServer) {
-                log.error("[Check config] Error. exception message, Thread sleep 30 s.");
+            // 服务端状态不正常睡眠 10s
+            if (!isHealthServer.get()) {
+                log.error("[Check config] Error. exception message, Thread sleep 10 s.");
                 Thread.sleep(10000);
+                log.info("睡眠十秒结束");
             }
         }
 
@@ -198,6 +201,9 @@ public class ClientWorker {
         try {
             long readTimeoutMs = timeout + (long) Math.round(timeout >> 1);
             Result result = agent.httpPostByConfig(Constants.LISTENER_PATH, headers, params, readTimeoutMs);
+
+            setHealthServer(true);
+
             if (result != null && result.isSuccess()) {
                 setHealthServer(true);
                 return parseUpdateDataIdResponse(result.getData().toString());
@@ -323,11 +329,11 @@ public class ClientWorker {
 
 
     public boolean isHealthServer() {
-        return this.isHealthServer;
+        return this.isHealthServer.get();
     }
 
     private void setHealthServer(boolean isHealthServer) {
-        this.isHealthServer = isHealthServer;
+        this.isHealthServer.set(isHealthServer);
     }
 
 

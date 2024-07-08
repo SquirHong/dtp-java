@@ -79,7 +79,7 @@ public class DiscoveryClient {
      * 初始化心跳任务 30s一次
      */
     private void initScheduledTasks() {
-        scheduler.scheduleWithFixedDelay(new HeartbeatThread(), 30, 30, TimeUnit.SECONDS);
+        scheduler.scheduleWithFixedDelay(new HeartbeatThread(), 10, 30, TimeUnit.SECONDS);
     }
 
 
@@ -91,6 +91,7 @@ public class DiscoveryClient {
         @Override
         public void run() {
             if (renew()) {
+                log.info("客户端实例续约成功");
                 lastSuccessfulHeartbeatTimestamp = System.currentTimeMillis();
             }
         }
@@ -113,7 +114,7 @@ public class DiscoveryClient {
 
             renewResult = httpAgent.httpPostByDiscovery(Constants.BASE_PATH + "/apps/renew", instanceRenew);
 
-            if (renewResult.getCode() == ErrorCodeEnum.NOT_FOUND.getCode()) {
+            if (ErrorCodeEnum.NOT_FOUND.getCode().equals(renewResult.getCode())) {
                 long timestamp = instanceInfo.setIsDirtyWithTime();
                 boolean success = register();
                 if (success) {
