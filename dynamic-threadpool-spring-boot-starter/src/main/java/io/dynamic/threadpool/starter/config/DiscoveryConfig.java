@@ -4,13 +4,15 @@ package io.dynamic.threadpool.starter.config;
 import io.dynamic.threadpool.common.model.InstanceInfo;
 import io.dynamic.threadpool.starter.core.DiscoveryClient;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
-import io.dynamic.threadpool.starter.toolkit.CloudCommonIdUtil;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 import java.net.InetAddress;
+
+import static io.dynamic.threadpool.starter.toolkit.CloudCommonIdUtil.getDefaultInstanceId;
+import static io.dynamic.threadpool.starter.toolkit.CloudCommonIdUtil.getIpApplicationName;
 
 
 @AllArgsConstructor
@@ -20,12 +22,17 @@ public class DiscoveryConfig {
 
     @Bean
     @SneakyThrows
-    public InstanceInfo instanceInfo() {
+    public InstanceInfo instanceConfig() {
         InstanceInfo instanceInfo = new InstanceInfo();
-        instanceInfo.setInstanceId(CloudCommonIdUtil.getDefaultInstanceId(environment));
-        instanceInfo.setIpApplicationName(CloudCommonIdUtil.getIpApplicationName(environment));
-        instanceInfo.setAppName(environment.getProperty("spring.application.name"));
-        instanceInfo.setHostName(InetAddress.getLocalHost().getHostAddress());
+        instanceInfo.setInstanceId(getDefaultInstanceId(environment))
+                .setIpApplicationName(getIpApplicationName(environment))
+                .setHostName(InetAddress.getLocalHost().getHostAddress())
+                .setAppName(environment.getProperty("spring.application.name"))
+                .setClientBasePath(environment.getProperty("server.servlet.context-path"));
+        String callBackUrl = new StringBuilder().append(instanceInfo.getHostName()).append(":")
+                .append(environment.getProperty("server.port")).append(instanceInfo.getClientBasePath())
+                .toString();
+        instanceInfo.setCallBackUrl(callBackUrl);
 
         return instanceInfo;
     }

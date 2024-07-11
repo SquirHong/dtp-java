@@ -20,6 +20,12 @@
             <groupId>io.dynamic-threadpool</groupId>
             <artifactId>config</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.dynamic-threadpool</groupId>
+            <artifactId>registry</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @ToString
+@Accessors(chain = true)
 public class InstanceInfo {
 
     private static final String UNKNOWN = "unknown";
@@ -20,9 +21,15 @@ public class InstanceInfo {
 
     private String hostName;
 
+    private String port;
+
     private String instanceId;
 
     private String ipApplicationName;
+
+    private String clientBasePath;
+
+    private String callBackUrl;
 
     private volatile String vipAddress;
 
