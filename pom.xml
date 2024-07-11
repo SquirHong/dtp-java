@@ -23,6 +23,8 @@
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <dozer.version>6.5.0</dozer.version>
         <dingtalk-sdk.version>2.0.0</dingtalk-sdk.version>
+        <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
+        <transmittable-thread-local.version>2.12.1</transmittable-thread-local.version>
     </properties>
 
     <modules>
@@ -34,6 +36,7 @@
         <module>alarm</module>
         <module>console</module>
         <module>registry</module>
+        <module>log-record-tool</module>
     </modules>
 
     <dependencyManagement>
@@ -102,6 +105,12 @@
             </dependency>
 
             <dependency>
+                <groupId>io.dynamic-threadpool</groupId>
+                <artifactId>log-record-tool</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
@@ -117,6 +126,18 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>alibaba-dingtalk-service-sdk</artifactId>
                 <version>${dingtalk-sdk.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
             </dependency>
 
 
