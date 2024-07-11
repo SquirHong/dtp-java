@@ -29,7 +29,7 @@ public class TenantController {
 
     @GetMapping("/query/{tenantId}")
     public Result<TenantRespDTO> queryTenant(@PathVariable("tenantId") String tenantId) {
-        return Results.success(tenantService.getTenantById(tenantId));
+        return Results.success(tenantService.getTenantByTenantId(tenantId));
     }
 
     @PostMapping("/save")

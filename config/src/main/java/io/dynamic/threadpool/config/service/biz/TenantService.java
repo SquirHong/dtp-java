@@ -12,12 +12,20 @@ import io.dynamic.threadpool.config.model.biz.tenant.TenantUpdateReqDTO;
 public interface TenantService {
 
     /**
-     * 根据 Id 获取租户
+     * Get tenant by id.
      *
-     * @param tenantIdId
+     * @param id
      * @return
      */
-    TenantRespDTO getTenantById(String tenantIdId);
+    TenantRespDTO getTenantById(String id);
+
+    /**
+     * Get tenant by tenantId.
+     *
+     * @param tenantId
+     * @return
+     */
+    TenantRespDTO getTenantByTenantId(String tenantId);
 
     /**
      * 分页查询租户

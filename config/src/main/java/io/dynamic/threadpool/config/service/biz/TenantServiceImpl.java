@@ -36,7 +36,12 @@ public class TenantServiceImpl implements TenantService {
     private TenantInfoMapper tenantInfoMapper;
 
     @Override
-    public TenantRespDTO getTenantById(String tenantId) {
+    public TenantRespDTO getTenantById(String id) {
+        return BeanUtil.convert(tenantInfoMapper.selectById(id), TenantRespDTO.class);
+    }
+
+    @Override
+    public TenantRespDTO getTenantByTenantId(String tenantId) {
         LambdaQueryWrapper<TenantInfo> queryWrapper = Wrappers
                 .lambdaQuery(TenantInfo.class).eq(TenantInfo::getTenantId, tenantId);
         TenantInfo tenantInfo = tenantInfoMapper.selectOne(queryWrapper);
