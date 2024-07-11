@@ -53,7 +53,7 @@ public class BeanUtil {
         return Optional.ofNullable(sources)
                 .map(each -> {
                     List<T> targetList = new ArrayList<T>(each.size());
-                    each.parallelStream()
+                    each.stream()
                             .forEach(item -> targetList.add(BEAN_MAPPER_BUILDER.map(item, clazz)));
                     return targetList;
                 })
@@ -73,7 +73,7 @@ public class BeanUtil {
         return Optional.ofNullable(sources)
                 .map(each -> {
                     Set<T> targetSize = new HashSet<T>(each.size());
-                    each.parallelStream()
+                    each.stream()
                             .forEach(item -> targetSize.add(BEAN_MAPPER_BUILDER.map(item, clazz)));
                     return targetSize;
                 })
