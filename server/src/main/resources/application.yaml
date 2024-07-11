@@ -1,6 +1,9 @@
 server:
   port: 6691
 
+
+tenant: dtp
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
