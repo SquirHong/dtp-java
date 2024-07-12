@@ -25,6 +25,7 @@
         <dingtalk-sdk.version>2.0.0</dingtalk-sdk.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
         <transmittable-thread-local.version>2.12.1</transmittable-thread-local.version>
+        <guava.version>29.0-jre</guava.version>
     </properties>
 
     <modules>
@@ -138,6 +139,12 @@
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>${hibernate-validator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
 
 

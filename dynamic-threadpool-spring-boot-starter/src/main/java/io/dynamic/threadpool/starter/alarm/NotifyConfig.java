@@ -3,7 +3,7 @@ package io.dynamic.threadpool.starter.alarm;
 import lombok.Data;
 
 @Data
-public class AlarmConfig {
+public class NotifyConfig {
 
     /**
      * type
@@ -19,5 +19,10 @@ public class AlarmConfig {
      * token
      */
     private String token;
+
+    /**
+     * receives
+     */
+    private String receives;
 
 }

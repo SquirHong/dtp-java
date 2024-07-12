@@ -23,7 +23,7 @@ public class MessageAlarmConfig {
     @Bean
     @DependsOn("applicationContextHolder")
     public SendMessageService sendMessageService() {
-        return new BaseSendMessageService(properties.getAlarms());
+        return new BaseSendMessageService(properties.getNotifys());
     }
 
     // 注入钉钉消息通知处理器
