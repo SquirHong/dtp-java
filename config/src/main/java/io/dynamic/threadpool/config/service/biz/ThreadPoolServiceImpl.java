@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import io.dynamic.threadpool.config.enums.DelEnum;
 import io.dynamic.threadpool.config.mapper.ConfigInfoMapper;
 import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolQueryReqDTO;
 import io.dynamic.threadpool.config.model.ConfigAllInfo;
@@ -33,7 +34,8 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
         LambdaQueryWrapper<ConfigAllInfo> wrapper = Wrappers.lambdaQuery(ConfigAllInfo.class)
                 .eq(!StringUtils.isBlank(reqDTO.getTenantId()), ConfigAllInfo::getTenantId, reqDTO.getTenantId())
                 .eq(!StringUtils.isBlank(reqDTO.getItemId()), ConfigAllInfo::getItemId, reqDTO.getItemId())
-                .eq(!StringUtils.isBlank(reqDTO.getTpId()), ConfigAllInfo::getTpId, reqDTO.getTpId());
+                .eq(!StringUtils.isBlank(reqDTO.getTpId()), ConfigAllInfo::getTpId, reqDTO.getTpId())
+                .eq(ConfigAllInfo::getDelFlag, DelEnum.DELETE);
         return configInfoMapper.selectPage(reqDTO, wrapper).convert(each -> BeanUtil.convert(each, ThreadPoolRespDTO.class));
     }
 

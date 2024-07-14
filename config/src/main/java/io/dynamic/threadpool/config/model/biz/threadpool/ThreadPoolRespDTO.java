@@ -47,6 +47,11 @@ public class ThreadPoolRespDTO {
     private Integer queueType;
 
     /**
+     * queueName
+     */
+    private String queueName;
+
+    /**
      * 队列长度
      */
     private Integer capacity;
@@ -70,6 +75,11 @@ public class ThreadPoolRespDTO {
      * 活跃度告警
      */
     private Integer livenessAlarm;
+
+    /**
+     * rejectedType
+     */
+    private Integer rejectedType;
 
     /**
      * 创建时间

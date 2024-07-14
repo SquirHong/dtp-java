@@ -1,7 +1,5 @@
 package io.dynamic.threadpool.config.model.biz.threadpool;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 /**
@@ -64,5 +62,10 @@ public class ThreadPoolSaveOrUpdateReqDTO {
      * 活跃度告警
      */
     private Integer livenessAlarm;
+
+    /**
+     * 拒绝策略类型
+     */
+    private Integer rejectedType;
 
 }
