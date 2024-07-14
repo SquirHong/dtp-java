@@ -2,10 +2,13 @@ package io.dynamic.threadpool.starter.alarm;
 
 import io.dynamic.threadpool.common.config.ApplicationContextHolder;
 import io.dynamic.threadpool.common.model.PoolParameterInfo;
+import io.dynamic.threadpool.starter.config.MessageAlarmConfig;
 import io.dynamic.threadpool.starter.toolkit.CalculateUtil;
 import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
 import io.dynamic.threadpool.starter.toolkit.thread.ResizableCapacityLinkedBlockIngQueue;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
 
 @Slf4j
 public class ThreadPoolAlarmManage {
@@ -14,7 +17,9 @@ public class ThreadPoolAlarmManage {
 
     static {
         log.info("ThreadPoolAlarmManage init before");
-        SEND_MESSAGE_SERVICE = ApplicationContextHolder.getBean("sendMessageService", SendMessageService.class);
+        SEND_MESSAGE_SERVICE = Optional.ofNullable(ApplicationContextHolder.getInstance())
+                .map(each -> each.getBean(MessageAlarmConfig.SEND_MESSAGE_BEAN_NAME, SendMessageService.class))
+                .orElse(null);
         log.info("ThreadPoolAlarmManage init success");
     }
 
@@ -24,6 +29,9 @@ public class ThreadPoolAlarmManage {
      * @param threadPoolExecutor
      */
     public static void checkPoolCapacityAlarm(CustomThreadPoolExecutor threadPoolExecutor) {
+        if (SEND_MESSAGE_SERVICE == null) {
+            return;
+        }
         ThreadPoolAlarm threadPoolAlarm = threadPoolExecutor.getThreadPoolAlarm();
         ResizableCapacityLinkedBlockIngQueue blockIngQueue = (ResizableCapacityLinkedBlockIngQueue) threadPoolExecutor.getQueue();
 
@@ -46,7 +54,7 @@ public class ThreadPoolAlarmManage {
     public static void checkPoolLivenessAlarm(boolean isCore, CustomThreadPoolExecutor threadPoolExecutor) {
         log.info("checkPoolLivenessAlarm");
         try {
-            if (isCore) {
+            if (isCore || SEND_MESSAGE_SERVICE == null) {
                 return;
             }
             int activeCount = threadPoolExecutor.getActiveCount();
@@ -70,6 +78,9 @@ public class ThreadPoolAlarmManage {
      * @param threadPoolExecutor
      */
     public static void checkPoolRejectAlarm(CustomThreadPoolExecutor threadPoolExecutor) {
+        if (SEND_MESSAGE_SERVICE == null) {
+            return;
+        }
         log.info("要发送线程池拒绝告警");
         SEND_MESSAGE_SERVICE.sendAlarmMessage(threadPoolExecutor);
 
@@ -81,6 +92,9 @@ public class ThreadPoolAlarmManage {
      * @param parameter
      */
     public static void sendPoolConfigChange(PoolParameterInfo parameter) {
+        if (SEND_MESSAGE_SERVICE == null) {
+            return;
+        }
         log.info("Send thread pool configuration change message, parameter :: {}", parameter);
         SEND_MESSAGE_SERVICE.sendChangeMessage(parameter);
     }

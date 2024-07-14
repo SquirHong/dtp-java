@@ -20,8 +20,10 @@ public class MessageAlarmConfig {
 
     private ConfigurableEnvironment environment;
 
-    @Bean
+    public static final String SEND_MESSAGE_BEAN_NAME = "sendMessageService";
+
     @DependsOn("applicationContextHolder")
+    @Bean(SEND_MESSAGE_BEAN_NAME)
     public SendMessageService sendMessageService() {
         return new BaseSendMessageService(properties.getNotifys());
     }
