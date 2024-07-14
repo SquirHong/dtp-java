@@ -14,8 +14,7 @@ import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
 import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
 import io.dynamic.threadpool.starter.toolkit.thread.RejectedTypeEnum;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
@@ -34,15 +33,15 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Component
 public class DingSendMessageHandler implements SendMessageHandler {
 
-    @NonNull
     private String active;
 
-    @NonNull
     private InstanceInfo instanceInfo;
+
+    private Long alarmInterval;
 
     private static final String secret = "SECb7b4f4e8e1b7a5b27b096e036973c2f648d4da94d85fea403bf3cc85b5c5f2be";
 
@@ -114,7 +113,7 @@ public class DingSendMessageHandler implements SendMessageHandler {
                         "<font color='#708090' size=2>拒绝策略：%s</font> \n\n" +
                         "<font color='#708090' size=2>拒绝策略执行次数：</font><font color='#FF0000' size=2>%d</font> \n\n " +
                         "<font color='#708090' size=2>OWNER：@%s</font> \n\n" +
-                        "<font color='#708090' size=2>提示：5 分钟内此线程池不会重复告警（可配置）</font> \n\n" +
+                        "<font color='#708090' size=2>提示：%d 分钟内此线程池不会重复告警（可配置）</font> \n\n" +
                         " --- \n\n  " +
                         "**播报时间：%s**",
 
@@ -150,6 +149,8 @@ public class DingSendMessageHandler implements SendMessageHandler {
                 pool.getRejectCount(),
                 // 告警手机号
                 afterReceives,
+                // 报警频率
+                alarmInterval,
                 // 当前时间
                 DateUtil.now()
 

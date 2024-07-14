@@ -38,4 +38,9 @@ public class BootstrapProperties {
      */
     private List<NotifyConfig> notifys;
 
+    /**
+     * Alarm interval
+     */
+    private Long alarmInterval;
+
 }

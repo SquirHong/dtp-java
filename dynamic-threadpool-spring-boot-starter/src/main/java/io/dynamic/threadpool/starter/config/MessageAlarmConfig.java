@@ -1,15 +1,14 @@
 package io.dynamic.threadpool.starter.config;
 
 import io.dynamic.threadpool.common.model.InstanceInfo;
-import io.dynamic.threadpool.starter.alarm.BaseSendMessageService;
-import io.dynamic.threadpool.starter.alarm.DingSendMessageHandler;
-import io.dynamic.threadpool.starter.alarm.SendMessageHandler;
-import io.dynamic.threadpool.starter.alarm.SendMessageService;
+import io.dynamic.threadpool.starter.alarm.*;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.ConfigurableEnvironment;
+
+import java.util.Optional;
 
 @AllArgsConstructor
 public class MessageAlarmConfig {
@@ -28,11 +27,19 @@ public class MessageAlarmConfig {
         return new BaseSendMessageService(properties.getNotifys());
     }
 
+    // 注入报警控制处理器
+    @Bean
+    public AlarmControlHandler alarmControlHandler() {
+        Long alarmInterval = properties.getAlarmInterval();
+        return new AlarmControlHandler(alarmInterval);
+    }
+
     // 注入钉钉消息通知处理器
     @Bean
     public SendMessageHandler dingSendMessageHandler() {
         String active = environment.getProperty("spring.profiles.active", Strings.EMPTY);
-        return new DingSendMessageHandler(active, instanceInfo);
+        Long alarmInterval = Optional.ofNullable(properties.getAlarmInterval()).orElse(3L);
+        return new DingSendMessageHandler(active, instanceInfo,alarmInterval);
     }
 
 }

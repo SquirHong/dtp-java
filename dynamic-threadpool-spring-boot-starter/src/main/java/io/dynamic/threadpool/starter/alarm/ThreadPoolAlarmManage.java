@@ -8,19 +8,27 @@ import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
 import io.dynamic.threadpool.starter.toolkit.thread.ResizableCapacityLinkedBlockIngQueue;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @Slf4j
 public class ThreadPoolAlarmManage {
 
+    public static HashMap<String, AlarmControlDTO> currentAlarmMap = new HashMap<>();
+
     public static final SendMessageService SEND_MESSAGE_SERVICE;
 
+    /**
+     * 报警间隔控制
+     */
+    private static final AlarmControlHandler ALARM_CONTROL_HANDLER;
+
     static {
-        log.info("ThreadPoolAlarmManage init before");
         SEND_MESSAGE_SERVICE = Optional.ofNullable(ApplicationContextHolder.getInstance())
                 .map(each -> each.getBean(MessageAlarmConfig.SEND_MESSAGE_BEAN_NAME, SendMessageService.class))
                 .orElse(null);
         log.info("ThreadPoolAlarmManage init success");
+        ALARM_CONTROL_HANDLER = ApplicationContextHolder.getInstance().getBean(AlarmControlHandler.class);
     }
 
     /**
@@ -38,7 +46,7 @@ public class ThreadPoolAlarmManage {
         int queueSize = blockIngQueue.size();
         int capacity = queueSize + blockIngQueue.remainingCapacity();
         int divide = CalculateUtil.divide(queueSize, capacity);
-        if (divide > threadPoolAlarm.getCapacityAlarm()) {
+        if ((divide > threadPoolAlarm.getCapacityAlarm()) && isSendMessage(threadPoolExecutor, MessageTypeEnum.CAPACITY)) {
             log.info("要发送线程池队列容量告警");
             SEND_MESSAGE_SERVICE.sendAlarmMessage(threadPoolExecutor);
 
@@ -54,7 +62,7 @@ public class ThreadPoolAlarmManage {
     public static void checkPoolLivenessAlarm(boolean isCore, CustomThreadPoolExecutor threadPoolExecutor) {
         log.info("checkPoolLivenessAlarm");
         try {
-            if (isCore || SEND_MESSAGE_SERVICE == null) {
+            if (isCore || SEND_MESSAGE_SERVICE == null || !isSendMessage(threadPoolExecutor, MessageTypeEnum.LIVENESS)) {
                 return;
             }
             int activeCount = threadPoolExecutor.getActiveCount();
@@ -78,7 +86,7 @@ public class ThreadPoolAlarmManage {
      * @param threadPoolExecutor
      */
     public static void checkPoolRejectAlarm(CustomThreadPoolExecutor threadPoolExecutor) {
-        if (SEND_MESSAGE_SERVICE == null) {
+        if (SEND_MESSAGE_SERVICE == null || !isSendMessage(threadPoolExecutor, MessageTypeEnum.REJECT)) {
             return;
         }
         log.info("要发送线程池拒绝告警");
@@ -97,6 +105,16 @@ public class ThreadPoolAlarmManage {
         }
         log.info("Send thread pool configuration change message, parameter :: {}", parameter);
         SEND_MESSAGE_SERVICE.sendChangeMessage(parameter);
+    }
+
+    private static boolean isSendMessage(CustomThreadPoolExecutor threadPoolExecutor, MessageTypeEnum typeEnum) {
+        AlarmControlDTO alarmControlDTO = currentAlarmMap.computeIfAbsent(
+                threadPoolExecutor.getThreadPoolId() + typeEnum,
+                key -> AlarmControlDTO.builder()
+                        .threadPool(threadPoolExecutor.getThreadPoolId())
+                        .typeEnum(typeEnum)
+                        .build());
+        return ALARM_CONTROL_HANDLER.isSend(alarmControlDTO);
     }
 
 }
