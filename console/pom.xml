@@ -26,6 +26,11 @@
             <artifactId>registry</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.dynamic-threadpool</groupId>
+            <artifactId>auth</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
