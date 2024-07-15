@@ -3,8 +3,8 @@ package io.dynamic.threadpool.starter.handle;
 import io.dynamic.threadpool.common.model.PoolRunStateInfo;
 import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
 import io.dynamic.threadpool.starter.toolkit.CalculateUtil;
-import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
-import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
+import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
+import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
@@ -30,7 +30,7 @@ public class ThreadPoolRunStateHandler {
     }
 
     public static PoolRunStateInfo getPoolRunState(String tpId) {
-        DynamicThreadPoolWrap executorService = GlobalThreadPoolManage.getExecutorService(tpId);
+        DynamicThreadPoolWrapper executorService = GlobalThreadPoolManage.getExecutorService(tpId);
         ThreadPoolExecutor pool = executorService.getPool();
 
         // 核心线程数
@@ -76,8 +76,8 @@ public class ThreadPoolRunStateHandler {
         stateInfo.setHost(addr.getHostAddress());
         stateInfo.setTpId(tpId);
 
-        int rejectCount = pool instanceof CustomThreadPoolExecutor
-                ? ((CustomThreadPoolExecutor) pool).getRejectCount()
+        int rejectCount = pool instanceof DynamicThreadPoolExecutor
+                ? ((DynamicThreadPoolExecutor) pool).getRejectCount()
                 : -1;
         stateInfo.setRejectCount(rejectCount);
 

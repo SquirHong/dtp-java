@@ -1,9 +1,7 @@
-package io.dynamic.threadpool.starter.toolkit.thread;
+package io.dynamic.threadpool.starter.core;
 
 import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarm;
 import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarmManage;
-import io.dynamic.threadpool.starter.toolkit.CalculateUtil;
-import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolExecutorTemplate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -19,14 +17,12 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static io.dynamic.threadpool.starter.alarm.ThreadPoolAlarmManage.SEND_MESSAGE_SERVICE;
-
 /**
  * Custom Thread Pool Wrap.
  */
 @Slf4j
 @Getter
-public final class CustomThreadPoolExecutor extends ThreadPoolExecutor {
+public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
 
     // 记录拒绝策略触发的次数
     private final AtomicInteger rejectCount = new AtomicInteger();
@@ -511,15 +507,15 @@ public final class CustomThreadPoolExecutor extends ThreadPoolExecutor {
             processWorkerExit(w, completedAbruptly);
         }
     }
-    public CustomThreadPoolExecutor(int corePoolSize,
-                                    int maximumPoolSize,
-                                    long keepAliveTime,
-                                    TimeUnit unit,
-                                    @NonNull BlockingQueue<Runnable> workQueue,
-                                    @NonNull String threadPoolId,
-                                    @NonNull ThreadFactory threadFactory,
-                                    @NonNull ThreadPoolAlarm threadPoolAlarm,
-                                    @NonNull RejectedExecutionHandler handler) {
+    public DynamicThreadPoolExecutor(int corePoolSize,
+                                     int maximumPoolSize,
+                                     long keepAliveTime,
+                                     TimeUnit unit,
+                                     @NonNull BlockingQueue<Runnable> workQueue,
+                                     @NonNull String threadPoolId,
+                                     @NonNull ThreadFactory threadFactory,
+                                     @NonNull ThreadPoolAlarm threadPoolAlarm,
+                                     @NonNull RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
         if (corePoolSize < 0 ||
                 maximumPoolSize <= 0 ||

@@ -18,9 +18,9 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
     private boolean isFastPool;
 
     /**
-     * 是否自定义线程池
+     * 是否动态线程池
      */
-    private boolean isCustomPool;
+    private boolean isDynamicPool;
 
     /**
      * 核心线程数量
@@ -107,8 +107,8 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
         return this;
     }
 
-    public ThreadPoolBuilder isCustomPool(Boolean isCustomPool) {
-        this.isCustomPool = isCustomPool;
+    public ThreadPoolBuilder dynamicPool() {
+        this.isDynamicPool = true;
         return this;
     }
 
@@ -208,8 +208,8 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
      */
     @Override
     public ThreadPoolExecutor build() {
-        if (isCustomPool) {
-            return buildCustomPool(this);
+        if (isDynamicPool) {
+            return buildDynamicPool(this);
         }
         return isFastPool ? buildFastPool(this) : buildPool(this);
     }
@@ -249,8 +249,8 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
      * @param builder
      * @return
      */
-    private static ThreadPoolExecutor buildCustomPool(ThreadPoolBuilder builder) {
-        return AbstractBuildThreadPoolTemplate.buildCustomPool(buildInitParam(builder));
+    private static ThreadPoolExecutor buildDynamicPool(ThreadPoolBuilder builder) {
+        return AbstractBuildThreadPoolTemplate.buildDynamicPool(buildInitParam(builder));
     }
 
     /**
@@ -271,7 +271,7 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
                 .setRejectedExecutionHandler(builder.rejectedExecutionHandler)
                 .setTimeUnit(builder.timeUnit);
 
-        if (builder.isCustomPool) {
+        if (builder.isDynamicPool) {
             initParam.setThreadPoolId(builder.threadPoolId);
             ThreadPoolAlarm threadPoolAlarm = new ThreadPoolAlarm(builder.isAlarm, builder.capacityAlarm, builder.livenessAlarm);
             initParam.setThreadPoolAlarm(threadPoolAlarm);

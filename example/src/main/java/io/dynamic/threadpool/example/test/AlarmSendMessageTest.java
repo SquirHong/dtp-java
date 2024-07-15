@@ -3,9 +3,9 @@ package io.dynamic.threadpool.example.test;
 import cn.hutool.core.thread.ThreadUtil;
 import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarm;
 import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
-import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
+import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
 import io.dynamic.threadpool.starter.toolkit.thread.ResizableCapacityLinkedBlockIngQueue;
-import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
+import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class AlarmSendMessageTest {
     public void alarmSendMessageTest() {
         ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
         scheduledThreadPool.scheduleWithFixedDelay(() -> {
-            DynamicThreadPoolWrap executorService = GlobalThreadPoolManage.getExecutorService(MESSAGE_PRODUCE);
+            DynamicThreadPoolWrapper executorService = GlobalThreadPoolManage.getExecutorService(MESSAGE_PRODUCE);
             ThreadPoolExecutor poolExecutor = executorService.getPool();
             try {
                 poolExecutor.execute(() -> ThreadUtil.sleep(10241024));
@@ -40,7 +40,7 @@ public class AlarmSendMessageTest {
         log.info("开始测试");
         ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
 
-        CustomThreadPoolExecutor customThreadPoolExecutor = new CustomThreadPoolExecutor(
+        DynamicThreadPoolExecutor customThreadPoolExecutor = new DynamicThreadPoolExecutor(
                 10,
                 100,
                 0,

@@ -1,7 +1,7 @@
 package io.dynamic.threadpool.starter.core;
 
 import io.dynamic.threadpool.common.model.PoolParameter;
-import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
+import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrapper;
 
 import java.util.Map;
 import java.util.Timer;
@@ -15,14 +15,14 @@ public class GlobalThreadPoolManage {
 
     private static final Map<String, PoolParameter> POOL_PARAMETER = new ConcurrentHashMap();
 
-    private static final Map<String, DynamicThreadPoolWrap> EXECUTOR_MAP = new ConcurrentHashMap();
+    private static final Map<String, DynamicThreadPoolWrapper> EXECUTOR_MAP = new ConcurrentHashMap();
 
-    public static void register(String tpId, PoolParameter poolParameter, DynamicThreadPoolWrap executor) {
+    public static void register(String tpId, PoolParameter poolParameter, DynamicThreadPoolWrapper executor) {
         registerPool(tpId, executor);
         registerPoolParameter(tpId, poolParameter);
     }
 
-    public static void registerPool(String tpId, DynamicThreadPoolWrap executor) {
+    public static void registerPool(String tpId, DynamicThreadPoolWrapper executor) {
         EXECUTOR_MAP.put(tpId, executor);
     }
 
@@ -34,7 +34,7 @@ public class GlobalThreadPoolManage {
         EXECUTOR_MAP.remove(tpId);
     }
 
-    public static DynamicThreadPoolWrap getExecutorService(String tpId) {
+    public static DynamicThreadPoolWrapper getExecutorService(String tpId) {
         return EXECUTOR_MAP.get(tpId);
     }
 
@@ -61,7 +61,7 @@ public class GlobalThreadPoolManage {
     }
 
     private static void printExecutorMap() {
-        for (Map.Entry<String, DynamicThreadPoolWrap> entry : EXECUTOR_MAP.entrySet()) {
+        for (Map.Entry<String, DynamicThreadPoolWrapper> entry : EXECUTOR_MAP.entrySet()) {
             System.out.println("Thread Pool ID: " + entry.getKey() + ", Executor: " + entry.getValue());
         }
     }

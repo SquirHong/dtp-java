@@ -1,12 +1,10 @@
 package io.dynamic.threadpool.example.test;
 
 import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
-import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
+import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -25,7 +23,7 @@ public class RunStateHandlerTest {
 
         ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
         scheduledThreadPool.scheduleAtFixedRate(() -> {
-            DynamicThreadPoolWrap executorService = GlobalThreadPoolManage.getExecutorService(MESSAGE_PRODUCE);
+            DynamicThreadPoolWrapper executorService = GlobalThreadPoolManage.getExecutorService(MESSAGE_PRODUCE);
             ThreadPoolExecutor pool = executorService.getPool();
             try {
                 pool.execute(() -> {

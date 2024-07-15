@@ -3,7 +3,7 @@ package io.dynamic.threadpool.starter.alarm;
 
 
 import io.dynamic.threadpool.common.model.PoolParameterInfo;
-import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
+import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public interface SendMessageHandler {
      * @param notifyConfigs
      * @param threadPoolExecutor
      */
-    void sendAlarmMessage(List<NotifyConfig> notifyConfigs, CustomThreadPoolExecutor threadPoolExecutor);
+    void sendAlarmMessage(List<NotifyConfig> notifyConfigs, DynamicThreadPoolExecutor threadPoolExecutor);
 
     /**
      * Send change message.

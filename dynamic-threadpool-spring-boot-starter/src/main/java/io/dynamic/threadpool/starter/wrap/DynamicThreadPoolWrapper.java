@@ -1,18 +1,17 @@
 package io.dynamic.threadpool.starter.wrap;
 
-import io.dynamic.threadpool.starter.common.CommonThreadPool;
-import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
+import io.dynamic.threadpool.starter.common.CommonDynamicThreadPool;
+import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
 import lombok.Data;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 线程池包装
  */
 @Data
-public class DynamicThreadPoolWrap {
+public class DynamicThreadPoolWrapper {
     private String tenantId;
 
     private String itemId;
@@ -21,15 +20,15 @@ public class DynamicThreadPoolWrap {
 
     private boolean subscribeFlag;
 
-    private CustomThreadPoolExecutor pool;
+    private DynamicThreadPoolExecutor pool;
 
     /**
-     * 首选服务端线程池, 为空使用默认线程池 {@link CommonThreadPool#getInstance(String)}
+     * 首选服务端线程池, 为空使用默认线程池 {@link CommonDynamicThreadPool#getInstance(String)}
      *
      * @param threadPoolId
      */
-    public DynamicThreadPoolWrap(String threadPoolId) {
-        this(threadPoolId, CommonThreadPool.getInstance(threadPoolId));
+    public DynamicThreadPoolWrapper(String threadPoolId) {
+        this(threadPoolId, CommonDynamicThreadPool.getInstance(threadPoolId));
     }
 
     /**
@@ -37,7 +36,7 @@ public class DynamicThreadPoolWrap {
      * @param threadPoolId
      * @param threadPoolExecutor
      */
-    public DynamicThreadPoolWrap(String threadPoolId, CustomThreadPoolExecutor threadPoolExecutor) {
+    public DynamicThreadPoolWrapper(String threadPoolId, DynamicThreadPoolExecutor threadPoolExecutor) {
         this.tpId = threadPoolId;
         this.pool = threadPoolExecutor;
     }

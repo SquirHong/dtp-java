@@ -1,16 +1,13 @@
 package io.dynamic.threadpool.example.config;
 
 import io.dynamic.threadpool.starter.core.DynamicThreadPool;
-import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
-import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
+import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
 import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolBuilder;
-import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
+import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
-import java.util.Random;
 import java.util.concurrent.*;
 
 import static io.dynamic.threadpool.example.constant.GlobalTestConstant.MESSAGE_CONSUME;
@@ -24,19 +21,19 @@ import static io.dynamic.threadpool.example.constant.GlobalTestConstant.MESSAGE_
 public class ThreadPoolConfig {
 
     /**
-     * {@link DynamicThreadPoolWrap} 完成 Server 端订阅配置功能.
+     * {@link DynamicThreadPoolWrapper} 完成 Server 端订阅配置功能.
      *
      * @return
      */
     @Bean
-    public DynamicThreadPoolWrap messageCenterConsumeThreadPool() {
-        return new DynamicThreadPoolWrap(MESSAGE_CONSUME);
+    public DynamicThreadPoolWrapper messageCenterConsumeThreadPool() {
+        return new DynamicThreadPoolWrapper(MESSAGE_CONSUME);
     }
 
     /**
-     * 通过 {@link DynamicThreadPool} 修饰 {@link CustomThreadPoolExecutor} 完成 Server 端订阅配置功能.
+     * 通过 {@link DynamicThreadPool} 修饰 {@link DynamicThreadPoolExecutor} 完成 Server 端订阅配置功能.
      * <p>
-     * 由动态线程池注解修饰后, IOC 容器中保存的是 {@link CustomThreadPoolExecutor}
+     * 由动态线程池注解修饰后, IOC 容器中保存的是 {@link DynamicThreadPoolExecutor}
      *
      * @return
      */
@@ -47,8 +44,8 @@ public class ThreadPoolConfig {
     }
 
     @Bean
-    public DynamicThreadPoolWrap MMMMMMMMThreadPool() {
-        return new DynamicThreadPoolWrap("MMMMMMMM");
+    public DynamicThreadPoolWrapper MMMMMMMMThreadPool() {
+        return new DynamicThreadPoolWrapper("MMMMMMMM");
     }
 
 }

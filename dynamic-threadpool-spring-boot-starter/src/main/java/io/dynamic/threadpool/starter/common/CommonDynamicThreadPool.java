@@ -1,7 +1,7 @@
 package io.dynamic.threadpool.starter.common;
 
 
-import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
+import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
 import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolBuilder;
 import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
 import io.dynamic.threadpool.starter.toolkit.thread.RejectedPolicies;
@@ -11,12 +11,11 @@ import java.util.concurrent.*;
 /**
  * 公共线程池生产者
  */
-public class CommonThreadPool {
+public class CommonDynamicThreadPool {
 
-    public static CustomThreadPoolExecutor getInstance(String threadPoolId) {
-        CustomThreadPoolExecutor poolExecutor = (CustomThreadPoolExecutor) ThreadPoolBuilder.builder()
-                .isCustomPool(true)
-                .threadPoolId(threadPoolId)
+    public static DynamicThreadPoolExecutor getInstance(String threadPoolId) {
+        DynamicThreadPoolExecutor poolExecutor = (DynamicThreadPoolExecutor) ThreadPoolBuilder.builder()
+                .dynamicPool()
                 .threadFactory(threadPoolId)
                 .poolThreadSize(3, 5)
                 .keepAliveTime(1000, TimeUnit.SECONDS)

@@ -1,20 +1,5 @@
 package io.dynamic.threadpool.starter.core;
 
-import cn.hutool.core.thread.ThreadFactoryBuilder;
-import io.dynamic.threadpool.common.config.ApplicationContextHolder;
-import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrap;
-import org.springframework.core.annotation.Order;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 /**
  * 动态线程池配置适配器
  */
@@ -38,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 //    @Order(1025)
 //    @PostConstruct
 //    public void subscribeConfig() {
-//        Map<String, DynamicThreadPoolWrap> executorMap =
-//                ApplicationContextHolder.getBeansOfType(DynamicThreadPoolWrap.class);
+//        Map<String, DynamicThreadPoolWrapper> executorMap =
+//                ApplicationContextHolder.getBeansOfType(DynamicThreadPoolWrapper.class);
 //
 //        List<String> tpIdList = new ArrayList();
 //        // 拿到所有线程池id

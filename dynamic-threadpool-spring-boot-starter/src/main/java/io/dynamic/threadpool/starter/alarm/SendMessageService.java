@@ -2,7 +2,7 @@ package io.dynamic.threadpool.starter.alarm;
 
 
 import io.dynamic.threadpool.common.model.PoolParameterInfo;
-import io.dynamic.threadpool.starter.toolkit.thread.CustomThreadPoolExecutor;
+import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
 
 public interface SendMessageService {
 
@@ -11,7 +11,7 @@ public interface SendMessageService {
      *
      * @param threadPoolExecutor
      */
-    void sendAlarmMessage(CustomThreadPoolExecutor threadPoolExecutor);
+    void sendAlarmMessage(DynamicThreadPoolExecutor threadPoolExecutor);
 
     /**
      * Send change message.
