@@ -97,6 +97,59 @@ CREATE TABLE `config_info`
   DEFAULT CHARSET = utf8mb4 COMMENT ='线程池配置表';
 
 
+/******************************************/
+/*   数据库全名 = hippo_manager   */
+/*   表名称 = user   */
+/******************************************/
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user`
+(
+    `id`           bigint(20)   NOT NULL COMMENT 'ID',
+    `user_name`    varchar(64)  NOT NULL COMMENT '用户名',
+    `password`     varchar(512) NOT NULL COMMENT '用户密码',
+    `gmt_create`   datetime     NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime     NOT NULL COMMENT '修改时间',
+    `del_flag`     tinyint(1)   NOT NULL COMMENT '是否删除',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';
+
+/******************************************/
+/*   数据库全名 = hippo_manager   */
+/*   表名称 = role   */
+/******************************************/
+DROP TABLE IF EXISTS `role`;
+CREATE TABLE `role`
+(
+    `id`           bigint(20)  NOT NULL COMMENT 'ID',
+    `role`         varchar(64) NOT NULL COMMENT '角色',
+    `user_name`    varchar(64) NOT NULL COMMENT '用户名',
+    `gmt_create`   datetime    NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime    NOT NULL COMMENT '修改时间',
+    `del_flag`     tinyint(1)  NOT NULL COMMENT '是否删除',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='角色表';
+
+/******************************************/
+/*   数据库全名 = hippo_manager   */
+/*   表名称 = permission   */
+/******************************************/
+DROP TABLE IF EXISTS `permission`;
+CREATE TABLE `permission`
+(
+    `id`           bigint(20)   NOT NULL COMMENT 'ID',
+    `role`         varchar(512) NOT NULL COMMENT '角色',
+    `resource`     varchar(512) NOT NULL COMMENT '资源',
+    `action`       varchar(8)   NOT NULL COMMENT '读写权限',
+    `gmt_create`   datetime     NOT NULL COMMENT '创建时间',
+    `gmt_modified` datetime     NOT NULL COMMENT '修改时间',
+    `del_flag`     tinyint(1)   NOT NULL COMMENT '是否删除',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='权限表';
+
+
 /* 租户 */
 INSERT INTO `tenant_info` (`id`, `tenant_id`, `tenant_name`, `tenant_desc`, `owner`, `gmt_create`, `gmt_modified`,
                            `del_flag`)
