@@ -38,6 +38,7 @@
         <module>console</module>
         <module>registry</module>
         <module>log-record-tool</module>
+        <module>auth</module>
     </modules>
 
     <dependencyManagement>
@@ -108,6 +109,12 @@
             <dependency>
                 <groupId>io.dynamic-threadpool</groupId>
                 <artifactId>log-record-tool</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.dynamic-threadpool</groupId>
+                <artifactId>auth</artifactId>
                 <version>${revision}</version>
             </dependency>
 

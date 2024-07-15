@@ -26,7 +26,4 @@ public class Result<T> implements Serializable {
         return SUCCESS_CODE.equals(code);
     }
 
-    public boolean isFail() {
-        return !isSuccess();
-    }
 }
