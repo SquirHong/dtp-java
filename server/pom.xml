@@ -25,6 +25,12 @@
             <groupId>io.dynamic-threadpool</groupId>
             <artifactId>registry</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.dynamic-threadpool</groupId>
+            <artifactId>console</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

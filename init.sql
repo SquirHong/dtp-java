@@ -38,10 +38,32 @@ CREATE TABLE `item_info`
     `gmt_modified` datetime     DEFAULT NULL COMMENT '修改时间',
     `del_flag`     tinyint(1)   DEFAULT NULL COMMENT '是否删除',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `id` (`id`)
+    UNIQUE KEY `id` (`id`),
+    UNIQUE KEY `uk_iteminfo_tenantitem` (`tenant_id`, `item_id`, `del_flag`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4 COMMENT ='项目表';
+
+/******************************************/
+/*   表名称 = log_record_info   */
+/******************************************/
+DROP TABLE IF EXISTS `log_record_info`;
+CREATE TABLE `log_record_info`
+(
+    `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `tenant`      varchar(128)        NOT NULL DEFAULT '' COMMENT '租户标识',
+    `biz_key`     varchar(128)        NOT NULL DEFAULT '' COMMENT '日志业务标识',
+    `biz_no`      varchar(128)        NOT NULL DEFAULT '' COMMENT '业务码标识',
+    `operator`    varchar(64)         NOT NULL DEFAULT '' COMMENT '操作人',
+    `action`      varchar(128)        NOT NULL DEFAULT '' COMMENT '动作',
+    `category`    varchar(128)        NOT NULL DEFAULT '' COMMENT '种类',
+    `detail`      varchar(2048)       NOT NULL DEFAULT '' COMMENT '修改的详细信息，可以为json',
+    `create_time` datetime            NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_biz_key` (`biz_key`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4 COMMENT ='操作日志表';
 
 /******************************************/
 /*   表名称 = config_info   */
@@ -53,6 +75,7 @@ CREATE TABLE `config_info`
     `tenant_id`       varchar(128) DEFAULT NULL COMMENT '租户ID',
     `item_id`         varchar(128) DEFAULT NULL COMMENT '项目ID',
     `tp_id`           varchar(256) DEFAULT NULL COMMENT '线程池ID',
+    `tp_name`         varchar(56)  DEFAULT NULL COMMENT '线程池名称',
     `core_size`       int(11)      DEFAULT NULL COMMENT '核心线程数',
     `max_size`        int(11)      DEFAULT NULL COMMENT '最大线程数',
     `queue_type`      int(11)      DEFAULT NULL COMMENT '队列类型...',
@@ -73,26 +96,33 @@ CREATE TABLE `config_info`
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4 COMMENT ='线程池配置表';
 
-INSERT IGNORE INTO `config_info` (`id`, `tenant_id`, `item_id`, `tp_id`, `core_size`, `max_size`,
-                                  `queue_type`, `capacity`, `rejected_type`, `keep_alive_time`,
-                                  `content`, `md5`, `is_alarm`, `capacity_alarm`,
-                                  `liveness_alarm`, `gmt_create`, `gmt_modified`, `del_flag`)
-VALUES ('1', 'common', 'message-center', 'message-consume', '5', '10', '9',
-        '1024', '2', '9999',
-        '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"message-consume\",\"coreSize\":5,\"maxSize\":10,\"queueType\":9,\"capacity\":1024,\"keepAliveTime\":9999,\"rejectedType\":2,\"isAlarm\":0,\"capacityAlarm\":80,\"livenessAlarm\":80,\"allowCoreThreadTimeOut\":0}',
-        'f80ea89044889fb6cec20e1a517f2ec3', '0', '80', '80', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0'),
-       ('2', 'common', 'message-center', 'message-produce', '5', '15', '9',
-        '1024', '2', '9999',
-        '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"message-produce\",\"coreSize\":5,\"maxSize\":15,\"queueType\":9,\"capacity\":1024,\"keepAliveTime\":9999,\"rejectedType\":1,\"isAlarm\":0,\"capacityAlarm\":30,\"livenessAlarm\":30,\"allowCoreThreadTimeOut\":0}',
-        '525e1429468bcfe98df7e70a75710051', '0', '30', '30', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0'),
-       ('3', 'common', 'message-center', 'custom-pool', '3', '10', '9',
-        '1024', '2', '9999',
-        '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"custom-pool\",\"coreSize\":3,\"maxSize\":10,\"queueType\":9,\"capacity\":1024,\"keepAliveTime\":9999,\"rejectedType\":1,\"isAlarm\":0,\"capacityAlarm\":30,\"livenessAlarm\":30,\"allowCoreThreadTimeOut\":0}',
-        '525e1429468bcfe98df7e70a7532111', '0', '30', '30', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0'),
-       ('4', 'common', 'message-center', 'hjs-pool', '11', '111', '9',
-        '111111', '2', '99991',
-        '{\"tenantId\":\"prescription\",\"itemId\":\"dynamic-threadpool-example\",\"tpId\":\"hjs-pool\",\"coreSize\":11,\"maxSize\":111,\"queueType\":9,\"capacity\":111111,\"keepAliveTime\":99991,\"rejectedType\":1,\"isAlarm\":0,\"capacityAlarm\":30,\"livenessAlarm\":30,\"allowCoreThreadTimeOut\":0}',
-        '525e1429468bcfe98df7e70a7532111', '0', '30', '30', '2024-1-24 10:00:00', '2024-1-24 10:00:00', '0');
 
+/* 租户 */
+INSERT INTO `tenant_info` (`id`, `tenant_id`, `tenant_name`, `tenant_desc`, `owner`, `gmt_create`, `gmt_modified`,
+                           `del_flag`)
+VALUES ('1', 'framework', '架构组', '架构组：负责集团项目的规范标准定义以及执行', 'john', '2024-6-24 11:11:11',
+        '2024-6-24 11:11:11', '0');
 
+/* 项目 */
+INSERT INTO `item_info` (`id`, `tenant_id`, `item_id`, `item_name`, `item_desc`, `owner`, `gmt_create`, `gmt_modified`,
+                         `del_flag`)
+VALUES ('1', 'common', 'dtp', '动态线程池示例项目',
+        '动态线程池示例项目，项目的 example 模块', 'john', '2024-6-24 11:11:11', '2024-6-24 11:11:11', '0');
 
+/* 线程池 */
+
+INSERT INTO `config_info` (`id`, `tenant_id`, `item_id`, `tp_id`, `tp_name`, `core_size`, `max_size`, `queue_type`,
+                           `capacity`, `rejected_type`, `keep_alive_time`, `content`, `md5`, `is_alarm`,
+                           `capacity_alarm`, `liveness_alarm`, `gmt_create`, `gmt_modified`, `del_flag`)
+VALUES (1, 'common', 'dtp', 'message-consume', NULL, 5, 10, 9, 1000, 2, 100,
+        '{\"tenantId\":\"common\",\"itemId\":\"dtp\",\"tpId\":\"message-consume\",\"coreSize\":5,\"maxSize\":10,\"queueType\":9,\"capacity\":1000,\"keepAliveTime\":100,\"rejectedType\":2,\"isAlarm\":true,\"capacityAlarm\":80,\"livenessAlarm\":50}',
+        'a754962bceff9591ba940894a6a436ef', 1, 80, 50, '2024-07-14 22:28:08', '2024-07-14 22:28:08', 0),
+       (2, 'common', 'dtp', 'message-produce', NULL, 10, 20, 9, 500, 1, 100,
+        '{\"tenantId\":\"common\",\"itemId\":\"dtp\",\"tpId\":\"message-produce\",\"coreSize\":10,\"maxSize\":20,\"queueType\":9,\"capacity\":500,\"keepAliveTime\":100,\"rejectedType\":1,\"isAlarm\":true,\"capacityAlarm\":70,\"livenessAlarm\":70}',
+        '5fc10a841821c26da09372af8756ff3e', 1, 70, 70, '2024-07-14 22:28:11', '2024-07-14 22:28:11', 0),
+       (3, 'common', 'dtp', 'hjs-pool', NULL, 20, 30, 9, 100, 3, 30,
+        '{\"tenantId\":\"common\",\"itemId\":\"dtp\",\"tpId\":\"hjs-pool\",\"coreSize\":20,\"maxSize\":30,\"queueType\":9,\"capacity\":100,\"keepAliveTime\":30,\"rejectedType\":3,\"isAlarm\":true,\"capacityAlarm\":80,\"livenessAlarm\":80}',
+        '6ab773ef7b26eb80a5cfba94c35596b6', 1, 80, 80, '2024-07-14 22:28:14', '2024-07-14 22:28:14', 0),
+       (4, 'common', 'dtp', 'custom-pool', NULL, 11, 22, 9, 50, 2, 20,
+        '{\"tenantId\":\"common\",\"itemId\":\"dtp\",\"tpId\":\"custom-pool\",\"coreSize\":11,\"maxSize\":22,\"queueType\":9,\"capacity\":50,\"keepAliveTime\":20,\"rejectedType\":2,\"isAlarm\":true,\"capacityAlarm\":60,\"livenessAlarm\":60}',
+        '305d072e795ca3bd64bd9644c7148b3a', 1, 60, 60, '2024-07-14 22:28:18', '2024-07-14 22:28:18', 0);

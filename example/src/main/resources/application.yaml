@@ -7,7 +7,7 @@ spring:
     thread-pool:
       server-addr: http://localhost:6691
       tenantId: common
-      item-id: message-center
+      item-id: dtp
       notifys:
         - type: DING
           url: https://oapi.dingtalk.com/robot/send?access_token=
