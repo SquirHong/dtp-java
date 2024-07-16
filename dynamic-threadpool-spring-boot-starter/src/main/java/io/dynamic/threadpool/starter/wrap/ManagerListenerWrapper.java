@@ -9,13 +9,13 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ManagerListenerWrap {
+public class ManagerListenerWrapper {
 
     Listener listener;
 
     String lastCallMd5;
 
-    public ManagerListenerWrap(String md5, Listener listener) {
+    public ManagerListenerWrapper(String md5, Listener listener) {
         this.lastCallMd5 = md5;
         this.listener = listener;
     }

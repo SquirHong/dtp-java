@@ -3,7 +3,7 @@ package io.dynamic.threadpool.starter.core;
 import io.dynamic.threadpool.common.toolkit.ContentUtil;
 import io.dynamic.threadpool.common.toolkit.Md5Util;
 import io.dynamic.threadpool.common.constant.Constants;
-import io.dynamic.threadpool.starter.wrap.ManagerListenerWrap;
+import io.dynamic.threadpool.starter.wrap.ManagerListenerWrapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +31,7 @@ public class CacheData {
 
     private volatile long localConfigLastModified;
 
-    private final CopyOnWriteArrayList<ManagerListenerWrap> listeners;
+    private final CopyOnWriteArrayList<ManagerListenerWrapper> listeners;
 
     public CacheData(String tenantId, String itemId, String tpId) {
         this.tenantId = tenantId;
@@ -54,7 +54,7 @@ public class CacheData {
             throw new IllegalArgumentException("listener is null");
         }
 
-        ManagerListenerWrap managerListenerWrap = new ManagerListenerWrap(md5, listener);
+        ManagerListenerWrapper managerListenerWrap = new ManagerListenerWrapper(md5, listener);
 
         if (listeners.addIfAbsent(managerListenerWrap)) {
             // 添加成功
@@ -66,7 +66,7 @@ public class CacheData {
      * 检查监听器的唯一md5值，如不同就是有 修改配置 的命令
      */
     public void checkListenerMd5() {
-        for (ManagerListenerWrap wrap : listeners) {
+        for (ManagerListenerWrapper wrap : listeners) {
             if (!md5.equals(wrap.getLastCallMd5())) {
                 safeNotifyListener(content, md5, wrap);
             }
@@ -76,7 +76,7 @@ public class CacheData {
     /**
      * 将content和md5传递给Listener对象，并通过执行器异步地执行receiveConfigInfo方法。
      */
-    private void safeNotifyListener(String content, String md5, ManagerListenerWrap wrap) {
+    private void safeNotifyListener(String content, String md5, ManagerListenerWrapper wrap) {
         Listener listener = wrap.getListener();
 
         Runnable runnable = () -> {
