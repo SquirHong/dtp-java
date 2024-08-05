@@ -26,6 +26,7 @@
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
         <transmittable-thread-local.version>2.12.1</transmittable-thread-local.version>
         <guava.version>29.0-jre</guava.version>
+        <jjwt.version>0.9.0</jjwt.version>
     </properties>
 
     <modules>

@@ -1,8 +1,11 @@
 package io.dynamic.threadpool.console.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.dynamic.threadpool.auth.model.biz.UserQueryPageReqDTO;
+import io.dynamic.threadpool.auth.model.biz.UserReqDTO;
 import io.dynamic.threadpool.auth.model.biz.UserRespDTO;
 import io.dynamic.threadpool.auth.service.UserService;
+import io.dynamic.threadpool.common.constant.Constants;
 import io.dynamic.threadpool.common.web.base.Result;
 import io.dynamic.threadpool.common.web.base.Results;
 import lombok.AllArgsConstructor;
@@ -15,30 +18,30 @@ import java.util.List;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping({"/v1/auth", "/v1/auth/users"})
+@RequestMapping(Constants.BASE_PATH + "/auth/users")
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/{pageNo}/{pageSize}")
-    public Result<IPage<UserRespDTO>> listUser(@PathVariable("pageNo") int pageNo, @PathVariable("pageSize") int pageSize) {
-        IPage<UserRespDTO> resultUserPage = userService.listUser(pageNo, pageSize);
+    @PostMapping("/page")
+    public Result<IPage<UserRespDTO>> listUser(@RequestBody UserQueryPageReqDTO reqDTO) {
+        IPage<UserRespDTO> resultUserPage = userService.listUser(reqDTO);
         return Results.success(resultUserPage);
     }
 
-    @PostMapping("/{userName}/{password}")
-    public Result<Void> addUser(@PathVariable("userName") String userName, @PathVariable("password") String password) {
-        userService.addUser(userName, password);
+    @PostMapping("/add")
+    public Result<Void> addUser(@RequestBody UserReqDTO reqDTO) {
+        userService.addUser(reqDTO);
         return Results.success();
     }
 
-    @PutMapping("/{userName}/{password}")
-    public Result<Void> updateUser(@PathVariable("userName") String userName, @PathVariable("password") String password) {
-        userService.updateUser(userName, password);
+    @PutMapping("/update")
+    public Result<Void> updateUser(@RequestBody UserReqDTO reqDTO) {
+        userService.updateUser(reqDTO);
         return Results.success();
     }
 
-    @DeleteMapping("/{userName}")
+    @DeleteMapping("/remove/{userName}")
     public Result<Void> deleteUser(@PathVariable("userName") String userName) {
         userService.deleteUser(userName);
         return Results.success();

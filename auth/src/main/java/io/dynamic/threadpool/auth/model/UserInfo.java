@@ -29,6 +29,11 @@ public class UserInfo {
     private String password;
 
     /**
+     * role
+     */
+    private String role;
+
+    /**
      * gmtCreate
      */
     @TableField(fill = FieldFill.INSERT)

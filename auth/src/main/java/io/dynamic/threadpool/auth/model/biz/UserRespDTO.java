@@ -17,9 +17,9 @@ public class UserRespDTO {
     private String userName;
 
     /**
-     * password
+     * role
      */
-    private String password;
+    private String role;
 
     /**
      * gmtCreate
