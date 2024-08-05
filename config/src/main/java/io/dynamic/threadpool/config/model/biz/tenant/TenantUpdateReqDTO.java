@@ -1,5 +1,6 @@
 package io.dynamic.threadpool.config.model.biz.tenant;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 
@@ -30,5 +31,10 @@ public class TenantUpdateReqDTO {
      * 负责人
      */
     private String owner;
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
 
 }

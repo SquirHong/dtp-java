@@ -53,7 +53,9 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
     @Override
     public List<ThreadPoolRespDTO> getThreadPoolByItemId(String itemId) {
         List<ConfigAllInfo> selectList = configInfoMapper
-                .selectList(Wrappers.lambdaUpdate(ConfigAllInfo.class).eq(ConfigAllInfo::getItemId, itemId));
+                .selectList(
+                        Wrappers.lambdaQuery(ConfigAllInfo.class).eq(ConfigAllInfo::getItemId, itemId)
+                );
         return BeanUtil.convert(selectList, ThreadPoolRespDTO.class);
     }
 }

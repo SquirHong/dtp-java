@@ -2,6 +2,7 @@ package io.dynamic.threadpool.starter.core;
 
 import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarm;
 import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarmManage;
+import io.dynamic.threadpool.starter.event.EventExecutor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -284,7 +285,9 @@ public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
         // 记录 reject 次数
         rejectCount.incrementAndGet();
         // 发生拒绝策略，告警通知
-        ThreadPoolAlarmManage.checkPoolRejectAlarm(this);
+        EventExecutor.publishEvent(() -> {
+            ThreadPoolAlarmManage.checkPoolRejectAlarm(this);
+        });
         handler.rejectedExecution(command, this);
     }
 
@@ -340,7 +343,9 @@ public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
             }
         }
         // 活跃度告警
-        ThreadPoolAlarmManage.checkPoolLivenessAlarm(core, this);
+        EventExecutor.publishEvent(() -> {
+            ThreadPoolAlarmManage.checkPoolLivenessAlarm(core, this);
+        });
         boolean workerStarted = false;
         boolean workerAdded = false;
         Worker w = null;
@@ -548,7 +553,9 @@ public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
         // 要放入队列 or 创建超过核心线程数的线程
         if (isRunning(c) && workQueue.offer(command)) {
             // 容量告警
-            ThreadPoolAlarmManage.checkPoolCapacityAlarm(this);
+            EventExecutor.publishEvent(() -> {
+                ThreadPoolAlarmManage.checkPoolCapacityAlarm(this);
+            });
             int recheck = ctl.get();
             if (!isRunning(recheck) && remove(command)) {
                 reject(command);

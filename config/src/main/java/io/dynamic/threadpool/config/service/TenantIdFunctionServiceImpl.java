@@ -19,6 +19,11 @@ public class TenantIdFunctionServiceImpl implements ParseFunction {
     private final TenantService tenantService;
 
     @Override
+    public boolean executeBefore() {
+        return true;
+    }
+
+    @Override
     public String functionName() {
         return "TENANT";
     }
