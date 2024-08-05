@@ -1,5 +1,9 @@
 package io.dynamic.threadpool.config.toolkit;
 
+import cn.hutool.core.collection.CollUtil;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -10,8 +14,7 @@ import java.util.function.BiFunction;
 public class MapUtil {
 
     /**
-     *
-     *  如果map中的key不存在，则调用function函数并传参param1和param2，结果值存入map中
+     * 如果map中的key不存在，则调用function函数并传参param1和param2，结果值存入map中
      */
     public static Object computeIfAbsent(Map target, Object key, BiFunction mappingFunction, Object param1, Object param2) {
         Objects.requireNonNull(target, "target");
@@ -28,4 +31,27 @@ public class MapUtil {
         }
         return val;
     }
+
+    /**
+     * 根据 Key 进行模糊匹配.
+     *
+     * @param sourceMap
+     * @param filters
+     * @return
+     */
+    public static List<String> parseMapForFilter(Map<String, ?> sourceMap, String filters) {
+        List<String> resultList = Lists.newArrayList();
+        if (CollUtil.isEmpty(sourceMap)) {
+            return resultList;
+        }
+
+        sourceMap.forEach((key, val) -> {
+            if (key.indexOf(filters) > -1) {
+                resultList.add(key);
+            }
+        });
+
+        return resultList;
+    }
+
 }

@@ -1,6 +1,7 @@
 package io.dynamic.threadpool.config.model;
 
 import io.dynamic.threadpool.common.constant.Constants;
+import io.dynamic.threadpool.common.toolkit.Md5Util;
 import io.dynamic.threadpool.config.toolkit.SimpleReadWriteLock;
 import io.dynamic.threadpool.config.toolkit.SingletonRepository;
 import lombok.Getter;
@@ -19,6 +20,8 @@ public class CacheItem {
 
     public volatile long lastModifiedTs;
 
+    public volatile ConfigAllInfo configAllInfo;
+
     /**
      * 读写锁
      */
@@ -29,7 +32,13 @@ public class CacheItem {
     }
 
     public CacheItem(String groupKey, String md5) {
-        this.md5 = md5;
         this.groupKey = SingletonRepository.DataIdGroupIdCache.getSingleton(groupKey);
+        this.md5 = md5;
+    }
+
+    public CacheItem(String groupKey, ConfigAllInfo configAllInfo) {
+        this.groupKey = SingletonRepository.DataIdGroupIdCache.getSingleton(groupKey);
+        this.configAllInfo = configAllInfo;
+        this.md5 = Md5Util.getTpContentMd5(configAllInfo);
     }
 }

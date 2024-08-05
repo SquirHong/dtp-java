@@ -31,9 +31,10 @@ public interface ThreadPoolService {
     /**
      * 新增或修改线程池配置
      *
+     * @param identify
      * @param reqDTO
      */
-    void saveOrUpdateThreadPoolConfig(ThreadPoolSaveOrUpdateReqDTO reqDTO);
+    void saveOrUpdateThreadPoolConfig(String identify, ThreadPoolSaveOrUpdateReqDTO reqDTO);
 
     /**
      * 根据 ItemId 获取线程池配置

@@ -28,7 +28,7 @@ public class ContentUtil {
     }
 
     /**
-     * 拼接tpid、itemid、tenantId
+     * 拼接tpid+itemid+tenantId
      */
     public static String getGroupKey(PoolParameter parameter) {
         StringBuilder stringBuilder = new StringBuilder();

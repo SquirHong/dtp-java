@@ -22,8 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static io.dynamic.threadpool.common.constant.Constants.LINE_SEPARATOR;
-import static io.dynamic.threadpool.common.constant.Constants.WORD_SEPARATOR;
+import static io.dynamic.threadpool.common.constant.Constants.*;
 
 /**
  * 客户端监听工作者
@@ -64,6 +63,9 @@ public class ClientWorker {
             t.setDaemon(true);
             return t;
         });
+
+        log.info("Client identity :: {}", CLIENT_IDENTIFICATION_VALUE);
+
         // 1s后，每个任务结束和开始之间的3s，任务内容：检查是否有新的线程配置需要进行长轮训
         this.executor.scheduleWithFixedDelay(() -> {
             try {
@@ -166,8 +168,9 @@ public class ClientWorker {
         for (CacheData cacheData : cacheDataList) {
             sb.append(cacheData.tpId).append(WORD_SEPARATOR);
             sb.append(cacheData.itemId).append(WORD_SEPARATOR);
-            sb.append(cacheData.getMd5()).append(WORD_SEPARATOR);
-            sb.append(cacheData.tenantId).append(LINE_SEPARATOR);
+            sb.append(cacheData.tenantId).append(WORD_SEPARATOR);
+            sb.append(CLIENT_IDENTIFICATION_VALUE).append(WORD_SEPARATOR);
+            sb.append(cacheData.getMd5()).append(LINE_SEPARATOR);
 
             if (cacheData.isInitializing()) {
                 // cacheData 首次出现在cacheMap中&首次check更新

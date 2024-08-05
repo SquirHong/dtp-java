@@ -1,5 +1,7 @@
 package io.dynamic.threadpool.common.constant;
 
+import java.util.UUID;
+
 /**
  * Constants
  */
@@ -45,4 +47,8 @@ public class Constants {
     public static final long EVICTION_INTERVAL_TIMER_IN_MS = 60 * 1000;
 
     public static final int SCHEDULED_THREAD_CORE_NUM = 1;
+
+    public static final String LONG_PULLING_CLIENT_IDENTIFICATION = "Long-Pulling-Client-Identification";
+
+    public static final String CLIENT_IDENTIFICATION_VALUE = UUID.randomUUID().toString();
 }

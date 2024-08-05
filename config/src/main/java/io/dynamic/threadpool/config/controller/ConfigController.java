@@ -45,8 +45,9 @@ public class ConfigController {
     }
 
     @PostMapping
-    public Result<Boolean> publishConfig(@RequestBody ConfigAllInfo config) {
-        configService.insertOrUpdate(config);
+    public Result<Boolean> publishConfig(@RequestParam(value = "identify", required = false) String identify,
+                                         @RequestBody ConfigAllInfo config) {
+        configService.insertOrUpdate(identify, config);
         return Results.success(true);
     }
 

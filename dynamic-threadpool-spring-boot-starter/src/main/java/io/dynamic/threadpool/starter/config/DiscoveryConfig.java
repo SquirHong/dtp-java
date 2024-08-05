@@ -11,6 +11,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 import java.net.InetAddress;
 
+import static io.dynamic.threadpool.common.constant.Constants.CLIENT_IDENTIFICATION_VALUE;
 import static io.dynamic.threadpool.starter.toolkit.CloudCommonIdUtil.getDefaultInstanceId;
 import static io.dynamic.threadpool.starter.toolkit.CloudCommonIdUtil.getIpApplicationName;
 
@@ -27,10 +28,14 @@ public class DiscoveryConfig {
         instanceInfo.setInstanceId(getDefaultInstanceId(environment))
                 .setIpApplicationName(getIpApplicationName(environment))
                 .setHostName(InetAddress.getLocalHost().getHostAddress())
+                .setIdentify(CLIENT_IDENTIFICATION_VALUE)
                 .setAppName(environment.getProperty("spring.application.name"))
                 .setClientBasePath(environment.getProperty("server.servlet.context-path"));
-        String callBackUrl = new StringBuilder().append(instanceInfo.getHostName()).append(":")
-                .append(environment.getProperty("server.port")).append(instanceInfo.getClientBasePath())
+        String callBackUrl = new StringBuilder()
+                .append(instanceInfo.getHostName())
+                .append(":")
+                .append(environment.getProperty("server.port"))
+                .append(instanceInfo.getClientBasePath())
                 .toString();
         instanceInfo.setCallBackUrl(callBackUrl);
 

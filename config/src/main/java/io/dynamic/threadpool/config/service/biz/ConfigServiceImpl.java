@@ -37,7 +37,7 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public void insertOrUpdate(ConfigAllInfo configAllInfo) {
+    public void insertOrUpdate(String identify, ConfigAllInfo configAllInfo) {
         try {
             addConfigInfo(configAllInfo);
             log.info("发布配置成功，即将发布LocalDataChangeEvent content :: {}", configAllInfo.getContent());
@@ -46,7 +46,7 @@ public class ConfigServiceImpl implements ConfigService {
             log.info("修改配置成功，即将发布LocalDataChangeEvent content :: {}", configAllInfo.getContent());
         }
         ConfigChangePublisher
-                .notifyConfigChange(new LocalDataChangeEvent(ContentUtil.getGroupKey(configAllInfo)));
+                .notifyConfigChange(new LocalDataChangeEvent(identify, ContentUtil.getGroupKey(configAllInfo)));
     }
 
     private Integer addConfigInfo(ConfigAllInfo config) {

@@ -1,15 +1,18 @@
 package io.dynamic.threadpool.config.service;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import io.dynamic.threadpool.common.constant.Constants;
 import io.dynamic.threadpool.common.toolkit.Md5Util;
 import io.dynamic.threadpool.common.web.base.Results;
-import io.dynamic.threadpool.config.toolkit.Md5ConfigUtil;
-import io.dynamic.threadpool.config.event.LocalDataChangeEvent;
 import io.dynamic.threadpool.config.event.Event;
+import io.dynamic.threadpool.config.event.LocalDataChangeEvent;
 import io.dynamic.threadpool.config.notify.NotifyCenter;
 import io.dynamic.threadpool.config.notify.listener.Subscriber;
 import io.dynamic.threadpool.config.toolkit.ConfigExecutor;
+import io.dynamic.threadpool.config.toolkit.MapUtil;
+import io.dynamic.threadpool.config.toolkit.Md5ConfigUtil;
 import io.dynamic.threadpool.config.toolkit.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,13 +21,14 @@ import org.springframework.util.CollectionUtils;
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static io.dynamic.threadpool.common.constant.Constants.GROUP_KEY_DELIMITER;
 
 /**
  * 长轮询服务
@@ -61,7 +65,7 @@ public class LongPollingService {
                     if (event instanceof LocalDataChangeEvent) {
                         LocalDataChangeEvent evt = (LocalDataChangeEvent) event;
                         log.info("接收到配置变更事件，groupKey :: {}", evt.groupKey);
-                        ConfigExecutor.executeLongPolling(new DataChangeTask(evt.groupKey));
+                        ConfigExecutor.executeLongPolling(new DataChangeTask(evt.identify, evt.groupKey));
                     }
                 }
             }
@@ -111,7 +115,6 @@ public class LongPollingService {
         // 异步响应的关键
         final AsyncContext asyncContext = req.startAsync();
         asyncContext.setTimeout(0L);
-        log.info("最长监听配置是否改变的时间为：{}ms", timeout);
         ConfigExecutor.executeLongPolling(new ClientLongPolling(asyncContext, clientMd5Map, ip, probeRequestSize, timeout, appName));
     }
 
@@ -229,9 +232,12 @@ public class LongPollingService {
 
     class DataChangeTask implements Runnable {
 
+        final String identify;
+
         final String groupKey;
 
-        DataChangeTask(String groupKey) {
+        DataChangeTask(String identify, String groupKey) {
+            this.identify = identify;
             this.groupKey = groupKey;
         }
 
@@ -240,18 +246,28 @@ public class LongPollingService {
             try {
                 for (Iterator<ClientLongPolling> iter = allSubs.iterator(); iter.hasNext(); ) {
                     ClientLongPolling clientSub = iter.next();
+
                     String mapAsString = clientSub.clientMd5Map.entrySet().stream().map(entry -> "Key: " + entry.getKey() + ", Value: " + entry.getValue())
                             .collect(Collectors.joining("\n"));
                     log.info("DataChangeTask事件 打印clientMd5Map:\n{}", mapAsString);
-                    if (clientSub.clientMd5Map.containsKey(groupKey)) {
-                        getRetainIps().put(clientSub.ip, System.currentTimeMillis());
 
-                        ConfigCacheService.updateMd5(groupKey, ConfigCacheService.getContentMd5(groupKey), System.currentTimeMillis());
-
-                        iter.remove();
-                        log.info("移除客户端长轮询，groupKey :: {}", groupKey);
-                        clientSub.sendResponse(Arrays.asList(groupKey));
+                    String identity = groupKey + GROUP_KEY_DELIMITER + identify;
+                    List<String> parseMapForFilter = Lists.newArrayList(identity);
+                    // 为空则修改集群
+                    if (StrUtil.isBlank(identify)) {
+                        parseMapForFilter = MapUtil.parseMapForFilter(clientSub.clientMd5Map, groupKey);
                     }
+                    parseMapForFilter.forEach(each -> {
+                        if (clientSub.clientMd5Map.containsKey(each)) {
+                            getRetainIps().put(clientSub.ip, System.currentTimeMillis());
+
+                            ConfigCacheService.updateMd5(each, clientSub.ip, ConfigCacheService.getContentMd5(groupKey));
+
+                            iter.remove();
+                            log.info("移除客户端长轮询，groupKey :: {}", groupKey);
+                            clientSub.sendResponse(Arrays.asList(groupKey));
+                        }
+                    });
                 }
             } catch (Exception ex) {
                 log.error("Data change error :: {}", ex.getMessage(), ex);

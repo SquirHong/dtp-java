@@ -21,7 +21,8 @@ public interface ConfigService {
     /**
      * 新增或修改
      *
+     * @param identify
      * @param configAllInfo
      */
-    void insertOrUpdate(ConfigAllInfo configAllInfo);
+    void insertOrUpdate(String identify, ConfigAllInfo configAllInfo);
 }
