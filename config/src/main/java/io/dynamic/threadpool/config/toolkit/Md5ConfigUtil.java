@@ -67,6 +67,7 @@ public class Md5ConfigUtil {
         return changedGroupKeys;
     }
 
+    // Key: tpid1+itemid1+tenantid1+identif1, Value: md51
     public static Map<String, String> getClientMd5Map(String configKeysString) {
         Map<String, String> md5Map = new HashMap();
 

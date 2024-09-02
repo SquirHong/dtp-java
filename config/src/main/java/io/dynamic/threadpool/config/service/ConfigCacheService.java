@@ -10,9 +10,11 @@ import io.dynamic.threadpool.config.model.CacheItem;
 import io.dynamic.threadpool.config.model.ConfigAllInfo;
 import io.dynamic.threadpool.config.notify.NotifyCenter;
 import io.dynamic.threadpool.config.service.biz.ConfigService;
+import io.dynamic.threadpool.config.toolkit.MapUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -86,6 +88,9 @@ public class ConfigCacheService {
         CacheItem cache = makeSure(groupKey, ip);
         if (cache.md5 == null || !cache.md5.equals(md5)) {
             cache.md5 = md5;
+            String[] split = groupKey.split("\\+");
+            ConfigAllInfo config = configService.findConfigAllInfo(split[0], split[1], split[2]);
+            cache.configAllInfo = config;
             cache.lastModifiedTs = System.currentTimeMillis();
             NotifyCenter.publishEvent(new LocalDataChangeEvent(ip, groupKey));
         }
@@ -102,6 +107,18 @@ public class ConfigCacheService {
         cacheItemMap.put(ip, tmp);
         CACHE.putIfAbsent(groupKey, cacheItemMap);
         return tmp;
+    }
+
+    /**
+     * 后续优化
+     * @param identification
+     * @return
+     */
+    public static Map<String, CacheItem> getContent(String identification) {
+        List<String> identificationList = MapUtil.parseMapForFilter(CACHE, identification);
+        Map<String, CacheItem> returnStrCacheItemMap = Maps.newHashMap();
+        identificationList.forEach(each -> returnStrCacheItemMap.putAll(CACHE.get(each)));
+        return returnStrCacheItemMap;
     }
 
 }

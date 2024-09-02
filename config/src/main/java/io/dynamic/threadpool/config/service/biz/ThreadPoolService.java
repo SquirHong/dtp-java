@@ -1,6 +1,7 @@
 package io.dynamic.threadpool.config.service.biz;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolDelReqDTO;
 import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolQueryReqDTO;
 import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolRespDTO;
 import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolSaveOrUpdateReqDTO;
@@ -43,5 +44,12 @@ public interface ThreadPoolService {
      * @return
      */
     List<ThreadPoolRespDTO> getThreadPoolByItemId(String itemId);
+
+    /**
+     * Delete pool.
+     *
+     * @param reqDTO
+     */
+    void deletePool(ThreadPoolDelReqDTO reqDTO);
 
 }

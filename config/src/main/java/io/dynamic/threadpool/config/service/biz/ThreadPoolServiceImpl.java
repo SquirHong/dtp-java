@@ -6,8 +6,9 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.dynamic.threadpool.config.enums.DelEnum;
 import io.dynamic.threadpool.config.mapper.ConfigInfoMapper;
-import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolQueryReqDTO;
 import io.dynamic.threadpool.config.model.ConfigAllInfo;
+import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolDelReqDTO;
+import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolQueryReqDTO;
 import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolRespDTO;
 import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolSaveOrUpdateReqDTO;
 import io.dynamic.threadpool.config.toolkit.BeanUtil;
@@ -58,4 +59,15 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
                 );
         return BeanUtil.convert(selectList, ThreadPoolRespDTO.class);
     }
+
+    @Override
+    public void deletePool(ThreadPoolDelReqDTO reqDTO) {
+        configInfoMapper.delete(
+                Wrappers.lambdaUpdate(ConfigAllInfo.class)
+                        .eq(ConfigAllInfo::getTenantId, reqDTO.getTenantId())
+                        .eq(ConfigAllInfo::getItemId, reqDTO.getItemId())
+                        .eq(ConfigAllInfo::getTpId, reqDTO.getTpId())
+        );
+    }
+
 }

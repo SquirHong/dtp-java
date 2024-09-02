@@ -33,20 +33,20 @@ public class TenantController {
     }
 
     @PostMapping("/save")
-    public Result saveTenant(@RequestBody TenantSaveReqDTO reqDTO) {
+    public Result<Boolean> saveTenant(@RequestBody TenantSaveReqDTO reqDTO) {
         tenantService.saveTenant(reqDTO);
-        return Results.success();
+        return Results.success(Boolean.TRUE);
     }
 
     @PostMapping("/update")
-    public Result updateTenant(@RequestBody TenantUpdateReqDTO reqDTO) {
+    public Result<Boolean> updateTenant(@RequestBody TenantUpdateReqDTO reqDTO) {
         tenantService.updateTenant(reqDTO);
-        return Results.success();
+        return Results.success(Boolean.TRUE);
     }
 
     @DeleteMapping("/delete/{tenantId}")
-    public Result deleteTenant(@PathVariable("tenantId") String tenantId) {
+    public Result<Boolean> deleteTenant(@PathVariable("tenantId") String tenantId) {
         tenantService.deleteTenantById(tenantId);
-        return Results.success();
+        return Results.success(Boolean.TRUE);
     }
 }
