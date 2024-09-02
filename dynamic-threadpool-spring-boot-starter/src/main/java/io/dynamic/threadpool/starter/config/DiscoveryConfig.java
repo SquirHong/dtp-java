@@ -1,9 +1,11 @@
 package io.dynamic.threadpool.starter.config;
 
 
+import cn.hutool.core.util.StrUtil;
 import io.dynamic.threadpool.common.model.InstanceInfo;
 import io.dynamic.threadpool.starter.core.DiscoveryClient;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
+import io.dynamic.threadpool.starter.toolkit.InetUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +13,6 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 import java.net.InetAddress;
 
-import static io.dynamic.threadpool.common.constant.Constants.CLIENT_IDENTIFICATION_VALUE;
 import static io.dynamic.threadpool.starter.toolkit.CloudCommonIdUtil.getDefaultInstanceId;
 import static io.dynamic.threadpool.starter.toolkit.CloudCommonIdUtil.getIpApplicationName;
 
@@ -19,7 +20,11 @@ import static io.dynamic.threadpool.starter.toolkit.CloudCommonIdUtil.getIpAppli
 @AllArgsConstructor
 public class DiscoveryConfig {
 
-    private ConfigurableEnvironment environment;
+    private final ConfigurableEnvironment environment;
+
+    private final BootstrapProperties properties;
+
+    private final InetUtils inetUtils;
 
     @Bean
     @SneakyThrows
@@ -28,7 +33,7 @@ public class DiscoveryConfig {
         instanceInfo.setInstanceId(getDefaultInstanceId(environment))
                 .setIpApplicationName(getIpApplicationName(environment))
                 .setHostName(InetAddress.getLocalHost().getHostAddress())
-                .setIdentify(CLIENT_IDENTIFICATION_VALUE)
+                .setGroupKey(properties.getItemId() + "+" + properties.getTenantId())
                 .setAppName(environment.getProperty("spring.application.name"))
                 .setClientBasePath(environment.getProperty("server.servlet.context-path"));
         String callBackUrl = new StringBuilder()
@@ -39,6 +44,10 @@ public class DiscoveryConfig {
                 .toString();
         instanceInfo.setCallBackUrl(callBackUrl);
 
+        String ip = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
+        String port = environment.getProperty("server.port");
+        String identification = StrUtil.builder(ip, ":", port).toString();
+        instanceInfo.setIdentify(identification);
         return instanceInfo;
     }
 

@@ -49,6 +49,4 @@ public class Constants {
     public static final int SCHEDULED_THREAD_CORE_NUM = 1;
 
     public static final String LONG_PULLING_CLIENT_IDENTIFICATION = "Long-Pulling-Client-Identification";
-
-    public static final String CLIENT_IDENTIFICATION_VALUE = UUID.randomUUID().toString();
 }

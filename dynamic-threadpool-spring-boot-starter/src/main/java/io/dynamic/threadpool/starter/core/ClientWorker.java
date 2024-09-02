@@ -38,14 +38,17 @@ public class ClientWorker {
 
     private final HttpAgent agent;
 
+    private final String identification;
+
     private final ScheduledExecutorService executor;
 
     private final ScheduledExecutorService executorService;
 
     private final ConcurrentHashMap<String, CacheData> cacheMap = new ConcurrentHashMap(16);
 
-    public ClientWorker(HttpAgent httpAgent) {
+    public ClientWorker(HttpAgent httpAgent, String identification) {
         this.agent = httpAgent;
+        this.identification = identification;
         this.timeout = Constants.CONFIG_LONG_POLL_TIMEOUT;
 
         this.executor = Executors.newScheduledThreadPool(1, r -> {
@@ -64,7 +67,7 @@ public class ClientWorker {
             return t;
         });
 
-        log.info("Client identity :: {}", CLIENT_IDENTIFICATION_VALUE);
+        log.info("Client identity :: {}", identification);
 
         // 1s后，每个任务结束和开始之间的3s，任务内容：检查是否有新的线程配置需要进行长轮训
         this.executor.scheduleWithFixedDelay(() -> {
@@ -169,7 +172,7 @@ public class ClientWorker {
             sb.append(cacheData.tpId).append(WORD_SEPARATOR);
             sb.append(cacheData.itemId).append(WORD_SEPARATOR);
             sb.append(cacheData.tenantId).append(WORD_SEPARATOR);
-            sb.append(CLIENT_IDENTIFICATION_VALUE).append(WORD_SEPARATOR);
+            sb.append(identification).append(WORD_SEPARATOR);
             sb.append(cacheData.getMd5()).append(LINE_SEPARATOR);
 
             if (cacheData.isInitializing()) {
@@ -192,6 +195,9 @@ public class ClientWorker {
         params.put(Constants.PROBE_MODIFY_REQUEST, probeUpdateString);
         Map<String, String> headers = new HashMap(2);
         headers.put(Constants.LONG_PULLING_TIMEOUT, "" + timeout);
+
+        // 确认客户端身份, 修改线程池配置时可单独修改
+        headers.put(LONG_PULLING_CLIENT_IDENTIFICATION, identification);
 
         // told server do not hang me up if new initializing cacheData added in
         if (isInitializingCacheList) {

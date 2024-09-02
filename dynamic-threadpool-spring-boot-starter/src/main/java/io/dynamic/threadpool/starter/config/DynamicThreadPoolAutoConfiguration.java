@@ -1,5 +1,6 @@
 package io.dynamic.threadpool.starter.config;
 
+import cn.hutool.core.util.StrUtil;
 import io.dynamic.threadpool.common.config.ApplicationContextHolder;
 import io.dynamic.threadpool.starter.controller.PoolRunStateController;
 import io.dynamic.threadpool.starter.core.ConfigService;
@@ -10,6 +11,7 @@ import io.dynamic.threadpool.starter.core.ThreadPoolConfigService;
 import io.dynamic.threadpool.starter.core.ThreadPoolOperation;
 import io.dynamic.threadpool.starter.enable.MarkerConfiguration;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
+import io.dynamic.threadpool.starter.toolkit.InetUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -20,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.ConfigurableEnvironment;
 
 /**
  * 动态线程池自动装配类
@@ -30,10 +33,16 @@ import org.springframework.core.annotation.Order;
 @EnableConfigurationProperties(BootstrapProperties.class)
 // 动态线程池启用的开关
 @ConditionalOnBean(MarkerConfiguration.Marker.class)
-@ImportAutoConfiguration({HttpClientConfig.class, DiscoveryConfig.class, MessageAlarmConfig.class})
+@ImportAutoConfiguration({HttpClientConfig.class,
+        DiscoveryConfig.class,
+        MessageAlarmConfig.class,
+        UtilAutoConfiguration.class,
+        CorsConfig.class})
 public class DynamicThreadPoolAutoConfiguration {
 
     private final BootstrapProperties properties;
+
+    private final ConfigurableEnvironment environment;
 
     @Bean
     public ApplicationContextHolder applicationContextHolder() {
@@ -42,8 +51,11 @@ public class DynamicThreadPoolAutoConfiguration {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public ConfigService configService(HttpAgent httpAgent) {
-        return new ThreadPoolConfigService(httpAgent);
+    public ConfigService configService(HttpAgent httpAgent, InetUtils inetUtils) {
+        String ip = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
+        String port = environment.getProperty("server.port");
+        String identification = StrUtil.builder(ip, ":", port).toString();
+        return new ThreadPoolConfigService(httpAgent, identification);
     }
 
     @Bean
@@ -54,8 +66,7 @@ public class DynamicThreadPoolAutoConfiguration {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE + 2)
-    public DynamicThreadPoolPostProcessor threadPoolBeanPostProcessor(HttpAgent httpAgent, ThreadPoolOperation threadPoolOperation,
-                                                                      ApplicationContextHolder applicationContextHolder) {
+    public DynamicThreadPoolPostProcessor threadPoolBeanPostProcessor(HttpAgent httpAgent, ThreadPoolOperation threadPoolOperation, ApplicationContextHolder applicationContextHolder) {
         return new DynamicThreadPoolPostProcessor(properties, httpAgent, threadPoolOperation);
     }
 

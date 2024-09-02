@@ -14,11 +14,8 @@ public class ThreadPoolConfigService implements ConfigService {
 
     private final ClientWorker clientWorker;
 
-    private final HttpAgent httpAgent;
-
-    public ThreadPoolConfigService(HttpAgent httpAgent) {
-        this.httpAgent = httpAgent;
-        clientWorker = new ClientWorker(httpAgent);
+    public ThreadPoolConfigService(HttpAgent httpAgent, String identification) {
+        clientWorker = new ClientWorker(httpAgent, identification);
     }
 
     @Override
