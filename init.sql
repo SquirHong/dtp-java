@@ -107,6 +107,7 @@ CREATE TABLE `user`
     `id`           bigint(20)   NOT NULL COMMENT 'ID',
     `user_name`    varchar(64)  NOT NULL COMMENT '用户名',
     `password`     varchar(512) NOT NULL COMMENT '用户密码',
+    `role` varchar(50) NOT NULL COMMENT '角色',
     `gmt_create`   datetime     NOT NULL COMMENT '创建时间',
     `gmt_modified` datetime     NOT NULL COMMENT '修改时间',
     `del_flag`     tinyint(1)   NOT NULL COMMENT '是否删除',
@@ -179,3 +180,6 @@ VALUES (1, 'common', 'dtp', 'message-consume', NULL, 5, 10, 9, 1000, 2, 100,
        (4, 'common', 'dtp', 'custom-pool', NULL, 11, 22, 9, 50, 2, 20,
         '{\"tenantId\":\"common\",\"itemId\":\"dtp\",\"tpId\":\"custom-pool\",\"coreSize\":11,\"maxSize\":22,\"queueType\":9,\"capacity\":50,\"keepAliveTime\":20,\"rejectedType\":2,\"isAlarm\":true,\"capacityAlarm\":60,\"livenessAlarm\":60}',
         '305d072e795ca3bd64bd9644c7148b3a', 1, 60, 60, '2024-07-14 22:28:18', '2024-07-14 22:28:18', 0);
+
+/* 用户 */
+INSERT INTO `user` VALUES (1832992147790843905,'admin','$2a$10$mHCMewlb3q8JetwerpL9Hu0QgdkKOVWXmj.PE06bU5LCzwqXG.qVO','ROLE_ADMIN','2024-09-09 11:59:18','2024-09-09 11:59:18',0);

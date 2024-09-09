@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,24 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+//    @PostConstruct
+//    public void init() {
+//        UserInfo admin = userMapper.selectById(1);
+//        if (admin == null) {
+//            UserInfo userInfo = new UserInfo();
+//            userInfo.setUserName("admin");
+//            userInfo.setRole("ROLE_ADMIN");
+//            userInfo.setPassword(bCryptPasswordEncoder.encode("618020Hjs"));
+//            int insert = userMapper.insert(userInfo);
+//            if (insert > 0) {
+//                System.out.println("初始化 admin 用户成功");
+//            }else {
+//                System.out.println("初始化 admin 用户失败");
+//            }
+//
+//        }
+//    }
 
     @Override
     public IPage<UserRespDTO> listUser(UserQueryPageReqDTO reqDTO) {
