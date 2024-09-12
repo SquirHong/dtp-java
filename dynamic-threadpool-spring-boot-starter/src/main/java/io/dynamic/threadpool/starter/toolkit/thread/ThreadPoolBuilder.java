@@ -5,6 +5,7 @@ import io.dynamic.threadpool.common.toolkit.Assert;
 import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarm;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.concurrent.*;
 
 /**
@@ -272,7 +273,7 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
                 .setTimeUnit(builder.timeUnit);
 
         if (builder.isDynamicPool) {
-            initParam.setThreadPoolId(builder.threadPoolId);
+            initParam.setThreadPoolId(Optional.ofNullable(builder.threadPoolId).orElse(builder.threadNamePrefix));
             ThreadPoolAlarm threadPoolAlarm = new ThreadPoolAlarm(builder.isAlarm, builder.capacityAlarm, builder.livenessAlarm);
             initParam.setThreadPoolAlarm(threadPoolAlarm);
         }
