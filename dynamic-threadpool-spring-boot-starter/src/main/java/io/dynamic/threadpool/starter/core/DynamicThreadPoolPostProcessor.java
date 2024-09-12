@@ -49,6 +49,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
         } else if (bean instanceof DynamicThreadPoolExecutor) {
             var dynamicThreadPool = ApplicationContextHolder.findAnnotationOnBean(beanName, DynamicThreadPool.class);
             if (Objects.isNull(dynamicThreadPool)) {
+                // 仅仅只是想使用线程池，不需要订阅配置
                 return bean;
             }
             var dynamicExecutor = (DynamicThreadPoolExecutor) bean;
