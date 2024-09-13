@@ -239,7 +239,7 @@ public class DingSendMessageHandler implements SendMessageHandler {
         // 加签
         Long timestamp = System.currentTimeMillis();
         String stringToSign = timestamp + "\n" + secret;
-        byte[] signData = MAC_INSTANCE.doFinal(stringToSign.getBytes("UTF-8"));
+        byte[] signData = MAC_INSTANCE.doFinal(stringToSign.getBytes(StandardCharsets.UTF_8));
         String sign = URLEncoder.encode(new String(Base64.encodeBase64(signData)), "UTF-8");
 
         String serverUrl = notifyConfigs.getUrl() + notifyConfigs.getToken() + "&timestamp=" + timestamp + "&sign=" + sign;
@@ -261,7 +261,7 @@ public class DingSendMessageHandler implements SendMessageHandler {
         try {
             dingTalkClient.execute(request);
         } catch (ApiException ex) {
-            log.error("Ding failed to send message", ex.getMessage());
+            log.error("Ding failed to send message:{}", ex.getMessage());
         }
     }
 
