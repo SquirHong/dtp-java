@@ -2,6 +2,7 @@ package io.dynamic.threadpool.auth.filter;
 
 import com.alibaba.fastjson.JSON;
 import io.dynamic.threadpool.auth.toolkit.JwtTokenUtil;
+import io.dynamic.threadpool.common.toolkit.UserContext;
 import io.dynamic.threadpool.common.web.base.Results;
 import io.dynamic.threadpool.common.web.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +68,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         String username = JwtTokenUtil.getUsername(token);
+        UserContext.setUserName(username);
         String role = JwtTokenUtil.getUserRole(token);
         if (username != null) {
             return new UsernamePasswordAuthenticationToken(username, null,
