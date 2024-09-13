@@ -35,34 +35,34 @@ public class AlarmSendMessageTest {
         }, 30, 1, TimeUnit.SECONDS);
     }
 
-    @PostConstruct
-    public void test() {
-        log.info("开始测试");
-        ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
-
-        DynamicThreadPoolExecutor customThreadPoolExecutor = new DynamicThreadPoolExecutor(
-                10,
-                100,
-                0,
-                TimeUnit.SECONDS,
-                new ResizableCapacityLinkedBlockIngQueue(100),
-                "100",
-                new CustomizableThreadFactory("test"),
-                new ThreadPoolAlarm(true, 2, 3),
-                new RejectedExecutionHandler() {
-                    @Override
-                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                        log.error("拒绝策略");
-                    }
-                });
-        scheduledThreadPool.scheduleWithFixedDelay(() -> {
-            log.info("开始执行非spring环境线程池");
-            try {
-                customThreadPoolExecutor.execute(() ->
-                        ThreadUtil.sleep(10241024));
-            } catch (Exception ex) {
-                log.error("抛出拒绝策略oooooooooo", ex.getMessage());
-            }
-        }, 10, 1, TimeUnit.SECONDS);
-    }
+//    @PostConstruct
+//    public void test() {
+//        log.info("开始测试");
+//        ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
+//
+//        DynamicThreadPoolExecutor customThreadPoolExecutor = new DynamicThreadPoolExecutor(
+//                10,
+//                100,
+//                0,
+//                TimeUnit.SECONDS,
+//                new ResizableCapacityLinkedBlockIngQueue(100),
+//                "100",
+//                new CustomizableThreadFactory("test"),
+//                new ThreadPoolAlarm(true, 2, 3),
+//                new RejectedExecutionHandler() {
+//                    @Override
+//                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+//                        log.error("拒绝策略");
+//                    }
+//                });
+//        scheduledThreadPool.scheduleWithFixedDelay(() -> {
+//            log.info("开始执行非spring环境线程池");
+//            try {
+//                customThreadPoolExecutor.execute(() ->
+//                        ThreadUtil.sleep(10241024));
+//            } catch (Exception ex) {
+//                log.error("抛出拒绝策略oooooooooo", ex.getMessage());
+//            }
+//        }, 10, 1, TimeUnit.SECONDS);
+//    }
 }

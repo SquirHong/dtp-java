@@ -277,7 +277,6 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
             ThreadPoolAlarm threadPoolAlarm = new ThreadPoolAlarm(builder.isAlarm, builder.capacityAlarm, builder.livenessAlarm);
             initParam.setThreadPoolAlarm(threadPoolAlarm);
         }
-
         // 快速消费线程池内置指定线程池
         if (!builder.isFastPool) {
             if (builder.queueType != null) {

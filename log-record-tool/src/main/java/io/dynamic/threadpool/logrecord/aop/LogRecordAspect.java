@@ -147,7 +147,7 @@ public class LogRecordAspect {
                 Map<String, String> expressionValues = logRecordValueParser.processTemplate(spElTemplates, ret, targetClass, method, args, errorMsg, functionNameAndReturnMap);
                 if (logConditionPassed(operation.getCondition(), expressionValues)) {
                     LogRecordInfo logRecordInfo = LogRecordInfo.builder()
-                            .tenant(environment.getProperty("tenant"))
+                            .tenant(StringUtils.isEmpty(environment.getProperty("tenant")) ? environment.getProperty("tenant") : "dtp")
                             .bizKey(expressionValues.get(operation.getBizKey()))
                             .bizNo(expressionValues.get(operation.getBizNo()))
                             .operator(getRealOperatorId(operation, operatorIdFromService, expressionValues))

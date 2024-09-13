@@ -11,7 +11,7 @@ public enum ErrorCodeEnum {
 
     SERVICE_ERROR("3", "服务异常"),
 
-    NOT_FOUND ("4", "未找到异常");
+    NOT_FOUND ("404", "未找到异常");
 
     private final String code;
 

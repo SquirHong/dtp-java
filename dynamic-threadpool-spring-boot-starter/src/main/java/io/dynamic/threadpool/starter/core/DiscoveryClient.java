@@ -115,6 +115,7 @@ public class DiscoveryClient {
             renewResult = httpAgent.httpPostByDiscovery(Constants.BASE_PATH + "/apps/renew", instanceRenew);
 
             if (ErrorCodeEnum.NOT_FOUND.getCode().equals(renewResult.getCode())) {
+                log.info("出现NOT_FOUND异常,客户端实例续约失败，重新注册,renewResult = {}", renewResult);
                 long timestamp = instanceInfo.setIsDirtyWithTime();
                 boolean success = register();
                 if (success) {
