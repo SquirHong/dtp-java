@@ -1,11 +1,8 @@
 package io.dynamic.threadpool.starter.alarm;
 
 
-
 import io.dynamic.threadpool.common.model.PoolParameterInfo;
 import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
-
-import java.util.List;
 
 public interface SendMessageHandler {
 
@@ -19,17 +16,17 @@ public interface SendMessageHandler {
     /**
      * Send alarm message.
      *
-     * @param notifyConfigs
+     * @param notifyConfig
      * @param threadPoolExecutor
      */
-    void sendAlarmMessage(List<NotifyConfig> notifyConfigs, DynamicThreadPoolExecutor threadPoolExecutor);
+    void sendAlarmMessage(AlarmNotifyDTO notifyConfig, DynamicThreadPoolExecutor threadPoolExecutor);
 
     /**
      * Send change message.
      *
-     * @param notifyConfigs
+     * @param notifyConfig
      * @param parameter
      */
-    void sendChangeMessage(List<NotifyConfig> notifyConfigs, PoolParameterInfo parameter);
+    void sendChangeMessage(AlarmNotifyDTO notifyConfig, PoolParameterInfo parameter);
 
 }

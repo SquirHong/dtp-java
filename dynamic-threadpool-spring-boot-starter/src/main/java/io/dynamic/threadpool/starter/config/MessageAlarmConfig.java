@@ -2,6 +2,7 @@ package io.dynamic.threadpool.starter.config;
 
 import io.dynamic.threadpool.common.model.InstanceInfo;
 import io.dynamic.threadpool.starter.alarm.*;
+import io.dynamic.threadpool.starter.remote.HttpAgent;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.context.annotation.Bean;
@@ -23,8 +24,8 @@ public class MessageAlarmConfig {
 
     @DependsOn("applicationContextHolder")
     @Bean(SEND_MESSAGE_BEAN_NAME)
-    public SendMessageService sendMessageService() {
-        return new BaseSendMessageService(properties.getNotifys());
+    public SendMessageService sendMessageService(HttpAgent httpAgent) {
+        return new BaseSendMessageService(httpAgent, properties);
     }
 
     // 注入报警控制处理器
@@ -38,8 +39,7 @@ public class MessageAlarmConfig {
     @Bean
     public SendMessageHandler dingSendMessageHandler() {
         String active = environment.getProperty("spring.profiles.active", Strings.EMPTY);
-        Long alarmInterval = Optional.ofNullable(properties.getAlarmInterval()).orElse(3L);
-        return new DingSendMessageHandler(active, instanceInfo,alarmInterval);
+        return new DingSendMessageHandler(active, instanceInfo);
     }
 
 }

@@ -9,8 +9,8 @@ import com.google.common.base.Joiner;
 import com.taobao.api.ApiException;
 import io.dynamic.threadpool.common.model.InstanceInfo;
 import io.dynamic.threadpool.common.model.PoolParameterInfo;
-import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
 import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
+import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
 import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
 import io.dynamic.threadpool.starter.toolkit.thread.RejectedTypeEnum;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrapper;
@@ -21,14 +21,11 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -40,8 +37,6 @@ public class DingSendMessageHandler implements SendMessageHandler {
     private String active;
 
     private InstanceInfo instanceInfo;
-
-    private Long alarmInterval;
 
     private static final String secret = "SECb7b4f4e8e1b7a5b27b096e036973c2f648d4da94d85fea403bf3cc85b5c5f2be";
 
@@ -62,32 +57,16 @@ public class DingSendMessageHandler implements SendMessageHandler {
     }
 
     @Override
-    public void sendAlarmMessage(List<NotifyConfig> notifyConfigs, DynamicThreadPoolExecutor pool) {
-        Optional<NotifyConfig> notifyConfigOptional = notifyConfigs.stream()
-                .filter(each -> Objects.equals(each.getType(), getType()))
-                .findFirst();
-        notifyConfigOptional.ifPresent(each -> {
-            try {
-                dingAlarmSendMessage(each, pool);
-            } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            } catch (InvalidKeyException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    public void sendAlarmMessage(AlarmNotifyDTO notifyConfig, DynamicThreadPoolExecutor pool) {
+        dingAlarmSendMessage(notifyConfig, pool);
     }
 
     @Override
-    public void sendChangeMessage(List<NotifyConfig> notifyConfigs, PoolParameterInfo parameter) {
-        Optional<NotifyConfig> changeConfigOptional = notifyConfigs.stream()
-                .filter(each -> Objects.equals(each.getType(), getType()))
-                .findFirst();
-        changeConfigOptional.ifPresent(each -> dingChangeSendMessage(each, parameter));
+    public void sendChangeMessage(AlarmNotifyDTO notifyConfig, PoolParameterInfo parameter) {
+        dingChangeSendMessage(notifyConfig, parameter);
     }
 
-    public void dingAlarmSendMessage(NotifyConfig notifyConfig, DynamicThreadPoolExecutor pool) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+    public void dingAlarmSendMessage(AlarmNotifyDTO notifyConfig, DynamicThreadPoolExecutor pool) {
         List<String> receives = StrUtil.split(notifyConfig.getReceives(), ',');
         String afterReceives = Joiner.on(", @").join(receives);
 
@@ -150,7 +129,7 @@ public class DingSendMessageHandler implements SendMessageHandler {
                 // 告警手机号
                 afterReceives,
                 // 报警频率
-                alarmInterval,
+                notifyConfig.getInterval(),
                 // 当前时间
                 DateUtil.now()
 
@@ -163,7 +142,7 @@ public class DingSendMessageHandler implements SendMessageHandler {
         }
     }
 
-    private void dingChangeSendMessage(NotifyConfig notifyConfig, PoolParameterInfo parameter) {
+    private void dingChangeSendMessage(AlarmNotifyDTO notifyConfig, PoolParameterInfo parameter) {
         String threadPoolId = parameter.getTpId();
         DynamicThreadPoolWrapper poolWrap = GlobalThreadPoolManage.getExecutorService(threadPoolId);
         if (poolWrap == null) {
@@ -234,15 +213,15 @@ public class DingSendMessageHandler implements SendMessageHandler {
         }
     }
 
-    private void execute(NotifyConfig notifyConfigs, String title, String text, List<String> mobiles) throws Exception {
-
+    private void execute(AlarmNotifyDTO notifyConfig, String title, String text, List<String> mobiles) throws Exception {
+        String url = "https://oapi.dingtalk.com/robot/send?access_token=";
         // 加签
         Long timestamp = System.currentTimeMillis();
         String stringToSign = timestamp + "\n" + secret;
         byte[] signData = MAC_INSTANCE.doFinal(stringToSign.getBytes(StandardCharsets.UTF_8));
         String sign = URLEncoder.encode(new String(Base64.encodeBase64(signData)), "UTF-8");
 
-        String serverUrl = notifyConfigs.getUrl() + notifyConfigs.getToken() + "&timestamp=" + timestamp + "&sign=" + sign;
+        String serverUrl = url + notifyConfig.getSecretKey() + "&timestamp=" + timestamp + "&sign=" + sign;
 
         DingTalkClient dingTalkClient = new DefaultDingTalkClient(serverUrl);
         OapiRobotSendRequest request = new OapiRobotSendRequest();

@@ -1,11 +1,8 @@
 package io.dynamic.threadpool.starter.config;
 
-import io.dynamic.threadpool.starter.alarm.NotifyConfig;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.util.List;
 
 /**
  * 动态线程池配置
@@ -32,11 +29,6 @@ public class BootstrapProperties {
      * 项目 Id
      */
     private String itemId;
-
-    /**
-     * notifys
-     */
-    private List<NotifyConfig> notifys;
 
     /**
      * Alarm interval

@@ -20,7 +20,7 @@ public class GroupKey {
 
     private static String doGetKey(String dataId, String group, String datumStr) {
         StringBuilder sb = new StringBuilder();
-        urlEncode(dataId, sb);
+//        urlEncode(dataId, sb);
         sb.append('+');
         urlEncode(group, sb);
         if (!StringUtils.isEmpty(datumStr)) {

@@ -110,6 +110,10 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
             log.error("[Init pool] Failed to initialize thread pool configuration. error message :: {},Enhance the default provided thread pool.. ", ex.getMessage());
             dynamicThreadPoolWrap.setPool(CommonDynamicThreadPool.getInstance(tpId));
         } finally {
+            // 如果客户端使用了 DynamicThreadPoolExecutor，但没有加@DynamicThreadPool注解，则配置上默认的线程池
+            if (Objects.isNull(dynamicThreadPoolWrap.getPool())) {
+                dynamicThreadPoolWrap.setPool(CommonDynamicThreadPool.getInstance(tpId));
+            }
             // 设置是否订阅远端线程池配置
             dynamicThreadPoolWrap.setSubscribeFlag(isSubscribe);
         }

@@ -1,8 +1,10 @@
 package io.dynamic.threadpool.starter.core;
 
+import com.google.common.collect.Lists;
 import io.dynamic.threadpool.common.model.PoolParameter;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrapper;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,10 +44,9 @@ public class GlobalThreadPoolManage {
         return POOL_PARAMETER.get(tpId);
     }
 
-    // 添加一个静态块或一个初始化方法来启动定时任务
-//    static {
-//        startPeriodicPrinting();
-//    }
+    public static List<String> listThreadPoolId() {
+        return Lists.newArrayList(POOL_PARAMETER.keySet());
+    }
 
     private static void startPeriodicPrinting() {
         TimerTask task = new TimerTask() {
