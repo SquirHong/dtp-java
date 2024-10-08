@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import io.dynamic.threadpool.common.toolkit.Assert;
 import io.dynamic.threadpool.config.enums.DelEnum;
 import io.dynamic.threadpool.config.mapper.TenantInfoMapper;
 import io.dynamic.threadpool.config.model.TenantInfo;
@@ -63,6 +64,12 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public void saveTenant(TenantSaveReqDTO reqDTO) {
+        LambdaQueryWrapper<TenantInfo> queryWrapper = Wrappers.lambdaQuery(TenantInfo.class)
+                .eq(TenantInfo::getTenantId, reqDTO.getTenantId());
+
+        TenantInfo existTenantInfo = tenantInfoMapper.selectOne(queryWrapper);
+        Assert.isNull(existTenantInfo, "租户 ID 不允许重复.");
+
         TenantInfo tenantInfo = BeanUtil.convert(reqDTO, TenantInfo.class);
         int insertResult = tenantInfoMapper.insert(tenantInfo);
 
