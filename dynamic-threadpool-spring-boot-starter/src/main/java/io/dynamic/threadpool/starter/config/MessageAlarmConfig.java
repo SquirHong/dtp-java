@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-import java.util.Optional;
-
 @AllArgsConstructor
 public class MessageAlarmConfig {
 
@@ -24,15 +22,14 @@ public class MessageAlarmConfig {
 
     @DependsOn("applicationContextHolder")
     @Bean(SEND_MESSAGE_BEAN_NAME)
-    public SendMessageService sendMessageService(HttpAgent httpAgent) {
-        return new BaseSendMessageService(httpAgent, properties);
+    public SendMessageService sendMessageService(HttpAgent httpAgent, AlarmControlHandler alarmControlHandler) {
+        return new BaseSendMessageService(httpAgent, properties, alarmControlHandler);
     }
 
     // 注入报警控制处理器
     @Bean
     public AlarmControlHandler alarmControlHandler() {
-        Long alarmInterval = properties.getAlarmInterval();
-        return new AlarmControlHandler(alarmInterval);
+        return new AlarmControlHandler();
     }
 
     // 注入钉钉消息通知处理器

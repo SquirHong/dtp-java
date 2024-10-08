@@ -1,5 +1,6 @@
-package io.dynamic.threadpool.config.config.alarm;
+package io.dynamic.threadpool.config.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -10,8 +11,8 @@ import java.util.Date;
  * 报警管理.
  */
 @Data
-@TableName("alarm")
-public class AlarmInfo {
+@TableName("notify")
+public class NotifyInfo {
 
     /**
      * id
@@ -38,6 +39,12 @@ public class AlarmInfo {
      */
     private String platform;
 
+    // 包含type = 1 or 2 ，CONFIG or ALARM
+    /**
+     * 通知类型
+     */
+    private String type;
+
     /**
      * 密钥
      */
@@ -57,16 +64,24 @@ public class AlarmInfo {
     /**
      * 创建时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private Date gmtCreate;
 
     /**
      * 修改时间
      */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
+
+    /**
+     * 是否启用
+     */
+    private Integer enable;
 
     /**
      * 是否删除
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer delFlag;
 
 }

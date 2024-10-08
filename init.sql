@@ -98,7 +98,6 @@ CREATE TABLE `config_info`
 
 
 /******************************************/
-/*   数据库全名 = hippo_manager   */
 /*   表名称 = user   */
 /******************************************/
 DROP TABLE IF EXISTS `user`;
@@ -107,7 +106,7 @@ CREATE TABLE `user`
     `id`           bigint(20)   NOT NULL COMMENT 'ID',
     `user_name`    varchar(64)  NOT NULL COMMENT '用户名',
     `password`     varchar(512) NOT NULL COMMENT '用户密码',
-    `role` varchar(50) NOT NULL COMMENT '角色',
+    `role`         varchar(50)  NOT NULL COMMENT '角色',
     `gmt_create`   datetime     NOT NULL COMMENT '创建时间',
     `gmt_modified` datetime     NOT NULL COMMENT '修改时间',
     `del_flag`     tinyint(1)   NOT NULL COMMENT '是否删除',
@@ -116,7 +115,6 @@ CREATE TABLE `user`
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';
 
 /******************************************/
-/*   数据库全名 = hippo_manager   */
 /*   表名称 = role   */
 /******************************************/
 DROP TABLE IF EXISTS `role`;
@@ -133,7 +131,6 @@ CREATE TABLE `role`
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色表';
 
 /******************************************/
-/*   数据库全名 = hippo_manager   */
 /*   表名称 = permission   */
 /******************************************/
 DROP TABLE IF EXISTS `permission`;
@@ -149,6 +146,30 @@ CREATE TABLE `permission`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='权限表';
+
+
+/******************************************/
+/*   表名称 = notify   */
+/******************************************/
+DROP TABLE IF EXISTS `notify`;
+CREATE TABLE `notify`
+(
+    `id`           bigint(20)   NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `tenant_id`    varchar(128) NOT NULL DEFAULT '' COMMENT '租户ID',
+    `item_id`      varchar(128) NOT NULL COMMENT '项目ID',
+    `tp_id`        varchar(128) NOT NULL COMMENT '线程池ID',
+    `platform`     varchar(32)  NOT NULL COMMENT '通知平台',
+    `type`         varchar(16)  NOT NULL COMMENT '通知类型',
+    `secret_key`   varchar(256) NOT NULL COMMENT '密钥',
+    `interval`     int(11)      DEFAULT NULL COMMENT '报警间隔',
+    `receives`     varchar(512) NOT NULL COMMENT '接收者',
+    `enable` tinyint(1) DEFAULT NULL COMMENT '是否启用',
+    `gmt_create`   datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `gmt_modified` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+    `del_flag`     tinyint(1)   NOT NULL COMMENT '是否删除',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='报警表';
 
 
 /* 租户 */
@@ -182,4 +203,6 @@ VALUES (1, 'common', 'dtp', 'message-consume', NULL, 5, 10, 9, 1000, 2, 100,
         '305d072e795ca3bd64bd9644c7148b3a', 1, 60, 60, '2024-07-14 22:28:18', '2024-07-14 22:28:18', 0);
 
 /* 用户 */
-INSERT INTO `user` VALUES (1832992147790843905,'admin','$2a$10$mHCMewlb3q8JetwerpL9Hu0QgdkKOVWXmj.PE06bU5LCzwqXG.qVO','ROLE_ADMIN','2024-09-09 11:59:18','2024-09-09 11:59:18',0);
+INSERT INTO `user`
+VALUES (1832992147790843905, 'admin', '$2a$10$mHCMewlb3q8JetwerpL9Hu0QgdkKOVWXmj.PE06bU5LCzwqXG.qVO', 'ROLE_ADMIN',
+        '2024-09-09 11:59:18', '2024-09-09 11:59:18', 0);

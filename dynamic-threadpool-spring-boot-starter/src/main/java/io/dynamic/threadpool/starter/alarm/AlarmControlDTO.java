@@ -16,6 +16,11 @@ public class AlarmControlDTO {
     private String threadPool;
 
     /**
+     * 推送报警平台
+     */
+    private String platform;
+
+    /**
      * 推送报警类型
      */
     private MessageTypeEnum typeEnum;
@@ -25,8 +30,8 @@ public class AlarmControlDTO {
      *
      * @return
      */
-    public String buildPk() {
-        return threadPool + "_" + typeEnum;
+    public String buildThreadPoolAndPlatform() {
+        return threadPool + "+" + platform;
     }
 
 }

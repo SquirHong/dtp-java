@@ -3,6 +3,7 @@ package io.dynamic.threadpool.starter.wrap;
 import io.dynamic.threadpool.starter.common.CommonDynamicThreadPool;
 import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -11,6 +12,7 @@ import java.util.concurrent.Future;
  * 线程池包装
  */
 @Data
+@Slf4j
 public class DynamicThreadPoolWrapper {
     private String tenantId;
 
@@ -29,6 +31,7 @@ public class DynamicThreadPoolWrapper {
      */
     public DynamicThreadPoolWrapper(String threadPoolId) {
         this(threadPoolId, CommonDynamicThreadPool.getInstance(threadPoolId));
+        log.info("hjs----->>>>");
     }
 
     /**

@@ -19,7 +19,7 @@ public interface SendMessageHandler {
      * @param notifyConfig
      * @param threadPoolExecutor
      */
-    void sendAlarmMessage(AlarmNotifyDTO notifyConfig, DynamicThreadPoolExecutor threadPoolExecutor);
+    void sendAlarmMessage(NotifyDTO notifyConfig, DynamicThreadPoolExecutor threadPoolExecutor);
 
     /**
      * Send change message.
@@ -27,6 +27,6 @@ public interface SendMessageHandler {
      * @param notifyConfig
      * @param parameter
      */
-    void sendChangeMessage(AlarmNotifyDTO notifyConfig, PoolParameterInfo parameter);
+    void sendChangeMessage(NotifyDTO notifyConfig, PoolParameterInfo parameter);
 
 }

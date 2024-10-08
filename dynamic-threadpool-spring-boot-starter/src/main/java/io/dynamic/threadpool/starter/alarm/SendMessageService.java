@@ -9,9 +9,10 @@ public interface SendMessageService {
     /**
      * Send alarm message.
      *
+     * @param typeEnum
      * @param threadPoolExecutor
      */
-    void sendAlarmMessage(DynamicThreadPoolExecutor threadPoolExecutor);
+    void sendAlarmMessage(MessageTypeEnum typeEnum, DynamicThreadPoolExecutor threadPoolExecutor);
 
     /**
      * Send change message.

@@ -1,7 +1,10 @@
 package io.dynamic.threadpool.starter.alarm;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.dynamic.threadpool.common.config.ApplicationContextHolder;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,7 +38,10 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
     @NonNull
     private final BootstrapProperties properties;
 
-    private static final Map<String, List<AlarmNotifyDTO>> ALARM_NOTIFY_CONFIG = Maps.newHashMap();
+    @NonNull
+    private final AlarmControlHandler alarmControlHandler;
+
+    private static final Map<String, List<NotifyDTO>> ALARM_NOTIFY_CONFIG = Maps.newHashMap();
 
     // 平台：钉钉、飞书、OA办公等
     private final Map<String, SendMessageHandler> sendMessageHandlers = Maps.newHashMap();
@@ -55,17 +62,32 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
             groupKeys.add(groupKey);
         });
         Result result = null;
-        result = httpAgent.httpPostByDiscovery("/v1/cs/alarm/list/config", new ThreadPoolAlarmReqDTO(groupKeys));
+        try {
+            result = httpAgent.httpPostByDiscovery("/v1/cs/notify/list/config", new ThreadPoolNotifyReqDTO(groupKeys));
+        } catch (Exception e) {
+            log.error("Failed to get alarm notification configuration.", e);
+        }
 
-        if (result.isSuccess() || result.getData() != null) {
-            List<ThreadPoolAlarmNotify> resultData = JSON.parseArray(JSON.toJSONString(result.getData()), ThreadPoolAlarmNotify.class);
-            resultData.forEach(each -> ALARM_NOTIFY_CONFIG.put(each.getThreadPoolId(), each.getAlarmNotifyList()));
+        if (result != null && result.isSuccess() && result.getData() != null) {
+            List<ThreadPoolNotify> resultData = JSON.parseArray(JSON.toJSONString(result.getData()), ThreadPoolNotify.class);
+            resultData.forEach(each -> ALARM_NOTIFY_CONFIG.put(each.getNotifyKey(), each.getNotifyList()));
+
+            ALARM_NOTIFY_CONFIG.forEach((key, value) -> {
+                value.stream().filter(each -> "ALARM".equals(each.getType())).forEach(each -> {
+                    Cache<String, String> cache = CacheBuilder.newBuilder()
+                            .expireAfterWrite(each.getInterval(), TimeUnit.MINUTES)
+                            .build();
+                    AlarmControlHandler.THREAD_POOL_ALARM_CACHE.put(StrUtil.builder(each.getTpId(), "+", each.getPlatform()).toString(), cache);
+                });
+            });
+
         }
     }
 
     @Override
-    public void sendAlarmMessage(DynamicThreadPoolExecutor threadPoolExecutor) {
-        List<AlarmNotifyDTO> notifyList = ALARM_NOTIFY_CONFIG.get(threadPoolExecutor.getThreadPoolId());
+    public void sendAlarmMessage(MessageTypeEnum typeEnum, DynamicThreadPoolExecutor threadPoolExecutor) {
+        String buildKey = threadPoolExecutor.getThreadPoolId() + "+ALARM";
+        List<NotifyDTO> notifyList = ALARM_NOTIFY_CONFIG.get(buildKey);
         if (CollUtil.isEmpty(notifyList)) {
             log.warn("Please configure alarm notification on the server.");
             return;
@@ -74,16 +96,19 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
         notifyList.forEach(each -> {
             SendMessageHandler messageHandler = sendMessageHandlers.get(each.getPlatform());
             if (messageHandler == null) {
-                log.warn("Please configure alarm notification for platform: " + each.getPlatform() + " on the server.");
+                log.warn("服务端没有实现: " + each.getPlatform() + " 平台.");
                 return;
             }
-            messageHandler.sendAlarmMessage(each, threadPoolExecutor);
+            if (isSendAlarm(each.getTpId(), each.setTypeEnum(typeEnum))) {
+                messageHandler.sendAlarmMessage(each, threadPoolExecutor);
+            }
         });
     }
 
     @Override
     public void sendChangeMessage(PoolParameterInfo parameter) {
-        List<AlarmNotifyDTO> notifyList = ALARM_NOTIFY_CONFIG.get(parameter.getTpId());
+        String buildKey = parameter.getTpId() + "+ALARM";
+        List<NotifyDTO> notifyList = ALARM_NOTIFY_CONFIG.get(buildKey);
         if (CollUtil.isEmpty(notifyList)) {
             log.warn("Please configure alarm notification on the server.");
             return;
@@ -92,16 +117,26 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
         notifyList.forEach(each -> {
             SendMessageHandler messageHandler = sendMessageHandlers.get(each.getPlatform());
             if (messageHandler == null) {
-                log.warn("Please configure alarm notification for platform: " + each.getPlatform() + " on the server.");
+                log.warn("服务端没有实现: " + each.getPlatform() + " 平台.");
                 return;
             }
             messageHandler.sendChangeMessage(each, parameter);
         });
     }
 
+    private boolean isSendAlarm(String threadPoolId, NotifyDTO notifyInfo) {
+        AlarmControlDTO alarmControl = AlarmControlDTO.builder()
+                .threadPool(threadPoolId)
+                .platform(notifyInfo.getPlatform())
+                .typeEnum(notifyInfo.getTypeEnum())
+                .build();
+
+        return alarmControlHandler.isSendAlarm(alarmControl);
+    }
+
     @Data
     @AllArgsConstructor
-    static class ThreadPoolAlarmReqDTO {
+    static class ThreadPoolNotifyReqDTO {
 
         /**
          * groupKeys
@@ -111,17 +146,17 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
     }
 
     @Data
-    static class ThreadPoolAlarmNotify {
+    static class ThreadPoolNotify {
 
         /**
-         * 线程池ID
+         * 通知 Key tpid+notifyType
          */
-        private String threadPoolId;
+        private String notifyKey;
 
         /**
          * 报警配置
          */
-        private List<AlarmNotifyDTO> alarmNotifyList;
+        private List<NotifyDTO> notifyList;
 
     }
 

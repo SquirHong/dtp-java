@@ -18,17 +18,11 @@ public class ThreadPoolAlarmManage {
 
     public static final SendMessageService SEND_MESSAGE_SERVICE;
 
-    /**
-     * 报警间隔控制
-     */
-    private static final AlarmControlHandler ALARM_CONTROL_HANDLER;
-
     static {
         SEND_MESSAGE_SERVICE = Optional.ofNullable(ApplicationContextHolder.getInstance())
                 .map(each -> each.getBean(MessageAlarmConfig.SEND_MESSAGE_BEAN_NAME, SendMessageService.class))
                 .orElse(null);
         log.info("ThreadPoolAlarmManage init success");
-        ALARM_CONTROL_HANDLER = ApplicationContextHolder.getInstance().getBean(AlarmControlHandler.class);
     }
 
     /**
@@ -46,9 +40,9 @@ public class ThreadPoolAlarmManage {
         int queueSize = blockIngQueue.size();
         int capacity = queueSize + blockIngQueue.remainingCapacity();
         int divide = CalculateUtil.divide(queueSize, capacity);
-        if ((divide > threadPoolAlarm.getCapacityAlarm()) && isSendMessage(threadPoolExecutor, MessageTypeEnum.CAPACITY)) {
+        if ((divide > threadPoolAlarm.getCapacityAlarm()) && threadPoolAlarm.getIsAlarm()) {
             log.info("要发送线程池队列容量告警");
-            SEND_MESSAGE_SERVICE.sendAlarmMessage(threadPoolExecutor);
+            SEND_MESSAGE_SERVICE.sendAlarmMessage(MessageTypeEnum.CAPACITY, threadPoolExecutor);
 
         }
     }
@@ -62,7 +56,7 @@ public class ThreadPoolAlarmManage {
     public static void checkPoolLivenessAlarm(boolean isCore, DynamicThreadPoolExecutor threadPoolExecutor) {
         log.info("checkPoolLivenessAlarm");
         try {
-            if (isCore || SEND_MESSAGE_SERVICE == null || !isSendMessage(threadPoolExecutor, MessageTypeEnum.LIVENESS)) {
+            if (isCore || SEND_MESSAGE_SERVICE == null || !threadPoolExecutor.getThreadPoolAlarm().getIsAlarm()) {
                 return;
             }
             int activeCount = threadPoolExecutor.getActiveCount();
@@ -70,7 +64,7 @@ public class ThreadPoolAlarmManage {
             int divide = CalculateUtil.divide(activeCount, maximumPoolSize);
             if (divide > threadPoolExecutor.getThreadPoolAlarm().getLivenessAlarm()) {
                 log.info("要发送线程池活跃度告警");
-                SEND_MESSAGE_SERVICE.sendAlarmMessage(threadPoolExecutor);
+                SEND_MESSAGE_SERVICE.sendAlarmMessage(MessageTypeEnum.CAPACITY, threadPoolExecutor);
 
             }
         } catch (Exception e) {
@@ -86,12 +80,11 @@ public class ThreadPoolAlarmManage {
      * @param threadPoolExecutor
      */
     public static void checkPoolRejectAlarm(DynamicThreadPoolExecutor threadPoolExecutor) {
-        if (SEND_MESSAGE_SERVICE == null || !isSendMessage(threadPoolExecutor, MessageTypeEnum.REJECT)) {
+        if (SEND_MESSAGE_SERVICE == null || !threadPoolExecutor.getThreadPoolAlarm().getIsAlarm()) {
             return;
         }
         log.info("要发送线程池拒绝告警");
-        SEND_MESSAGE_SERVICE.sendAlarmMessage(threadPoolExecutor);
-
+        SEND_MESSAGE_SERVICE.sendAlarmMessage(MessageTypeEnum.REJECT, threadPoolExecutor);
     }
 
     /**
@@ -107,14 +100,5 @@ public class ThreadPoolAlarmManage {
         SEND_MESSAGE_SERVICE.sendChangeMessage(parameter);
     }
 
-    private static boolean isSendMessage(DynamicThreadPoolExecutor threadPoolExecutor, MessageTypeEnum typeEnum) {
-        AlarmControlDTO alarmControlDTO = currentAlarmMap.computeIfAbsent(
-                threadPoolExecutor.getThreadPoolId() + typeEnum,
-                key -> AlarmControlDTO.builder()
-                        .threadPool(threadPoolExecutor.getThreadPoolId())
-                        .typeEnum(typeEnum)
-                        .build());
-        return ALARM_CONTROL_HANDLER.isSend(alarmControlDTO);
-    }
 
 }

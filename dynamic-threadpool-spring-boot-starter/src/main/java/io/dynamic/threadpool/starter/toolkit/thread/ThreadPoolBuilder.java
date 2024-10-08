@@ -284,7 +284,7 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
             }
             initParam.setWorkQueue(builder.workQueue);
         }
-
+        System.out.println("hjs------initParam>>>>" + initParam);
         return initParam;
     }
 }

@@ -53,20 +53,20 @@ public class DingSendMessageHandler implements SendMessageHandler {
 
     @Override
     public String getType() {
-        return SendMessageEnum.DING.name();
+        return NotifyPlatformEnum.DING.name();
     }
 
     @Override
-    public void sendAlarmMessage(AlarmNotifyDTO notifyConfig, DynamicThreadPoolExecutor pool) {
+    public void sendAlarmMessage(NotifyDTO notifyConfig, DynamicThreadPoolExecutor pool) {
         dingAlarmSendMessage(notifyConfig, pool);
     }
 
     @Override
-    public void sendChangeMessage(AlarmNotifyDTO notifyConfig, PoolParameterInfo parameter) {
+    public void sendChangeMessage(NotifyDTO notifyConfig, PoolParameterInfo parameter) {
         dingChangeSendMessage(notifyConfig, parameter);
     }
 
-    public void dingAlarmSendMessage(AlarmNotifyDTO notifyConfig, DynamicThreadPoolExecutor pool) {
+    public void dingAlarmSendMessage(NotifyDTO notifyConfig, DynamicThreadPoolExecutor pool) {
         List<String> receives = StrUtil.split(notifyConfig.getReceives(), ',');
         String afterReceives = Joiner.on(", @").join(receives);
 
@@ -75,6 +75,7 @@ public class DingSendMessageHandler implements SendMessageHandler {
                 "<font color='#FF0000'>[警报] </font>%s - 动态线程池运行告警 \n\n" +
                         " --- \n\n " +
                         "<font color='#778899' size=2>应用实例：%s</font> \n\n " +
+                        "<font color='#778899' size=2>报警类型：%s</font> \n\n " +
                         "<font color='#708090' size=2>线程池名称：%s</font> \n\n " +
                         " --- \n\n  " +
                         "<font color='#708090' size=2>核心线程数：%d</font> \n\n " +
@@ -100,6 +101,8 @@ public class DingSendMessageHandler implements SendMessageHandler {
                 active.toUpperCase(),
                 // 节点信息
                 instanceInfo.getIpApplicationName(),
+                // 报警类型
+                notifyConfig.getTypeEnum(),
                 // 线程池ID
                 pool.getThreadPoolId(),
                 // 核心线程数
@@ -142,7 +145,7 @@ public class DingSendMessageHandler implements SendMessageHandler {
         }
     }
 
-    private void dingChangeSendMessage(AlarmNotifyDTO notifyConfig, PoolParameterInfo parameter) {
+    private void dingChangeSendMessage(NotifyDTO notifyConfig, PoolParameterInfo parameter) {
         String threadPoolId = parameter.getTpId();
         DynamicThreadPoolWrapper poolWrap = GlobalThreadPoolManage.getExecutorService(threadPoolId);
         if (poolWrap == null) {
@@ -213,7 +216,7 @@ public class DingSendMessageHandler implements SendMessageHandler {
         }
     }
 
-    private void execute(AlarmNotifyDTO notifyConfig, String title, String text, List<String> mobiles) throws Exception {
+    private void execute(NotifyDTO notifyConfig, String title, String text, List<String> mobiles) throws Exception {
         String url = "https://oapi.dingtalk.com/robot/send?access_token=";
         // 加签
         Long timestamp = System.currentTimeMillis();

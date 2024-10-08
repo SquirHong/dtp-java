@@ -1,12 +1,14 @@
 package io.dynamic.threadpool.starter.alarm;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 报警通知实体.
  */
 @Data
-public class AlarmNotifyDTO {
+@Accessors(chain = true)
+public class NotifyDTO {
 
     /**
      * 租户id
@@ -29,6 +31,11 @@ public class AlarmNotifyDTO {
     private String platform;
 
     /**
+     * 通知类型
+     */
+    private String type;
+
+    /**
      * 密钥
      */
     private String secretKey;
@@ -42,5 +49,12 @@ public class AlarmNotifyDTO {
      * 接收者
      */
     private String receives;
+
+    /**
+     * 报警类型
+     */
+    private MessageTypeEnum typeEnum;
+
+
 
 }

@@ -45,6 +45,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
     public Object postProcessAfterInitialization(Object bean, String beanName) {
         if (bean instanceof DynamicThreadPoolWrapper) {
             var wrap = (DynamicThreadPoolWrapper) bean;
+            log.info("[Init pool] Register thread pool. dynamicThreadPoolWrap :: {}", wrap);
             registerAndSubscribe(wrap);
         } else if (bean instanceof DynamicThreadPoolExecutor) {
             var dynamicThreadPool = ApplicationContextHolder.findAnnotationOnBean(beanName, DynamicThreadPool.class);
