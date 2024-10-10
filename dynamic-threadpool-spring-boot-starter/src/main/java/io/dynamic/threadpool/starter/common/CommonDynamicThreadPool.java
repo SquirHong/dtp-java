@@ -25,7 +25,6 @@ public class CommonDynamicThreadPool {
                 .alarmConfig(true, 80, 80)
                 .workQueue(QueueTypeEnum.RESIZABLE_LINKED_BLOCKING_QUEUE, 512)
                 .build();
-        log.info("hjs*******************,poolExecutor={}", poolExecutor);
         return poolExecutor;
     }
 

@@ -31,7 +31,6 @@ public class DynamicThreadPoolWrapper {
      */
     public DynamicThreadPoolWrapper(String threadPoolId) {
         this(threadPoolId, CommonDynamicThreadPool.getInstance(threadPoolId));
-        log.info("hjs----->>>>");
     }
 
     /**

@@ -19,8 +19,8 @@ import io.dynamic.threadpool.config.toolkit.BeanUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 通知管理.
@@ -33,29 +33,38 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     public List<NotifyListRespDTO> listNotifyConfig(NotifyQueryReqDTO reqDTO) {
+        System.out.println("reqDTO.getGroupKeys() = " + reqDTO.getGroupKeys());
         List<NotifyListRespDTO> notifyListRespList = Lists.newArrayList();
         reqDTO.getGroupKeys().forEach(each -> {
             String[] parseKey = GroupKey.parseKey(each);
             // 包含type = 1 or 2 ，CONFIG or ALARM
+            for (String s : parseKey) {
+                System.out.println(s);
+            }
+            System.out.println("///////////////////////////////");
             LambdaQueryWrapper<NotifyInfo> queryWrapper = Wrappers.lambdaQuery(NotifyInfo.class)
                     .eq(NotifyInfo::getTenantId, parseKey[2])
                     .eq(NotifyInfo::getItemId, parseKey[1])
                     .eq(NotifyInfo::getTpId, parseKey[0])
                     .eq(NotifyInfo::getEnable, DelEnum.NORMAL);
-            List<NotifyInfo> notifyInfos = notifyInfoMapper.selectList(queryWrapper);
+            List<NotifyInfo> Infos = notifyInfoMapper.selectList(queryWrapper);
+            List<NotifyInfo> notifyInfos = new ArrayList<>();
+            List<NotifyInfo> alarmInfos = new ArrayList<>();
+            Infos.forEach(Info -> {
+                if (Info.getType().equals("CONFIG")) {
+                    notifyInfos.add(Info);
+                } else if (Info.getType().equals("ALARM")) {
+                    alarmInfos.add(Info);
+                }
+            });
 
-            notifyListRespList.addAll(
-                    notifyInfos.stream()
-                            .filter(info -> info.getType().equals("1"))
-                            .map(info -> new NotifyListRespDTO(StrUtil.builder(parseKey[0], "+", "CONFIG").toString(), notifyInfos))
-                            .collect(Collectors.toList())
-            );
-            notifyListRespList.addAll(
-                    notifyInfos.stream()
-                            .filter(info -> info.getType().equals("2"))
-                            .map(info -> new NotifyListRespDTO(StrUtil.builder(parseKey[0], "+", "ALARM").toString(), notifyInfos))
-                            .collect(Collectors.toList())
-            );
+            if (notifyInfos.size() > 0) {
+                notifyListRespList.add(new NotifyListRespDTO(StrUtil.builder(parseKey[0], "+", "CONFIG").toString(), notifyInfos));
+            }
+            if (alarmInfos.size() > 0) {
+                notifyListRespList.add(new NotifyListRespDTO(StrUtil.builder(parseKey[0], "+", "ALARM").toString(), alarmInfos));
+            }
+
         });
         return notifyListRespList;
     }
@@ -97,7 +106,6 @@ public class NotifyServiceImpl implements NotifyService {
 
         notifyInfoMapper.delete(updateWrapper);
     }
-
 
 
 }

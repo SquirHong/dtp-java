@@ -88,7 +88,6 @@ public class AbstractBuildThreadPoolTemplate {
      * @return
      */
     public static DynamicThreadPoolExecutor buildDynamicPool(ThreadPoolInitParam initParam) {
-        System.out.println("hjs-----buildDynamicPool>>>>");
         Assert.notNull(initParam);
         DynamicThreadPoolExecutor executorService =
                 new DynamicThreadPoolExecutor(initParam.getCorePoolNum(),

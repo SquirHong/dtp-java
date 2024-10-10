@@ -14,7 +14,7 @@ import java.util.List;
 public class NotifyListRespDTO {
 
     /**
-     * 通知 Key
+     * 通知 Key  tpid+type
      */
     private String notifyKey;
 

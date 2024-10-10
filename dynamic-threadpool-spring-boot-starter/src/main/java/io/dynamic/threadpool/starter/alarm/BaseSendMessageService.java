@@ -64,6 +64,7 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
         Result result = null;
         try {
             result = httpAgent.httpPostByDiscovery("/v1/cs/notify/list/config", new ThreadPoolNotifyReqDTO(groupKeys));
+            log.info("Get alarm notification configuration: {}", JSON.toJSONString(result));
         } catch (Exception e) {
             log.error("Failed to get alarm notification configuration.", e);
         }
@@ -107,7 +108,7 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
 
     @Override
     public void sendChangeMessage(PoolParameterInfo parameter) {
-        String buildKey = parameter.getTpId() + "+ALARM";
+        String buildKey = parameter.getTpId() + "+CONFIG";
         List<NotifyDTO> notifyList = ALARM_NOTIFY_CONFIG.get(buildKey);
         if (CollUtil.isEmpty(notifyList)) {
             log.warn("Please configure alarm notification on the server.");

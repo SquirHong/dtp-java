@@ -64,7 +64,7 @@ public class ThreadPoolAlarmManage {
             int divide = CalculateUtil.divide(activeCount, maximumPoolSize);
             if (divide > threadPoolExecutor.getThreadPoolAlarm().getLivenessAlarm()) {
                 log.info("要发送线程池活跃度告警");
-                SEND_MESSAGE_SERVICE.sendAlarmMessage(MessageTypeEnum.CAPACITY, threadPoolExecutor);
+                SEND_MESSAGE_SERVICE.sendAlarmMessage(MessageTypeEnum.LIVENESS, threadPoolExecutor);
 
             }
         } catch (Exception e) {
