@@ -206,3 +206,14 @@ VALUES (1, 'common', 'dtp', 'message-consume', NULL, 5, 10, 9, 1000, 2, 100,
 INSERT INTO `user`
 VALUES (1832992147790843905, 'admin', '$2a$10$mHCMewlb3q8JetwerpL9Hu0QgdkKOVWXmj.PE06bU5LCzwqXG.qVO', 'ROLE_ADMIN',
         '2024-09-09 11:59:18', '2024-09-09 11:59:18', 0);
+
+
+/* 通知表 */
+INSERT INTO `notify` (`id`, `tenant_id`, `item_id`, `tp_id`, `platform`, `type`, `secret_key`, `interval`, `receives`,
+                      `enable`, `gmt_create`, `gmt_modified`, `del_flag`)
+VALUES ('1461345908531671042', 'common', 'dtp', 'message-produce', 'DING', 'CONFIG',
+        '77fcf4d71ca59c7ccd6b66f09ddee44847ab276ebcf0d9e6b5ab56bae69f8468', NULL, '15926772290', '0',
+        '2024-09-09 11:59:18', '2024-09-09 11:59:18', 0),
+       ('1461345976047382530', 'common', 'dtp', 'message-produce', 'DING', 'ALARM',
+        '77fcf4d71ca59c7ccd6b66f09ddee44847ab276ebcf0d9e6b5ab56bae69f8468', '30', '15926772290', '0',
+        '2024-09-09 11:59:18', '2024-09-09 11:59:18', 0);
