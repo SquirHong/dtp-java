@@ -172,37 +172,34 @@ export const asyncRoutes = [
         name: 'threadPoolList',
         component: () => import('@/views/dtp/threadpool/index'),
         meta: { title: '线程池管理', icon: 'tree' }
+      },
+      {
+        path: 'instanceList',
+        name: 'instanceList',
+        component: () => import('@/views/dtp/instance/index'),
+        meta: { title: '线程池实例', icon: 'exe-cfg' }
+      },
+      {
+        path: 'user',
+        name: 'User',
+        component: () => import('@/views/dtp/notify/index'),
+        meta: { title: '报警通知', icon: 'battery-line' }
       }
     ]
   },
 
   {
-    path: '/dtp/instance',
-    component: Layout,
-    redirect: '/dtp/instanceList',
-    name: 'datasource',
-    meta: { title: '实例管理', icon: 'exe-cfg' },
-    children: [
-      {
-        path: 'instanceList',
-        name: 'instanceList',
-        component: () => import('@/views/dtp/instance/index'),
-        meta: { title: '实例管理', icon: 'exe-cfg' }
-      }
-    ]
-  },
-  {
     path: '/dtp/user',
     component: Layout,
     redirect: '/dtp/userList',
     name: 'user',
-    meta: { title: '用户管理', icon: 'work', roles: ['ROLE_ADMIN'] },
+    meta: { title: '用户权限', icon: 'work', roles: ['ROLE_ADMIN'] },
     children: [
       {
         path: 'user',
         name: 'User',
         component: () => import('@/views/dtp/user/index'),
-        meta: { title: '用户管理', icon: 'table' }
+        meta: { title: '用户权限', icon: 'table' }
       }
     ]
   },
