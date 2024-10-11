@@ -1472,7 +1472,7 @@
         t["default"] = s
     }, "83d6": function (e, t) {
         e.exports = {
-            title: "Hippo4J Web",
+            title: "dtp Web",
             showSettings: !0,
             tagsView: !0,
             fixedHeader: !1,
@@ -2523,9 +2523,9 @@
                 }, name: "Page404", meta: {title: "404", noCache: !0}
             }]
         }, {
-            path: "/hippo4j/tenant",
+            path: "/dtp/tenant",
             component: vt,
-            redirect: "/hippo4j/tenantList",
+            redirect: "/dtp/tenantList",
             name: "datasource",
             meta: {title: "租户管理", icon: "lessee"},
             children: [{
@@ -2534,9 +2534,9 @@
                 }, meta: {title: "租户管理", icon: "lessee"}
             }]
         }, {
-            path: "/hippo4j/item",
+            path: "/dtp/item",
             component: vt,
-            redirect: "/hippo4j/itemList",
+            redirect: "/dtp/itemList",
             name: "datasource",
             meta: {title: "项目管理", icon: "project"},
             children: [{
@@ -2545,9 +2545,9 @@
                 }, meta: {title: "项目管理", icon: "project"}
             }]
         }, {
-            path: "/hippo4j/threadPool",
+            path: "/dtp/threadPool",
             component: vt,
-            redirect: "/hippo4j/threadPoolList",
+            redirect: "/dtp/threadPoolList",
             name: "datasource",
             meta: {title: "线程池管理", icon: "tree"},
             children: [{
@@ -2564,9 +2564,9 @@
                 }, meta: {title: "报警通知", icon: "battery-line"}
             }]
         }, {
-            path: "/hippo4j/user",
+            path: "/dtp/user",
             component: vt,
-            redirect: "/hippo4j/userList",
+            redirect: "/dtp/userList",
             name: "user",
             meta: {title: "用户权限", icon: "work", roles: ["ROLE_ADMIN"]},
             children: [{
@@ -2575,9 +2575,9 @@
                 }, meta: {title: "用户权限", icon: "table"}
             }]
         }, {
-            path: "/hippo4j/log",
+            path: "/dtp/log",
             component: vt,
-            redirect: "/hippo4j/logList",
+            redirect: "/dtp/logList",
             name: "log",
             meta: {title: "日志管理", icon: "work"},
             children: [{
@@ -3023,7 +3023,7 @@
         n("aace")
     }, f514: function (e, t, n) {
     }, f561: function (e, t, n) {
-        e.exports = n.p + "static/img/hippo4j.ecba1844.gif"
+        e.exports = n.p + "static/img/dtp.ecba1844.gif"
     }, f782: function (e, t, n) {
         "use strict";
         n.r(t);

@@ -176,10 +176,10 @@
 </template>
 
 <script>
-  import * as itemApi from '@/api/hippo4j-item'
-  import * as tenantApi from '@/api/hippo4j-tenant'
-  import * as notifyApi from '@/api/hippo4j-notify'
-  import * as threadPoolApi from '@/api/hippo4j-threadPool'
+  import * as itemApi from '@/api/dtp-item'
+  import * as tenantApi from '@/api/dtp-tenant'
+  import * as notifyApi from '@/api/dtp-notify'
+  import * as threadPoolApi from '@/api/dtp-threadPool'
   import waves from '@/directive/waves'
   import Pagination from '@/components/Pagination'
 

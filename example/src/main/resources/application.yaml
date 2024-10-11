@@ -8,4 +8,3 @@ spring:
       server-addr: http://localhost:6691
       tenantId: common
       item-id: dtp
-      alarm-interval: 3

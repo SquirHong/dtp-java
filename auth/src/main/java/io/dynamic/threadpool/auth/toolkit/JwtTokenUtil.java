@@ -21,7 +21,7 @@ public class JwtTokenUtil {
     public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
 
-    private static final String SECRET = "Hippo4J_admin";
+    private static final String SECRET = "dtp_admin";
     private static final String ISS = "admin";
 
     /**
