@@ -1,7 +1,5 @@
 package io.dynamic.threadpool.common.constant;
 
-import java.util.UUID;
-
 /**
  * Constants
  */
@@ -43,6 +41,8 @@ public class Constants {
     public static final String LONG_PULLING_TIMEOUT_NO_HANGUP = "Long-Pulling-Timeout-No-Hangup";
 
     public static final String GROUP_KEY_DELIMITER = "+";
+
+    public static final String GROUP_KEY_DELIMITER_TRANSLATION = "\\+";
 
     public static final long EVICTION_INTERVAL_TIMER_IN_MS = 60 * 1000;
 

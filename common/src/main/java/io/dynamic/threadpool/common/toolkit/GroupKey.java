@@ -1,10 +1,13 @@
 package io.dynamic.threadpool.common.toolkit;
 
+import io.dynamic.threadpool.common.constant.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 /**
  * Group Key
  */
+@Slf4j
 public class GroupKey {
     public static String getKey(String dataId, String group) {
         return getKey(dataId, group, "");
@@ -38,51 +41,7 @@ public class GroupKey {
      * @return parsed key
      */
     public static String[] parseKey(String groupKey) {
-        StringBuilder sb = new StringBuilder();
-        String dataId = null;
-        String group = null;
-        String tenant = null;
-
-        for (int i = 0; i < groupKey.length(); ++i) {
-            char c = groupKey.charAt(i);
-            if ('+' == c) {
-                if (null == dataId) {
-                    dataId = sb.toString();
-                    sb.setLength(0);
-                } else if (null == group) {
-                    group = sb.toString();
-                    sb.setLength(0);
-                } else {
-                    throw new IllegalArgumentException("invalid groupkey:" + groupKey);
-                }
-            } else if ('%' == c) {
-                char next = groupKey.charAt(++i);
-                char nextnext = groupKey.charAt(++i);
-                if ('2' == next && 'B' == nextnext) {
-                    sb.append('+');
-                } else if ('2' == next && '5' == nextnext) {
-                    sb.append('%');
-                } else {
-                    throw new IllegalArgumentException("invalid groupkey:" + groupKey);
-                }
-            } else {
-                sb.append(c);
-            }
-        }
-
-        if (StringUtils.isEmpty(group)) {
-            group = sb.toString();
-            if (group.length() == 0) {
-                throw new IllegalArgumentException("invalid groupkey:" + groupKey);
-            }
-        } else {
-            tenant = sb.toString();
-            if (group.length() == 0) {
-                throw new IllegalArgumentException("invalid groupkey:" + groupKey);
-            }
-        }
-
-        return new String[]{dataId, group, tenant};
+        return groupKey.split(Constants.GROUP_KEY_DELIMITER_TRANSLATION);
     }
 
     /**
@@ -94,8 +53,11 @@ public class GroupKey {
             char c = str.charAt(idx);
             if ('+' == c) {
                 sb.append("%2B");
+
+                log.info("出现%2BBBBBBBBBBBBurlEncode: {}", sb);
             } else if ('%' == c) {
                 sb.append("%25");
+                log.info("出现%2CCCCCCCCCCCCurlEncode: {}", sb);
             } else {
                 sb.append(c);
             }
