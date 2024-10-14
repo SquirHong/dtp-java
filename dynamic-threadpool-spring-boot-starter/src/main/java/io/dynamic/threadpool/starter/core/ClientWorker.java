@@ -36,6 +36,8 @@ public class ClientWorker {
 
     private AtomicBoolean isHealthServer = new AtomicBoolean(true);
 
+    private AtomicBoolean isHealthServerTemp = new AtomicBoolean(true);
+
     private final HttpAgent agent;
 
     private final String identification;
@@ -103,8 +105,14 @@ public class ClientWorker {
 
         @SneakyThrows
         private void checkStatus() {
+            if (Objects.equals(isHealthServerTemp.get(), Boolean.FALSE)
+                    && Objects.equals(isHealthServer.get(), Boolean.TRUE)) {
+                isHealthServerTemp.set(Boolean.TRUE);
+                log.info("🚀 The client reconnects to the server successfully.");
+            }
             // 服务端状态不正常睡眠 10s
             if (!isHealthServer.get()) {
+                isHealthServerTemp.set(Boolean.FALSE);
                 log.error("[Check config] Error. exception message, Thread sleep 10 s.");
                 Thread.sleep(10000);
                 log.info("睡眠十秒结束");
