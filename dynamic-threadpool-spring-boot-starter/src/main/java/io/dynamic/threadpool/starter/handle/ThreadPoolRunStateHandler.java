@@ -1,9 +1,12 @@
 package io.dynamic.threadpool.starter.handle;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.system.RuntimeInfo;
 import io.dynamic.threadpool.common.model.PoolRunStateInfo;
-import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
-import io.dynamic.threadpool.starter.toolkit.CalculateUtil;
 import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
+import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
+import io.dynamic.threadpool.starter.toolkit.ByteConvertUtil;
+import io.dynamic.threadpool.starter.toolkit.CalculateUtil;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrapper;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,6 +63,15 @@ public class ThreadPoolRunStateHandler {
         // 队列容量
         int queueCapacity = queueSize + remainingCapacity;
 
+        // 内存占比: 使用内存 / 最大内存
+        RuntimeInfo runtimeInfo = new RuntimeInfo();
+        String memoryProportion = StrUtil.builder(
+                "已分配: ",
+                ByteConvertUtil.getPrintSize(runtimeInfo.getTotalMemory()),
+                " / 最大可用: ",
+                ByteConvertUtil.getPrintSize(runtimeInfo.getMaxMemory())
+        ).toString();
+
         PoolRunStateInfo stateInfo = new PoolRunStateInfo();
         stateInfo.setCoreSize(corePoolSize);
         stateInfo.setMaximumSize(maximumPoolSize);
@@ -75,6 +87,8 @@ public class ThreadPoolRunStateHandler {
         stateInfo.setCompletedTaskCount(completedTaskCount);
         stateInfo.setHost(addr.getHostAddress());
         stateInfo.setTpId(tpId);
+        stateInfo.setMemoryProportion(memoryProportion);
+        stateInfo.setFreeMemory(ByteConvertUtil.getPrintSize(runtimeInfo.getFreeMemory()));
 
         int rejectCount = pool instanceof DynamicThreadPoolExecutor
                 ? ((DynamicThreadPoolExecutor) pool).getRejectCount()
