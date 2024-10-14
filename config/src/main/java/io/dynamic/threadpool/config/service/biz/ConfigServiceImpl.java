@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.google.common.collect.Lists;
 import io.dynamic.threadpool.common.toolkit.ContentUtil;
 import io.dynamic.threadpool.common.toolkit.Md5Util;
 import io.dynamic.threadpool.common.toolkit.UserContext;
@@ -17,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.SynchronousQueue;
 
 /**
  * 服务端配置接口实现
@@ -81,6 +85,7 @@ public class ConfigServiceImpl implements ConfigService {
                 .eq(ConfigAllInfo::getItemId, config.getItemId())
                 .eq(ConfigAllInfo::getTenantId, config.getTenantId());
 
+        config.setCapacity(getQueueCapacityByType(config));
         config.setContent(ContentUtil.getPoolContent(config));
         config.setMd5(Md5Util.getTpContentMd5(config));
         try {
@@ -89,6 +94,19 @@ public class ConfigServiceImpl implements ConfigService {
             log.error("[db-error] message :: {}", ex.getMessage(), ex);
             throw ex;
         }
+    }
+
+    /**
+     * 根据队列类型获取队列大小.
+     * <p>
+     * 不支持设置队列大小 {@link SynchronousQueue} {@link LinkedTransferQueue}
+     *
+     * @param config
+     * @return
+     */
+    private Integer getQueueCapacityByType(ConfigAllInfo config) {
+        List<Integer> noCapacityBlockingQueues = Lists.newArrayList(4, 5);
+        return noCapacityBlockingQueues.contains(config.getQueueType()) ? 0 : config.getCapacity();
     }
 
 }
