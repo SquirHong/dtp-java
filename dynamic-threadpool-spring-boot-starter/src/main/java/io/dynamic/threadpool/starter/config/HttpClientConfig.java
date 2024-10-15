@@ -7,7 +7,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -27,7 +26,7 @@ public class HttpClientConfig {
      * @return
      */
     @Bean
-    public OkHttpClient okHttpClient() {
+    public OkHttpClient dtpOkHttpClient() {
         OkHttpClient.Builder build = new OkHttpClient.Builder();
         build.connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
@@ -37,13 +36,13 @@ public class HttpClientConfig {
     }
 
     @Bean
-    public HttpClientUtil httpClientUtil() {
+    public HttpClientUtil dtpHttpClientUtil() {
         return new HttpClientUtil();
     }
 
     @Bean
-    public HttpAgent httpAgent(BootstrapProperties properties, HttpClientUtil httpClientUtil) {
-        return new ServerHttpAgent(properties, httpClientUtil);
+    public HttpAgent httpAgent(BootstrapProperties properties, HttpClientUtil dtpHttpClientUtil) {
+        return new ServerHttpAgent(properties, dtpHttpClientUtil);
     }
 
     /**

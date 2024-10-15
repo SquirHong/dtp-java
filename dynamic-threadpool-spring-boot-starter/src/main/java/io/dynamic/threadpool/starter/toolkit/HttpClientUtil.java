@@ -4,10 +4,9 @@ import com.alibaba.fastjson.JSON;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -17,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class HttpClientUtil {
 
-    @Autowired
+    @Resource
     private OkHttpClient okHttpClient;
 
     private MediaType jsonMediaType = MediaType.parse("application/json; charset=utf-8");

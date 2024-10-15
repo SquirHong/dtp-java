@@ -5,9 +5,7 @@ import io.dynamic.threadpool.common.config.ApplicationContextHolder;
 import io.dynamic.threadpool.starter.controller.PoolRunStateController;
 import io.dynamic.threadpool.starter.core.ConfigService;
 import io.dynamic.threadpool.starter.core.DynamicThreadPoolPostProcessor;
-
 import io.dynamic.threadpool.starter.core.ThreadPoolConfigService;
-
 import io.dynamic.threadpool.starter.core.ThreadPoolOperation;
 import io.dynamic.threadpool.starter.enable.MarkerConfiguration;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
@@ -19,7 +17,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -45,14 +42,14 @@ public class DynamicThreadPoolAutoConfiguration {
     private final ConfigurableEnvironment environment;
 
     @Bean
-    public ApplicationContextHolder applicationContextHolder() {
+    public ApplicationContextHolder dtpApplicationContextHolder() {
         return new ApplicationContextHolder();
     }
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public ConfigService configService(HttpAgent httpAgent, InetUtils inetUtils) {
-        String ip = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
+    public ConfigService configService(HttpAgent httpAgent, InetUtils dtpInetUtils) {
+        String ip = dtpInetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
         String port = environment.getProperty("server.port");
         String identification = StrUtil.builder(ip, ":", port).toString();
         return new ThreadPoolConfigService(httpAgent, identification);
@@ -66,7 +63,7 @@ public class DynamicThreadPoolAutoConfiguration {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE + 2)
-    public DynamicThreadPoolPostProcessor threadPoolBeanPostProcessor(HttpAgent httpAgent, ThreadPoolOperation threadPoolOperation, ApplicationContextHolder applicationContextHolder) {
+    public DynamicThreadPoolPostProcessor threadPoolBeanPostProcessor(HttpAgent httpAgent, ThreadPoolOperation threadPoolOperation, ApplicationContextHolder dtpApplicationContextHolder) {
         return new DynamicThreadPoolPostProcessor(properties, httpAgent, threadPoolOperation);
     }
 

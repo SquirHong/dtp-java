@@ -18,11 +18,11 @@ public class MessageAlarmConfig {
 
     private ConfigurableEnvironment environment;
 
-    public static final String SEND_MESSAGE_BEAN_NAME = "sendMessageService";
+    public static final String SEND_MESSAGE_BEAN_NAME = "dtpSendMessageService";
 
-    @DependsOn("applicationContextHolder")
+    @DependsOn("dtpApplicationContextHolder")
     @Bean(SEND_MESSAGE_BEAN_NAME)
-    public SendMessageService sendMessageService(HttpAgent httpAgent, AlarmControlHandler alarmControlHandler) {
+    public SendMessageService dtpSendMessageService(HttpAgent httpAgent, AlarmControlHandler alarmControlHandler) {
         return new BaseSendMessageService(httpAgent, properties, alarmControlHandler);
     }
 

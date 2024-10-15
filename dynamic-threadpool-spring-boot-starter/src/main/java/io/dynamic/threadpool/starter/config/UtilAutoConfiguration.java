@@ -14,7 +14,7 @@ public class UtilAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public InetUtils inetUtils(InetUtilsProperties properties) {
+    public InetUtils dtpInetUtils(InetUtilsProperties properties) {
         return new InetUtils(properties);
     }
 
