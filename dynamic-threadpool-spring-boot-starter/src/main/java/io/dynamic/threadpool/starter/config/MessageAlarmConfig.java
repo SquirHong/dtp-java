@@ -2,7 +2,9 @@ package io.dynamic.threadpool.starter.config;
 
 import io.dynamic.threadpool.common.model.InstanceInfo;
 import io.dynamic.threadpool.starter.alarm.*;
+import io.dynamic.threadpool.starter.alarm.lark.LarkSendMessageHandler;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
+import io.dynamic.threadpool.starter.toolkit.HttpClientUtil;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +39,13 @@ public class MessageAlarmConfig {
     public SendMessageHandler dingSendMessageHandler() {
         String active = environment.getProperty("spring.profiles.active", Strings.EMPTY);
         return new DingSendMessageHandler(active, instanceInfo);
+    }
+
+    // 注入lark消息通知处理器
+    @Bean
+    public SendMessageHandler larkSendMessageHandler(HttpClientUtil httpClientUtil) {
+        String active = environment.getProperty("spring.profiles.active", Strings.EMPTY);
+        return new LarkSendMessageHandler(active, instanceInfo, httpClientUtil);
     }
 
 }
