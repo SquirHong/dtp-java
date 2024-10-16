@@ -1,12 +1,12 @@
 package io.dynamic.threadpool.starter.wrap;
 
 import io.dynamic.threadpool.starter.common.CommonDynamicThreadPool;
-import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 线程池包装
@@ -22,7 +22,7 @@ public class DynamicThreadPoolWrapper {
 
     private boolean subscribeFlag;
 
-    private DynamicThreadPoolExecutor pool;
+    private ThreadPoolExecutor executor;
 
     /**
      * 首选服务端线程池, 为空使用默认线程池 {@link CommonDynamicThreadPool#getInstance(String)}
@@ -38,9 +38,9 @@ public class DynamicThreadPoolWrapper {
      * @param threadPoolId
      * @param threadPoolExecutor
      */
-    public DynamicThreadPoolWrapper(String threadPoolId, DynamicThreadPoolExecutor threadPoolExecutor) {
+    public DynamicThreadPoolWrapper(String threadPoolId, ThreadPoolExecutor threadPoolExecutor) {
         this.tpId = threadPoolId;
-        this.pool = threadPoolExecutor;
+        this.executor = threadPoolExecutor;
     }
 
     /**
@@ -49,7 +49,7 @@ public class DynamicThreadPoolWrapper {
      * @param command
      */
     public void execute(Runnable command) {
-        pool.execute(command);
+        executor.execute(command);
     }
 
     /**
@@ -59,7 +59,7 @@ public class DynamicThreadPoolWrapper {
      * @return
      */
     public Future<?> submit(Runnable task) {
-        return pool.submit(task);
+        return executor.submit(task);
     }
 
     /**
@@ -70,7 +70,7 @@ public class DynamicThreadPoolWrapper {
      * @return
      */
     public <T> Future<T> submit(Callable<T> task) {
-        return pool.submit(task);
+        return executor.submit(task);
     }
 
 }

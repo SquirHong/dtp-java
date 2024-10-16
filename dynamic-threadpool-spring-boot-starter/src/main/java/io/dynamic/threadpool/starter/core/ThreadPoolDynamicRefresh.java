@@ -27,7 +27,7 @@ public class ThreadPoolDynamicRefresh {
 
     public static void refreshDynamicPool(PoolParameterInfo parameter) {
         String threadPoolId = parameter.getTpId();
-        ThreadPoolExecutor beforeExecutor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getPool();
+        ThreadPoolExecutor beforeExecutor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getExecutor();
 
         int originalCoreSize = beforeExecutor.getCorePoolSize();
         int originalMaximumPoolSize = beforeExecutor.getMaximumPoolSize();
@@ -38,7 +38,7 @@ public class ThreadPoolDynamicRefresh {
 
         changePoolInfo(beforeExecutor, parameter);
 
-        ThreadPoolExecutor afterExecutor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getPool();
+        ThreadPoolExecutor afterExecutor = GlobalThreadPoolManage.getExecutorService(threadPoolId).getExecutor();
         log.info("[🔥 {}] Changed thread pool. \ncoreSize :: [{}], maxSize :: [{}], queueType :: [{}], capacity :: [{}], keepAliveTime :: [{}], rejectedType :: [{}]",
                 threadPoolId.toUpperCase(),
                 String.format("%s=>%s", originalCoreSize, afterExecutor.getCorePoolSize()),

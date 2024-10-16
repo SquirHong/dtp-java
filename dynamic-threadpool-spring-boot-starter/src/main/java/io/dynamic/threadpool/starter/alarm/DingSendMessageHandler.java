@@ -27,6 +27,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -155,7 +156,7 @@ public class DingSendMessageHandler implements SendMessageHandler {
         List<String> receives = StrUtil.split(notifyConfig.getReceives(), ',');
         String afterReceives = Joiner.on(", @").join(receives);
 
-        DynamicThreadPoolExecutor customPool = poolWrap.getPool();
+        ThreadPoolExecutor customPool = poolWrap.getExecutor();
 
         long agoAliveTime = customPool.getKeepAliveTime(TimeUnit.SECONDS);
         long nowAliveTime = parameter.getKeepAliveTime();

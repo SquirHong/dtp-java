@@ -1,17 +1,15 @@
 package io.dynamic.threadpool.example.test;
 
 import cn.hutool.core.thread.ThreadUtil;
-import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarm;
 import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
-import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
-import io.dynamic.threadpool.starter.toolkit.thread.ResizableCapacityLinkedBlockIngQueue;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static io.dynamic.threadpool.example.constant.GlobalTestConstant.MESSAGE_PRODUCE;
 
@@ -26,7 +24,7 @@ public class AlarmSendMessageTest {
         ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
         scheduledThreadPool.scheduleWithFixedDelay(() -> {
             DynamicThreadPoolWrapper executorService = GlobalThreadPoolManage.getExecutorService(MESSAGE_PRODUCE);
-            ThreadPoolExecutor poolExecutor = executorService.getPool();
+            ThreadPoolExecutor poolExecutor = executorService.getExecutor();
             try {
                 poolExecutor.execute(() -> ThreadUtil.sleep(10241024));
             } catch (Exception ex) {

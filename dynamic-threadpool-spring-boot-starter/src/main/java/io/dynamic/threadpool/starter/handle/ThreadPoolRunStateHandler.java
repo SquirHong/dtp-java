@@ -34,7 +34,7 @@ public class ThreadPoolRunStateHandler {
 
     public static PoolRunStateInfo getPoolRunState(String tpId) {
         DynamicThreadPoolWrapper executorService = GlobalThreadPoolManage.getExecutorService(tpId);
-        ThreadPoolExecutor pool = executorService.getPool();
+        ThreadPoolExecutor pool = executorService.getExecutor();
 
         // 核心线程数
         int corePoolSize = pool.getCorePoolSize();

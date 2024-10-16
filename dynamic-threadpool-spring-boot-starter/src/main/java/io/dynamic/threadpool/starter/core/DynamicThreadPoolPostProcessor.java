@@ -75,7 +75,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
         });
     }
 
-    private DynamicThreadPoolExecutor fillPoolAndRegister(DynamicThreadPoolWrapper dynamicThreadPoolWrap) {
+    private ThreadPoolExecutor fillPoolAndRegister(DynamicThreadPoolWrapper dynamicThreadPoolWrap) {
         String tpId = dynamicThreadPoolWrap.getTpId();
         Map<String, String> queryStrMap = new HashMap(3);
         queryStrMap.put(Constants.TP_ID, tpId);
@@ -85,7 +85,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
         PoolParameterInfo ppi = new PoolParameterInfo();
         boolean isSubscribe = false;
         Result result = null;
-        DynamicThreadPoolExecutor poolExecutor = null;
+        ThreadPoolExecutor poolExecutor = null;
         try {
             log.info("[Init pool] Query thread pool configuration from server. ,queryStrMap :: {}", queryStrMap);
             result = httpAgent.httpGetByConfig(Constants.CONFIG_CONTROLLER_PATH, null, queryStrMap, 3000L);
@@ -104,16 +104,16 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                         .rejected(rejectedExecutionHandler)
                         .alarmConfig(ppi.getIsAlarm(), ppi.getCapacityAlarm(), ppi.getLivenessAlarm())
                         .build();
-                dynamicThreadPoolWrap.setPool(poolExecutor);
+                dynamicThreadPoolWrap.setExecutor(poolExecutor);
                 isSubscribe = true;
             }
         } catch (Exception ex) {
             log.error("[Init pool] Failed to initialize thread pool configuration. error message :: {},Enhance the default provided thread pool.. ", ex.getMessage());
-            dynamicThreadPoolWrap.setPool(CommonDynamicThreadPool.getInstance(tpId));
+            dynamicThreadPoolWrap.setExecutor(CommonDynamicThreadPool.getInstance(tpId));
         } finally {
             // 如果客户端使用了 DynamicThreadPoolExecutor，但没有加@DynamicThreadPool注解，则配置上默认的线程池
-            if (Objects.isNull(dynamicThreadPoolWrap.getPool())) {
-                dynamicThreadPoolWrap.setPool(CommonDynamicThreadPool.getInstance(tpId));
+            if (Objects.isNull(dynamicThreadPoolWrap.getExecutor())) {
+                dynamicThreadPoolWrap.setExecutor(CommonDynamicThreadPool.getInstance(tpId));
             }
             // 设置是否订阅远端线程池配置
             dynamicThreadPoolWrap.setSubscribeFlag(isSubscribe);
