@@ -30,6 +30,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+// TODO: 2024/10/16  当前页面配置的机器人hook发送消息不支持实现签名校验
 @Slf4j
 @AllArgsConstructor
 @Component
