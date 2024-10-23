@@ -2,6 +2,7 @@ package io.dynamic.threadpool.starter.config;
 
 import io.dynamic.threadpool.common.model.InstanceInfo;
 import io.dynamic.threadpool.starter.alarm.*;
+import io.dynamic.threadpool.starter.alarm.ding.DingSendMessageHandler;
 import io.dynamic.threadpool.starter.alarm.lark.LarkSendMessageHandler;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
 import io.dynamic.threadpool.starter.toolkit.HttpClientUtil;

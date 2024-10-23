@@ -1,6 +1,7 @@
 package io.dynamic.threadpool.config.service.biz;
 
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -85,20 +86,19 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     public void save(NotifyModifyReqDTO reqDTO) {
-        try {
-            notifyInfoMapper.insert(BeanUtil.convert(reqDTO, NotifyInfo.class));
-        } catch (DuplicateKeyException ex) {
-            throw new ServiceException("通知配置已存在");
+        if (existNotify(reqDTO)) {
+            throw new ServiceException("新增通知报警配置重复.");
         }
+        notifyInfoMapper.insert(BeanUtil.convert(reqDTO, NotifyInfo.class));
     }
+
+
 
     @Override
     public void update(NotifyModifyReqDTO reqDTO) {
         NotifyInfo notifyInfo = BeanUtil.convert(reqDTO, NotifyInfo.class);
         LambdaUpdateWrapper<NotifyInfo> updateWrapper = Wrappers.lambdaUpdate(NotifyInfo.class)
-                .eq(NotifyInfo::getTenantId, reqDTO.getTenantId())
-                .eq(NotifyInfo::getItemId, reqDTO.getItemId())
-                .eq(NotifyInfo::getTpId, reqDTO.getTpId());
+                .eq(NotifyInfo::getId, reqDTO.getId());
 
         try {
             notifyInfoMapper.update(notifyInfo, updateWrapper);
@@ -110,11 +110,22 @@ public class NotifyServiceImpl implements NotifyService {
     @Override
     public void delete(NotifyModifyReqDTO reqDTO) {
         LambdaUpdateWrapper<NotifyInfo> updateWrapper = Wrappers.lambdaUpdate(NotifyInfo.class)
-                .eq(NotifyInfo::getTenantId, reqDTO.getTenantId())
-                .eq(NotifyInfo::getItemId, reqDTO.getItemId())
-                .eq(NotifyInfo::getTpId, reqDTO.getTpId());
+                .eq(NotifyInfo::getId, reqDTO.getId());
 
         notifyInfoMapper.delete(updateWrapper);
+    }
+
+
+    private boolean existNotify(NotifyModifyReqDTO reqDTO) {
+        LambdaQueryWrapper<NotifyInfo> queryWrapper = Wrappers.lambdaQuery(NotifyInfo.class)
+                .eq(NotifyInfo::getTenantId, reqDTO.getTenantId())
+                .eq(NotifyInfo::getItemId, reqDTO.getItemId())
+                .eq(NotifyInfo::getTpId, reqDTO.getTpId())
+                .eq(NotifyInfo::getPlatform, reqDTO.getPlatform())
+                .eq(NotifyInfo::getType, reqDTO.getType());
+
+        List<NotifyInfo> existNotifyInfos = notifyInfoMapper.selectList(queryWrapper);
+        return CollUtil.isNotEmpty(existNotifyInfos);
     }
 
 
