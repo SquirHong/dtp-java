@@ -46,15 +46,15 @@
       <el-table-column label="是否报警" align="center" width="200">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.isAlarm" active-color="#00A854" active-text="报警" :active-value="0"
-                     inactive-color="#F04134" inactive-text="忽略" :inactive-value="1" @change="changeSwitch(scope.row)"/>
+                     inactive-color="#F04134" inactive-text="忽略" :inactive-value="1" @change="changeAlarm(scope.row)"/>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.status!=='deleted'" size="mini" type="danger" @click="handleDelete(row)">
+          <el-button size="mini" type="danger" @click="handleDelete(row)">
             删除
           </el-button>
         </template>
@@ -63,8 +63,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size"
                 @pagination="fetchData"/>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="1000px"
-               :before-close="handleClose">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="1000px">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="110px">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -134,7 +133,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="队列容量" prop="capacity">
-              <el-input-number v-model="temp.capacity" placeholder="队列容量" :min="0" :max="99999"/>
+              <el-input-number v-model="temp.capacity" placeholder="队列容量" :min="0" :max="2147483647"
+                               :disabled="temp.queueType===4||temp.queueType===5?true:false"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -318,6 +318,17 @@
           this.listLoading = false
         })
       },
+      changeAlarm(row) {
+        threadPoolApi.alarmEnable(row).then(() => {
+          this.fetchData()
+          this.$notify({
+            title: 'Success',
+            message: 'Update Successfully',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      },
       initSelect() {
         tenantApi.list({}).then(response => {
           const {records} = response
@@ -417,8 +428,12 @@
           })
         })
       },
-
       selectQueueType(value) {
+        if (value === 4) {
+          this.temp.capacity = 0
+        } else if (value === 5) {
+          this.temp.capacity = 2147483647
+        }
       }
     }
   }

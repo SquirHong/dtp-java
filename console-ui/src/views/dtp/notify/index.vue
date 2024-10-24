@@ -31,19 +31,22 @@
       <el-table-column label="线程池ID" align="center">
         <template slot-scope="scope">{{ scope.row.tpId }}</template>
       </el-table-column>
-      <el-table-column label="通知方式" align="center" width="200">
-        <template slot-scope="scope">{{ scope.row.platform }} - {{ scope.row.type }}</template>
+      <el-table-column label="通知平台" align="center">
+        <template slot-scope="scope">{{ scope.row.platform }}</template>
       </el-table-column>
-      <el-table-column label="接收者" align="center">
-        <template slot-scope="scope">{{ scope.row.receives | ellipsis}}</template>
+      <el-table-column label="通知类型" align="center">
+        <template slot-scope="scope">{{ scope.row.type }}</template>
       </el-table-column>
       <el-table-column label="报警间隔" align="center" width="120">
         <template slot-scope="scope">{{ scope.row.interval }}</template>
       </el-table-column>
+      <el-table-column label="接收者" align="center" width="200">
+        <template slot-scope="scope">{{ scope.row.receives | ellipsis}}</template>
+      </el-table-column>
       <el-table-column label="是否启用" align="center" width="200">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.enable" active-color="#00A854" active-text="启用" :active-value="0"
-                     inactive-color="#F04134" inactive-text="停用" :inactive-value="1" @change="changeSwitch(scope.row)"/>
+                     inactive-color="#F04134" inactive-text="停用" :inactive-value="1" @change="changeEnable(scope.row)"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -60,8 +63,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size"
                 @pagination="fetchData"/>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="1000px"
-               :before-close="handleClose">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="1000px">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="110px">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -98,7 +100,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="通知类型" prop="type">
-              <el-select v-model="temp.type" placeholder="通知类型" style="display:block;">
+              <el-select v-model="temp.type" placeholder="通知类型" @change="selectType" style="display:block;">
                 <el-option v-for="item in typeTypes" :key="item.key" :label="item.display_name"
                            :value="item.key"/>
               </el-select>
@@ -138,7 +140,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="报警间隔" prop="interval">
-              <el-input-number v-model="temp.interval" placeholder="报警间隔/Min" :min="1" :max="99999"/>
+              <el-input-number v-model="temp.interval"  placeholder="报警间隔/Min" :min="0"
+                               :disabled="temp.type==='CONFIG'?true:false"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -146,7 +149,9 @@
         <el-row :gutter="40">
           <el-col :span="24">
             <el-form-item label="接收者" prop="receives">
-              <el-input v-model="temp.receives" :autosize="{ minRows: 4, maxRows: 6}" type="textarea" placeholder="多个接收者使用英文逗号 , 分割 (注意不要有空格)"
+              <el-input v-model="temp.receives" :autosize="{ minRows: 6, maxRows: 10}" type="textarea" placeholder="多个接收者使用英文逗号 , 分割 (注意不要有空格)
+钉钉：填写手机号
+飞书：填写ou_开头用户唯一标识会以@的消息发给用户，填写手机号则是普通的@"
                         style="width: 83%"/>
             </el-form-item>
           </el-col>
@@ -198,11 +203,11 @@
       },
 
       ellipsis(value) {
-        if (!value) return "";
+        if (!value) return ''
         if (value.length > 22) {
-          return value.slice(0, 22) + "...";
+          return value.slice(0, 22) + '...'
         }
-        return value;
+        return value
       }
     },
     data() {
@@ -224,16 +229,17 @@
         threadPoolOptions: [],
         platformTypes: [
           { key: 'DING', display_name: 'DING' },
+          { key: 'LARK', display_name: 'LARK' }
         ],
 
         typeTypes: [
           { key: 'CONFIG', display_name: 'CONFIG'},
-          { key: 'ALARM', display_name: 'ALARM'},
+          { key: 'ALARM', display_name: 'ALARM'}
         ],
 
         enableTypes: [
           { key: 0, display_name: '启用'},
-          { key: 1, display_name: '停用'},
+          { key: 1, display_name: '停用'}
         ],
         dialogStatus: '',
         textMap: {
@@ -248,12 +254,13 @@
           secretKey: [{ required: true, message: 'this is required', trigger: 'blur' }],
           platform: [{ required: true, message: 'this is required', trigger: 'blur' }],
           type: [{ required: true, message: 'this is required', trigger: 'blur' }],
-          enable: [{ required: true, message: 'this is required', trigger: 'blur' }],
+          enable: [{ required: true, message: 'this is required', trigger: 'blur' }]
 
         },
         temp: {
           id: undefined,
-          tenantId: ''
+          tenantId: '',
+          interval: undefined
         },
         visible: true
       }
@@ -339,6 +346,9 @@
       },
       handleUpdate(row) {
         this.temp = Object.assign({}, row) // copy obj
+        if (this.temp.interval == null) {
+          this.temp.interval = undefined
+        }
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
         this.$nextTick(() => {
@@ -372,6 +382,23 @@
             duration: 2000
           })
         })
+      },
+      changeEnable(row) {
+        notifyApi.enable(row).then(response => {
+          this.fetchData()
+          this.$notify({
+            title: 'Success',
+            message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      },
+
+      selectType(value) {
+        if (value === 'CONFIG') {
+          this.temp.interval = undefined
+        }
       }
     }
   }

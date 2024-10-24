@@ -134,7 +134,7 @@ export const asyncRoutes = [
     path: '/dtp/tenant',
     component: Layout,
     redirect: '/dtp/tenantList',
-    name: 'datasource',
+    name: 'tenant',
     meta: { title: '租户管理', icon: 'lessee' },
     children: [
       {
@@ -149,14 +149,14 @@ export const asyncRoutes = [
     path: '/dtp/item',
     component: Layout,
     redirect: '/dtp/itemList',
-    name: 'datasource',
+    name: 'item',
     meta: { title: '项目管理', icon: 'project' },
     children: [
       {
         path: 'itemList',
         name: 'itemList',
         component: () => import('@/views/dtp/item/index'),
-        meta: { title: '项目管理', icon: 'project' }
+        meta: { title: '项目管理', icon: 'documentation' }
       }
     ]
   },
@@ -164,26 +164,26 @@ export const asyncRoutes = [
     path: '/dtp/threadPool',
     component: Layout,
     redirect: '/dtp/threadPoolList',
-    name: 'datasource',
+    name: 'threadPool',
     meta: { title: '线程池管理', icon: 'tree' },
     children: [
       {
         path: 'threadPoolList',
         name: 'threadPoolList',
         component: () => import('@/views/dtp/threadpool/index'),
-        meta: { title: '线程池管理', icon: 'tree' }
+        meta: { title: '线程池管理' }
       },
       {
         path: 'instanceList',
         name: 'instanceList',
         component: () => import('@/views/dtp/instance/index'),
-        meta: { title: '线程池实例', icon: 'exe-cfg' }
+        meta: { title: '线程池实例' }
       },
       {
-        path: 'user',
-        name: 'User',
+        path: 'notifyList',
+        name: 'notifyList',
         component: () => import('@/views/dtp/notify/index'),
-        meta: { title: '报警通知', icon: 'battery-line' }
+        meta: { title: '报警通知' }
       }
     ]
   },
@@ -214,7 +214,7 @@ export const asyncRoutes = [
         path: 'user',
         name: 'User',
         component: () => import('@/views/dtp/log/index'),
-        meta: { title: '日志管理', icon: 'log' }
+        meta: { title: '日志管理', icon: 'bug' }
       }
     ]
   },
