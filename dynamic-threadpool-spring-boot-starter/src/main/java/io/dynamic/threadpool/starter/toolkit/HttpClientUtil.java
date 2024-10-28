@@ -142,6 +142,7 @@ public class HttpClientUtil {
 
     @SneakyThrows
     private String doPost(String url, Object body) {
+        log.info("Calling doPost with url: {}, body: {}", url, body);
         String jsonBody = JSON.toJSONString(body);
         RequestBody requestBody = RequestBody.create(jsonMediaType, jsonBody);
         Request request = new Request.Builder()

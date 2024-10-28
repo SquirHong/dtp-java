@@ -29,10 +29,9 @@ public class DingAlarmConstants {
     public static final String DING_ALARM_TXT =
             "<font color='#FF0000'>[警报] </font>%s - 动态线程池运行告警 \n\n" +
                     " --- \n\n " +
-                    "<font color='#708090' size=2>线程池ID：%s</font> \n\n " +
-                    "<font color='#708090' size=2>应用名称：%s</font> \n\n " +
                     "<font color='#778899' size=2>应用实例：%s</font> \n\n " +
                     "<font color='#778899' size=2>报警类型：%s</font> \n\n " +
+                    "<font color='#708090' size=2>线程池名称：%s</font> \n\n " +
                     " --- \n\n  " +
                     "<font color='#708090' size=2>核心线程数：%d</font> \n\n " +
                     "<font color='#708090' size=2>最大线程数：%d</font> \n\n " +
@@ -60,18 +59,16 @@ public class DingAlarmConstants {
             "<font color='#2a9d8f'>[通知] </font>%s - 动态线程池参数变更 \n\n" +
                     " --- \n\n " +
                     "<font color='#708090' size=2>线程池ID：%s</font> \n\n " +
-                    "<font color='#708090' size=2>应用名称：%s</font> \n\n " +
                     "<font color='#778899' size=2>应用实例：%s</font> \n\n " +
                     " --- \n\n  " +
                     "<font color='#708090' size=2>核心线程数：%s</font> \n\n " +
                     "<font color='#708090' size=2>最大线程数：%s</font> \n\n " +
-                    "<font color='#708090' size=2>线程存活时间：%s / SECONDS</font> \n\n" +
+                    "<font color='#708090' size=2>线程存活时间(SECONDS)：%s </font> \n\n" +
                     " --- \n\n  " +
                     "<font color='#708090' size=2>队列类型：%s</font> \n\n " +
                     "<font color='#708090' size=2>队列容量：%s</font> \n\n " +
                     " --- \n\n  " +
-                    "<font color='#708090' size=2>AGO 拒绝策略：%s</font> \n\n" +
-                    "<font color='#708090' size=2>NOW 拒绝策略：%s</font> \n\n" +
+                    "<font color='#708090' size=2>拒绝策略：%s</font> \n\n" +
                     " --- \n\n  " +
                     "<font color='#708090' size=2>提示：动态线程池配置变更实时通知（无限制）</font> \n\n" +
                     "<font color='#708090' size=2>OWNER：@%s</font> \n\n" +

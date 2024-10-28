@@ -3,6 +3,7 @@ package io.dynamic.threadpool.starter.alarm.lark;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
 import io.dynamic.threadpool.common.model.InstanceInfo;
 import io.dynamic.threadpool.common.model.PoolParameterInfo;
 import io.dynamic.threadpool.starter.alarm.NotifyDTO;
@@ -10,7 +11,6 @@ import io.dynamic.threadpool.starter.alarm.NotifyPlatformEnum;
 import io.dynamic.threadpool.starter.alarm.SendMessageHandler;
 import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
 import io.dynamic.threadpool.starter.core.GlobalThreadPoolManage;
-import io.dynamic.threadpool.starter.toolkit.HttpClientUtil;
 import io.dynamic.threadpool.starter.toolkit.thread.QueueTypeEnum;
 import io.dynamic.threadpool.starter.toolkit.thread.RejectedTypeEnum;
 import io.dynamic.threadpool.starter.wrap.DynamicThreadPoolWrapper;
@@ -43,8 +43,6 @@ public class LarkSendMessageHandler implements SendMessageHandler {
 
     private InstanceInfo instanceInfo;
 
-    private HttpClientUtil httpClientUtil;
-
     @Override
     public String getType() {
         return NotifyPlatformEnum.LARK.name();
@@ -52,11 +50,13 @@ public class LarkSendMessageHandler implements SendMessageHandler {
 
     @Override
     public void sendAlarmMessage(NotifyDTO notifyConfig, DynamicThreadPoolExecutor pool) {
+        log.info("Lark send alarm message");
         larkAlarmSendMessage(notifyConfig, pool);
     }
 
     @Override
     public void sendChangeMessage(NotifyDTO notifyConfig, PoolParameterInfo parameter) {
+        log.info("Lark send change message");
         larkChangeSendMessage(notifyConfig, parameter);
     }
 
@@ -180,7 +180,7 @@ public class LarkSendMessageHandler implements SendMessageHandler {
         String serverUrl = LARK_BOT_URL + notifyConfig.getSecretKey();
 
         try {
-            httpClientUtil.restApiPost(serverUrl, text);
+            HttpRequest.post(serverUrl).body(text).execute();
         } catch (Exception ex) {
             log.error("Lark failed to send message", ex);
         }

@@ -8,6 +8,7 @@ import io.dynamic.threadpool.starter.wrap.ManagerListenerWrapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executor;
 
 /**
  * CacheData.
@@ -83,7 +84,8 @@ public class CacheData {
             wrap.setLastCallMd5(md5);
             listener.receiveConfigInfo(content);
         };
-
+        Executor executor = listener.getExecutor();
+        log.info("executor :: {}", executor);
         listener.getExecutor().execute(runnable);
     }
 

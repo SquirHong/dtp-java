@@ -62,6 +62,14 @@
             <artifactId>alibaba-dingtalk-service-sdk</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.larksuite.oapi/oapi-sdk -->
+        <dependency>
+            <groupId>com.larksuite.oapi</groupId>
+            <artifactId>oapi-sdk</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>

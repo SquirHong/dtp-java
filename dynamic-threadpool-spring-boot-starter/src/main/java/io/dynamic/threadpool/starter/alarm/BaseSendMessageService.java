@@ -71,6 +71,7 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
 
         if (result != null && result.isSuccess() && result.getData() != null) {
             List<ThreadPoolNotify> resultData = JSON.parseArray(JSON.toJSONString(result.getData()), ThreadPoolNotify.class);
+            log.info("Get alarm notification configuration: {}", JSON.toJSONString(resultData));
             resultData.forEach(each -> ALARM_NOTIFY_CONFIG.put(each.getNotifyKey(), each.getNotifyList()));
 
             ALARM_NOTIFY_CONFIG.forEach((key, value) -> {
@@ -101,6 +102,7 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
                 return;
             }
             if (isSendAlarm(each.getTpId(), each.setTypeEnum(typeEnum))) {
+                log.info("Send alarm message to platform: {}", each.getPlatform());
                 messageHandler.sendAlarmMessage(each, threadPoolExecutor);
             }
         });
@@ -121,6 +123,7 @@ public class BaseSendMessageService implements InitializingBean, SendMessageServ
                 log.warn("服务端没有实现: " + each.getPlatform() + " 平台.");
                 return;
             }
+            log.info("Send change message to platform: {}", each.getPlatform());
             messageHandler.sendChangeMessage(each, parameter);
         });
     }
