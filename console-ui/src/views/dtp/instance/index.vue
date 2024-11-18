@@ -71,7 +71,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="线程池ID" prop="tpId">
+            <el-form-item label="线程池ID">
               <el-input v-model="runTimeTemp.tpId" :disabled="true"/>
             </el-form-item>
           </el-col>
