@@ -249,14 +249,15 @@ public class LongPollingService {
 
                     String mapAsString = clientSub.clientMd5Map.entrySet().stream().map(entry -> "Key: " + entry.getKey() + ", Value: " + entry.getValue())
                             .collect(Collectors.joining("\n"));
-                    log.info("DataChangeTask事件 打印clientMd5Map:\n{}", mapAsString);
-
+                    log.info("DataChangeTask事件 打印clientMd5Map:\n{},identify:{}", mapAsString, identify);
                     String identity = groupKey + GROUP_KEY_DELIMITER + identify;
                     List<String> parseMapForFilter = Lists.newArrayList(identity);
                     // 为空则修改集群
                     if (StrUtil.isBlank(identify)) {
                         parseMapForFilter = MapUtil.parseMapForFilter(clientSub.clientMd5Map, groupKey);
                     }
+                    log.info("DataChangeTask 的 identity:{}", identity);
+                    log.info("DataChangeTask事件 parseMapForFilter:{}", parseMapForFilter);
                     parseMapForFilter.forEach(each -> {
                         if (clientSub.clientMd5Map.containsKey(each)) {
                             getRetainIps().put(clientSub.ip, System.currentTimeMillis());

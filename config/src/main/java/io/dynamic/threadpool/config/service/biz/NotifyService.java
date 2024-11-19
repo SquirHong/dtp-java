@@ -51,4 +51,13 @@ public interface NotifyService {
      */
     void delete(NotifyModifyReqDTO reqDTO);
 
+
+    /**
+     * 启用停用通知.
+     *
+     * @param id
+     * @param status
+     */
+    void enableNotify(String id, Integer status);
+
 }

@@ -5,6 +5,7 @@ import io.dynamic.threadpool.common.toolkit.Md5Util;
 import io.dynamic.threadpool.common.constant.Constants;
 import io.dynamic.threadpool.starter.wrap.ManagerListenerWrapper;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -14,6 +15,7 @@ import java.util.concurrent.Executor;
  * CacheData.
  */
 @Slf4j
+@ToString
 public class CacheData {
 
     public volatile String md5;

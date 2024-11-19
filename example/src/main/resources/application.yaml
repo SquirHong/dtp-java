@@ -8,3 +8,6 @@ spring:
       server-addr: http://localhost:6691
       tenantId: common
       item-id: dtp
+
+server:
+  port: 8088

@@ -44,7 +44,6 @@ public class NotifyServiceImpl implements NotifyService {
             for (String s : parseKey) {
                 System.out.println(s);
             }
-            System.out.println("///////////////////////////////");
             LambdaQueryWrapper<NotifyInfo> queryWrapper = Wrappers.lambdaQuery(NotifyInfo.class)
                     .eq(NotifyInfo::getTenantId, parseKey[2])
                     .eq(NotifyInfo::getItemId, parseKey[1])
@@ -113,6 +112,14 @@ public class NotifyServiceImpl implements NotifyService {
                 .eq(NotifyInfo::getId, reqDTO.getId());
 
         notifyInfoMapper.delete(updateWrapper);
+    }
+
+    @Override
+    public void enableNotify(String id, Integer status) {
+        NotifyInfo notifyInfo = new NotifyInfo();
+        notifyInfo.setId(Long.parseLong(id));
+        notifyInfo.setEnable(status);
+        notifyInfoMapper.updateById(notifyInfo);
     }
 
 

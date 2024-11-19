@@ -52,6 +52,7 @@ public class DynamicThreadPoolAutoConfiguration {
         String ip = dtpInetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
         String port = environment.getProperty("server.port");
         String identification = StrUtil.builder(ip, ":", port).toString();
+        log.info("Dynamic thread pool identification: {}", identification);
         return new ThreadPoolConfigService(httpAgent, identification);
     }
 

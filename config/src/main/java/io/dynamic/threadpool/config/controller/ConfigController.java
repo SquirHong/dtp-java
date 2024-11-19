@@ -69,7 +69,7 @@ public class ConfigController {
             clientMd5Map = Md5ConfigUtil.getClientMd5Map(probeModify);
             String mapAsString = clientMd5Map.entrySet().stream().map(entry -> "Key: " + entry.getKey() + ", Value: " + entry.getValue())
                     .collect(Collectors.joining("\n"));
-            log.info("Map content:\n{}", mapAsString);
+            log.info("Map content/listener:\n{}", mapAsString);
         } catch (Throwable e) {
             throw new IllegalArgumentException("invalid probeModify");
         }

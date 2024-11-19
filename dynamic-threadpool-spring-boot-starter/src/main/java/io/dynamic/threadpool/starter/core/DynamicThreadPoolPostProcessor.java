@@ -50,6 +50,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
         } else if (bean instanceof DynamicThreadPoolExecutor) {
             var dynamicThreadPool = ApplicationContextHolder.findAnnotationOnBean(beanName, DynamicThreadPool.class);
             if (Objects.isNull(dynamicThreadPool)) {
+                log.info("出现了一个没有加@DynamicThreadPool注解的线程池，将使用默认的线程池配置. beanName :: {}", beanName);
                 // 仅仅只是想使用线程池，不需要订阅配置
                 return bean;
             }
@@ -87,8 +88,8 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
         Result result = null;
         ThreadPoolExecutor poolExecutor = null;
         try {
-            log.info("[Init pool] Query thread pool configuration from server. ,queryStrMap :: {}", queryStrMap);
             result = httpAgent.httpGetByConfig(Constants.CONFIG_CONTROLLER_PATH, null, queryStrMap, 3000L);
+            log.info("[Init pool] Get thread pool configuration. queryStrMap :: {},result :: {}", queryStrMap, result);
             // 如果数据库有值，则将得到的参数转化为PoolParameterInfo，         没指定的tpid，则使用默认的
             if (result.isSuccess() && result.getData() != null && (ppi = JSON.toJavaObject((JSON) result.getData(), PoolParameterInfo.class)) != null) {
                 // 使用相关参数创建线程池
@@ -108,7 +109,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                 isSubscribe = true;
             }
         } catch (Exception ex) {
-            log.error("[Init pool] Failed to initialize thread pool configuration. error message :: {},Enhance the default provided thread pool.. ", ex.getMessage());
+            log.error("[Init pool] Failed to initialize thread pool configuration. error message :: {},Enhance the default provided thread pool.. ", ex);
             dynamicThreadPoolWrap.setExecutor(CommonDynamicThreadPool.getInstance(tpId));
         } finally {
             // 如果客户端使用了 DynamicThreadPoolExecutor，但没有加@DynamicThreadPool注解，则配置上默认的线程池
@@ -124,6 +125,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
     }
 
     private void subscribeConfig(DynamicThreadPoolWrapper dynamicThreadPoolWrap) {
+        log.info("[Init pool] Subscribe thread pool configuration. dynamicThreadPoolWrap :: {}", dynamicThreadPoolWrap);
         // 只有数据库有对应的线程池数据才会去订阅
         if (dynamicThreadPoolWrap.isSubscribeFlag()) {
             threadPoolOperation.subscribeConfig(dynamicThreadPoolWrap.getTpId(), executorService, config -> ThreadPoolDynamicRefresh.refreshDynamicPool(config));

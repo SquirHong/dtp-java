@@ -8,9 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ThreadPoolExecutor;
 
-import static io.dynamic.threadpool.example.constant.GlobalTestConstant.MESSAGE_CONSUME;
 import static io.dynamic.threadpool.example.constant.GlobalTestConstant.MESSAGE_PRODUCE;
 
 /**
@@ -25,14 +24,14 @@ public class ThreadPoolConfig {
      *
      * @return
      */
-    @Bean
-    public DynamicThreadPoolWrapper messageCenterConsumeThreadPool() {
-        ThreadPoolExecutor customExecutor = ThreadPoolBuilder.builder()
-                .dynamicPool()
-                .threadFactory(MESSAGE_CONSUME)
-                .build();
-        return new DynamicThreadPoolWrapper(MESSAGE_CONSUME, customExecutor);
-    }
+//    @Bean
+//    public DynamicThreadPoolWrapper messageCenterConsumeThreadPool() {
+//        ThreadPoolExecutor customExecutor = ThreadPoolBuilder.builder()
+//                .dynamicPool()
+//                .threadFactory(MESSAGE_CONSUME)
+//                .build();
+//        return new DynamicThreadPoolWrapper(MESSAGE_CONSUME, customExecutor);
+//    }
 
     /**
      * 通过 {@link DynamicThreadPool} 修饰 {@link DynamicThreadPoolExecutor} 完成 Server 端订阅配置功能.
@@ -47,9 +46,9 @@ public class ThreadPoolConfig {
         return ThreadPoolBuilder.builder().threadFactory(MESSAGE_PRODUCE).threadPoolId(MESSAGE_PRODUCE).dynamicPool().build();
     }
 
-    @Bean
-    public DynamicThreadPoolWrapper MMMMMMMMThreadPool() {
-        return new DynamicThreadPoolWrapper("MMMMMMMM");
-    }
+//    @Bean
+//    public DynamicThreadPoolWrapper MMMMMMMMThreadPool() {
+//        return new DynamicThreadPoolWrapper("MMMMMMMM");
+//    }
 
 }
