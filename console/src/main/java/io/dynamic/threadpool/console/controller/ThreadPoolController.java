@@ -86,4 +86,10 @@ public class ThreadPoolController {
         return Results.success();
     }
 
+
+    @PostMapping("/alarm/enable/{id}/{isAlarm}")
+    public Result alarmEnable(@PathVariable("id") String id, @PathVariable("isAlarm") Integer isAlarm) {
+        threadPoolService.alarmEnable(id, isAlarm);
+        return Results.success();
+    }
 }

@@ -70,4 +70,12 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
         );
     }
 
+    @Override
+    public void alarmEnable(String id, Integer isAlarm) {
+        ConfigAllInfo configAllInfo = configInfoMapper.selectById(id);
+        configAllInfo.setIsAlarm(isAlarm);
+        // TODO: 是否报警变更, 虽然通知了客户端, 但客户端并没有“处理”这个变更
+        configService.insertOrUpdate(null, configAllInfo);
+    }
+
 }

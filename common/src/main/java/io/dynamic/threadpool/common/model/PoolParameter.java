@@ -23,7 +23,7 @@ public interface PoolParameter {
 
     Integer getRejectedType();
 
-    Boolean getIsAlarm();
+    Integer getIsAlarm();
 
     Integer getCapacityAlarm();
 

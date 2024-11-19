@@ -3,3 +3,10 @@
 /dynamic-threadpool-spring-boot-starter/target/
 /example/target/
 /server/target/
+/auth/target/
+/log-record-tool/target/
+/registry/target/
+.idea/
+*.iml
+ExampleLog/
+.DS_Store

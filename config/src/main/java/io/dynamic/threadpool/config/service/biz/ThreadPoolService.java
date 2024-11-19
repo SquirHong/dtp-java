@@ -52,4 +52,12 @@ public interface ThreadPoolService {
      */
     void deletePool(ThreadPoolDelReqDTO reqDTO);
 
+    /**
+     * Alarm enable.
+     *
+     * @param id
+     * @param isAlarm
+     */
+    void alarmEnable(String id, Integer isAlarm);
+
 }

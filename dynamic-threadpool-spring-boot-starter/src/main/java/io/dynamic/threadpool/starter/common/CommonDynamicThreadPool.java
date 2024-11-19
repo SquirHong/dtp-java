@@ -22,7 +22,7 @@ public class CommonDynamicThreadPool {
                 .poolThreadSize(3, 5)
                 .keepAliveTime(1000, TimeUnit.SECONDS)
                 .rejected(RejectedPolicies.runsOldestTaskPolicy())
-                .alarmConfig(true, 80, 80)
+                .alarmConfig(1, 80, 80)
                 .workQueue(QueueTypeEnum.RESIZABLE_LINKED_BLOCKING_QUEUE, 512)
                 .build();
         return poolExecutor;

@@ -73,7 +73,7 @@ public class PoolParameterInfo implements PoolParameter, Serializable {
     /**
      * 是否告警
      */
-    private Boolean isAlarm;
+    private Integer isAlarm;
 
     /**
      * 容量告警

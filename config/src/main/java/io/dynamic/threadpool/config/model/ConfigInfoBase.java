@@ -20,7 +20,7 @@ public class ConfigInfoBase implements Serializable {
      * ID
      */
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * tenantId
@@ -71,7 +71,7 @@ public class ConfigInfoBase implements Serializable {
     /**
      * 是否告警
      */
-    private Boolean isAlarm;
+    private Integer isAlarm;
 
     /**
      * 容量告警
