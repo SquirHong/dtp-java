@@ -53,10 +53,10 @@ public class ConfigServiceImpl implements ConfigService {
 
         try {
             addConfigInfo(configAllInfo);
-            log.info("发布配置成功，即将发布LocalDataChangeEvent content :: {}", configAllInfo.getContent());
+            log.info("发布配置成功，即将发布LocalDataChangeEvent identify::{} content :: {}", identify, configAllInfo.getContent());
         } catch (Exception ex) {
             updateConfigInfo(userName, configAllInfo);
-            log.info("修改配置成功，即将发布LocalDataChangeEvent content :: {}", configAllInfo.getContent());
+            log.info("修改配置成功，即将发布LocalDataChangeEvent identify::{} content :: {}", identify, configAllInfo.getContent());
         }
         ConfigChangePublisher
                 .notifyConfigChange(new LocalDataChangeEvent(identify, ContentUtil.getGroupKey(configAllInfo)));
@@ -103,15 +103,19 @@ public class ConfigServiceImpl implements ConfigService {
      * 根据队列类型获取队列大小.
      * <p>
      * 不支持设置队列大小 {@link SynchronousQueue} {@link LinkedTransferQueue}
-     *  前者为0，后者为无界
+     * 前者为0，后者为无界
+     *
      * @param config
      * @return
      */
     private Integer getQueueCapacityByType(ConfigAllInfo config) {
-        int queueCapacity = 0;
+        int queueCapacity;
         switch (config.getQueueType()) {
             case 5:
                 queueCapacity = Integer.MAX_VALUE;
+                break;
+            default:
+                queueCapacity = config.getCapacity();
                 break;
         }
 
