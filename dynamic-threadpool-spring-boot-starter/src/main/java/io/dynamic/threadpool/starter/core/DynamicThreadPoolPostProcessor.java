@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.task.TaskDecorator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -95,7 +96,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                 // 使用相关参数创建线程池
                 BlockingQueue workQueue = QueueTypeEnum.createBlockingQueue(ppi.getQueueType(), ppi.getCapacity());
                 RejectedExecutionHandler rejectedExecutionHandler = RejectedTypeEnum.createPolicy(ppi.getRejectedType());
-                poolExecutor = (DynamicThreadPoolExecutor) ThreadPoolBuilder.builder()
+                poolExecutor = ThreadPoolBuilder.builder()
                         .dynamicPool()
                         .poolThreadSize(ppi.getCoreSize(), ppi.getMaxSize())
                         .keepAliveTime(ppi.getKeepAliveTime(), TimeUnit.SECONDS)
@@ -105,6 +106,12 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                         .rejected(rejectedExecutionHandler)
                         .alarmConfig(ppi.getIsAlarm(), ppi.getCapacityAlarm(), ppi.getLivenessAlarm())
                         .build();
+
+                if (poolExecutor instanceof DynamicExecutorConfigurationSupport) {
+                    TaskDecorator taskDecorator = ((DynamicThreadPoolExecutor) dynamicThreadPoolWrap.getExecutor()).getTaskDecorator();
+                    ((DynamicThreadPoolExecutor) poolExecutor).setTaskDecorator(taskDecorator);
+                }
+
                 dynamicThreadPoolWrap.setExecutor(poolExecutor);
                 isSubscribe = true;
             }

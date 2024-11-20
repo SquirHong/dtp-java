@@ -3,6 +3,7 @@ package io.dynamic.threadpool.starter.toolkit.thread;
 
 import io.dynamic.threadpool.common.toolkit.Assert;
 import io.dynamic.threadpool.starter.alarm.ThreadPoolAlarm;
+import org.springframework.core.task.TaskDecorator;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -92,6 +93,21 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
      * 活跃度告警
      */
     private Integer livenessAlarm;
+
+    /**
+     * 线程任务装饰器
+     */
+    private TaskDecorator taskDecorator;
+
+    /**
+     * 等待终止毫秒
+     */
+    private Long awaitTerminationMillis = 0L;
+
+    /**
+     * 等待任务在关机时完成
+     */
+    private Boolean waitForTasksToCompleteOnShutdown = false;
 
     /**
      * 计算公式：CPU 核数 / (1 - 阻塞系数 0.8)
@@ -199,6 +215,27 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
         this.isAlarm = isAlarm == 1 ? true : false;
         this.capacityAlarm = capacityAlarm;
         this.livenessAlarm = livenessAlarm;
+        return this;
+    }
+
+    public ThreadPoolBuilder taskDecorator(TaskDecorator taskDecorator) {
+        this.taskDecorator = taskDecorator;
+        return this;
+    }
+
+    public ThreadPoolBuilder awaitTerminationMillis(long awaitTerminationMillis) {
+        this.awaitTerminationMillis = awaitTerminationMillis;
+        return this;
+    }
+
+    public ThreadPoolBuilder waitForTasksToCompleteOnShutdown(boolean waitForTasksToCompleteOnShutdown) {
+        this.waitForTasksToCompleteOnShutdown = waitForTasksToCompleteOnShutdown;
+        return this;
+    }
+
+    public ThreadPoolBuilder dynamicSupport(boolean waitForTasksToCompleteOnShutdown, long awaitTerminationMillis) {
+        this.awaitTerminationMillis = awaitTerminationMillis;
+        this.waitForTasksToCompleteOnShutdown = waitForTasksToCompleteOnShutdown;
         return this;
     }
 

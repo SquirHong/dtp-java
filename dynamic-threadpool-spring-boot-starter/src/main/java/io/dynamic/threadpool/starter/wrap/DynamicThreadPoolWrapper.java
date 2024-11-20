@@ -1,8 +1,10 @@
 package io.dynamic.threadpool.starter.wrap;
 
 import io.dynamic.threadpool.starter.common.CommonDynamicThreadPool;
+import io.dynamic.threadpool.starter.core.DynamicExecutorConfigurationSupport;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -13,7 +15,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Data
 @Slf4j
-public class DynamicThreadPoolWrapper {
+public class DynamicThreadPoolWrapper implements DisposableBean {
     private String tenantId;
 
     private String itemId;
@@ -34,7 +36,6 @@ public class DynamicThreadPoolWrapper {
     }
 
     /**
-     *
      * @param threadPoolId
      * @param threadPoolExecutor
      */
@@ -71,6 +72,13 @@ public class DynamicThreadPoolWrapper {
      */
     public <T> Future<T> submit(Callable<T> task) {
         return executor.submit(task);
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        if (executor != null && executor instanceof DynamicExecutorConfigurationSupport) {
+            ((DynamicExecutorConfigurationSupport) executor).destroy();
+        }
     }
 
 }

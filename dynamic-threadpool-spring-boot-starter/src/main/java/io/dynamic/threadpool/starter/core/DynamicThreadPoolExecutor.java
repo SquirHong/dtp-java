@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.task.TaskDecorator;
 
 import java.security.AccessControlContext;
 import java.security.AccessController;
@@ -23,7 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Slf4j
 @Getter
-public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
+public final class DynamicThreadPoolExecutor extends DynamicExecutorConfigurationSupport {
 
     // 记录拒绝策略触发的次数
     private final AtomicInteger rejectCount = new AtomicInteger();
@@ -82,6 +83,8 @@ public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
         return rejectCount.get();
     }
 
+    private TaskDecorator taskDecorator;
+
     private final BlockingQueue<Runnable> workQueue;
 
     private final ReentrantLock mainLock = new ReentrantLock();
@@ -113,6 +116,37 @@ public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
             new RuntimePermission("modifyThread");
 
     private final AccessControlContext acc;
+
+
+    public DynamicThreadPoolExecutor(int corePoolSize,
+                                     int maximumPoolSize,
+                                     long keepAliveTime,
+                                     TimeUnit unit,
+                                     boolean waitForTasksToCompleteOnShutdown,
+                                     long awaitTerminationMillis,
+                                     @NonNull BlockingQueue<Runnable> workQueue,
+                                     @NonNull String threadPoolId,
+                                     @NonNull ThreadFactory threadFactory,
+                                     @NonNull ThreadPoolAlarm threadPoolAlarm,
+                                     @NonNull RejectedExecutionHandler handler) {
+        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, waitForTasksToCompleteOnShutdown, awaitTerminationMillis, workQueue, threadFactory, handler);
+        if (corePoolSize < 0 ||
+                maximumPoolSize <= 0 ||
+                maximumPoolSize < corePoolSize ||
+                keepAliveTime < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        this.corePoolSize = corePoolSize;
+        this.maximumPoolSize = maximumPoolSize;
+        this.workQueue = workQueue;
+        this.threadPoolId = threadPoolId;
+        this.keepAliveTime = unit.toNanos(keepAliveTime);
+        this.threadFactory = threadFactory;
+        this.handler = handler;
+        this.threadPoolAlarm = threadPoolAlarm;
+        this.acc = System.getSecurityManager() == null ? null : AccessController.getContext();
+    }
 
     private final class Worker
             extends AbstractQueuedSynchronizer
@@ -512,37 +546,14 @@ public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
             processWorkerExit(w, completedAbruptly);
         }
     }
-    public DynamicThreadPoolExecutor(int corePoolSize,
-                                     int maximumPoolSize,
-                                     long keepAliveTime,
-                                     TimeUnit unit,
-                                     @NonNull BlockingQueue<Runnable> workQueue,
-                                     @NonNull String threadPoolId,
-                                     @NonNull ThreadFactory threadFactory,
-                                     @NonNull ThreadPoolAlarm threadPoolAlarm,
-                                     @NonNull RejectedExecutionHandler handler) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
-        if (corePoolSize < 0 ||
-                maximumPoolSize <= 0 ||
-                maximumPoolSize < corePoolSize ||
-                keepAliveTime < 0) {
-            throw new IllegalArgumentException();
-        }
 
-        this.corePoolSize = corePoolSize;
-        this.maximumPoolSize = maximumPoolSize;
-        this.workQueue = workQueue;
-        this.threadPoolId = threadPoolId;
-        this.keepAliveTime = unit.toNanos(keepAliveTime);
-        this.threadFactory = threadFactory;
-        this.handler = handler;
-        this.threadPoolAlarm = threadPoolAlarm;
-        this.acc = System.getSecurityManager() == null ? null : AccessController.getContext();
-    }
 
     @Override
     public void execute(@NonNull Runnable command) {
-        log.info("Execute command to pool, threadPoolId :: {}", threadPoolId);
+        if (taskDecorator != null) {
+            command = taskDecorator.decorate(command);
+        }
+        log.info("Execute command to pool, threadPoolId :: {},command :: {}", threadPoolId, command);
         int c = ctl.get();
         if (workerCountOf(c) < corePoolSize) {
             if (addWorker(command, true)) {
@@ -565,6 +576,11 @@ public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
         } else if (!addWorker(command, false)) {
             reject(command);
         }
+    }
+
+    @Override
+    protected ExecutorService initializeExecutor() {
+        return this;
     }
 
     @Override
@@ -713,6 +729,14 @@ public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
             ++n;
         }
         return n;
+    }
+
+    public TaskDecorator getTaskDecorator() {
+        return taskDecorator;
+    }
+
+    public void setTaskDecorator(TaskDecorator taskDecorator) {
+        this.taskDecorator = taskDecorator;
     }
 
     @Override
@@ -902,11 +926,11 @@ public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
                         "Shutting down"));
         return
                 "[" + rs +
-                ", pool size = " + nworkers +
-                ", active threads = " + nactive +
-                ", queued tasks = " + workQueue.size() +
-                ", completed tasks = " + ncompleted +
-                "]";
+                        ", pool size = " + nworkers +
+                        ", active threads = " + nactive +
+                        ", queued tasks = " + workQueue.size() +
+                        ", completed tasks = " + ncompleted +
+                        "]";
     }
 
     // 计算每个任务的执行耗时，这里可以知道最大的容量有多大，就是当前线程池的最大线程数
@@ -915,13 +939,13 @@ public final class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
 
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
-        log.info("------r={}", r.hashCode()+t.hashCode());
-        statisticsTime.put(String.valueOf(r.hashCode()+t.hashCode()), new Date());
+        log.info("------r={}", r.hashCode() + t.hashCode());
+        statisticsTime.put(String.valueOf(r.hashCode() + t.hashCode()), new Date());
     }
 
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
-        Date startDate = statisticsTime.remove(String.valueOf(r.hashCode()+Thread.currentThread().hashCode()));
+        Date startDate = statisticsTime.remove(String.valueOf(r.hashCode() + Thread.currentThread().hashCode()));
         Date finishDate = new Date();
         log.info("Task execute time finishDate={},startDate={}", finishDate, startDate);
         long diff = finishDate.getTime() - startDate.getTime();
