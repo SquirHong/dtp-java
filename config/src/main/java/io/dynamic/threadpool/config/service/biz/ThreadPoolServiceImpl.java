@@ -12,6 +12,7 @@ import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolQueryReqDTO;
 import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolRespDTO;
 import io.dynamic.threadpool.config.model.biz.threadpool.ThreadPoolSaveOrUpdateReqDTO;
 import io.dynamic.threadpool.config.toolkit.BeanUtil;
+import io.dynamic.threadpool.logrecord.annotation.LogRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,8 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
                 .eq(!StringUtils.isBlank(reqDTO.getTenantId()), ConfigAllInfo::getTenantId, reqDTO.getTenantId())
                 .eq(!StringUtils.isBlank(reqDTO.getItemId()), ConfigAllInfo::getItemId, reqDTO.getItemId())
                 .eq(!StringUtils.isBlank(reqDTO.getTpId()), ConfigAllInfo::getTpId, reqDTO.getTpId())
-                .eq(ConfigAllInfo::getDelFlag, DelEnum.DELETE);
+                .eq(ConfigAllInfo::getDelFlag, DelEnum.DELETE)
+                .orderByDesc(ConfigAllInfo::getGmtModified);
         return configInfoMapper.selectPage(reqDTO, wrapper).convert(each -> BeanUtil.convert(each, ThreadPoolRespDTO.class));
     }
 
@@ -60,6 +62,13 @@ public class ThreadPoolServiceImpl implements ThreadPoolService {
         return BeanUtil.convert(selectList, ThreadPoolRespDTO.class);
     }
 
+
+    @LogRecord(
+            bizNo = "{{#reqDTO.itemId}}_{{#reqDTO.tpId}}",
+            category = "THREAD_POOL_DELETE",
+            success = "删除线程池: {{#reqDTO.tpId}}",
+            detail = "{{#reqDTO.toString()}}"
+    )
     @Override
     public void deletePool(ThreadPoolDelReqDTO reqDTO) {
         configInfoMapper.delete(

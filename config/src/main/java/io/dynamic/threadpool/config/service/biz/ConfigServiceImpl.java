@@ -77,7 +77,7 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @LogRecord(
-            bizNo = "{{#config.itemId}}:{{#config.tpId}}",
+            bizNo = "{{#config.itemId}}_{{#config.tpId}}",
             category = "THREAD_POOL_UPDATE",
             operator = "{{#operator}}",
             success = "核心线程: {{#config.coreSize}}, 最大线程: {{#config.maxSize}}, 队列类型: {{#config.queueType}}, 队列容量: {{#config.capacity}}, 拒绝策略: {{#config.rejectedType}}",
