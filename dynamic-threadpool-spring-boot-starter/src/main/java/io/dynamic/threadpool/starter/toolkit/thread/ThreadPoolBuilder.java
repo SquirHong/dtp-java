@@ -307,12 +307,15 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
                 .setKeepAliveTime(builder.keepAliveTime)
                 .setCapacity(builder.capacity)
                 .setRejectedExecutionHandler(builder.rejectedExecutionHandler)
-                .setTimeUnit(builder.timeUnit);
+                .setTimeUnit(builder.timeUnit)
+                .setTaskDecorator(builder.taskDecorator);
 
         if (builder.isDynamicPool) {
             initParam.setThreadPoolId(Optional.ofNullable(builder.threadPoolId).orElse(builder.threadNamePrefix));
             ThreadPoolAlarm threadPoolAlarm = new ThreadPoolAlarm(builder.isAlarm, builder.capacityAlarm, builder.livenessAlarm);
             initParam.setThreadPoolAlarm(threadPoolAlarm);
+            initParam.setWaitForTasksToCompleteOnShutdown(builder.waitForTasksToCompleteOnShutdown);
+            initParam.setAwaitTerminationMillis(builder.awaitTerminationMillis);
         }
         // 快速消费线程池内置指定线程池
         if (!builder.isFastPool) {

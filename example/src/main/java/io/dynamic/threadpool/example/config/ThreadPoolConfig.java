@@ -1,5 +1,6 @@
 package io.dynamic.threadpool.example.config;
 
+import io.dynamic.threadpool.example.test.TaskDecoratorTest;
 import io.dynamic.threadpool.starter.core.DynamicThreadPool;
 import io.dynamic.threadpool.starter.core.DynamicThreadPoolExecutor;
 import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolBuilder;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
-import static io.dynamic.threadpool.example.constant.GlobalTestConstant.MESSAGE_PRODUCE;
+import static io.dynamic.threadpool.example.constant.GlobalTestConstant.*;
 
 /**
  * 线程池配置
@@ -43,7 +44,14 @@ public class ThreadPoolConfig {
     @Bean
     @DynamicThreadPool
     public ThreadPoolExecutor customThreadPoolExecutor() {
-        return ThreadPoolBuilder.builder().threadFactory(MESSAGE_PRODUCE).threadPoolId(MESSAGE_PRODUCE).dynamicPool().build();
+        return ThreadPoolBuilder.builder()
+                .threadFactory(MESSAGE_PRODUCE)
+                .threadPoolId(MESSAGE_PRODUCE)
+                .dynamicPool()
+                .waitForTasksToCompleteOnShutdown(true)
+                .awaitTerminationMillis(5000)
+                .taskDecorator(new TaskDecoratorTest.ContextCopyingDecorator())
+                .build();
     }
 
 //    @Bean
