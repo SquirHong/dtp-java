@@ -129,7 +129,7 @@ public final class DynamicThreadPoolExecutor extends DynamicExecutorConfiguratio
                                      @NonNull ThreadFactory threadFactory,
                                      @NonNull ThreadPoolAlarm threadPoolAlarm,
                                      @NonNull RejectedExecutionHandler handler) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, waitForTasksToCompleteOnShutdown, awaitTerminationMillis, workQueue, threadFactory, handler);
+        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, waitForTasksToCompleteOnShutdown, awaitTerminationMillis, workQueue, threadPoolId, threadFactory, handler);
         if (corePoolSize < 0 ||
                 maximumPoolSize <= 0 ||
                 maximumPoolSize < corePoolSize ||

@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   io.dynamic.threadpool.starter.config.DynamicThreadPoolAutoConfiguration
+org.springframework.boot.diagnostics.FailureAnalyzer=\
+  io.dynamic.threadpool.starter.core.ConfigEmptyAnalyzer

@@ -1,17 +1,15 @@
 package io.dynamic.threadpool.starter.core;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.util.concurrent.*;
 
 @Slf4j
-public abstract class DynamicExecutorConfigurationSupport extends ThreadPoolExecutor
-        implements BeanNameAware, InitializingBean, DisposableBean {
+public abstract class DynamicExecutorConfigurationSupport extends ThreadPoolExecutor implements InitializingBean, DisposableBean {
 
-    private String beanName;
+    private String threadPoolId;
 
     private ExecutorService executor;
 
@@ -26,9 +24,11 @@ public abstract class DynamicExecutorConfigurationSupport extends ThreadPoolExec
                                                boolean waitForTasksToCompleteOnShutdown,
                                                long awaitTerminationMillis,
                                                BlockingQueue<Runnable> workQueue,
+                                               String threadPoolId,
                                                ThreadFactory threadFactory,
                                                RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
+        this.threadPoolId = threadPoolId;
         this.waitForTasksToCompleteOnShutdown = waitForTasksToCompleteOnShutdown;
         this.awaitTerminationMillis = awaitTerminationMillis;
     }
@@ -41,11 +41,6 @@ public abstract class DynamicExecutorConfigurationSupport extends ThreadPoolExec
      * @see #afterPropertiesSet()
      */
     protected abstract ExecutorService initializeExecutor();
-
-    @Override
-    public void setBeanName(String name) {
-        this.beanName = name;
-    }
 
     /**
      * Calls {@code initialize()} after the container applied all property values.
@@ -73,7 +68,7 @@ public abstract class DynamicExecutorConfigurationSupport extends ThreadPoolExec
      */
     public void initialize() {
         if (log.isInfoEnabled()) {
-            log.info("Initializing ExecutorService" + (this.beanName != null ? " '" + this.beanName + "'" : ""));
+            log.info("Initializing ExecutorService" + (this.threadPoolId != null ? " '" + this.threadPoolId + "'" : ""));
         }
 
         this.executor = initializeExecutor();
@@ -87,7 +82,7 @@ public abstract class DynamicExecutorConfigurationSupport extends ThreadPoolExec
      */
     public void shutdownSupport() {
         if (log.isInfoEnabled()) {
-            log.info("Shutting down ExecutorService" + (this.beanName != null ? " '" + this.beanName + "'" : ""));
+            log.info("Shutting down ExecutorService" + (this.threadPoolId != null ? " '" + this.threadPoolId + "'" : ""));
         }
         if (this.executor != null) {
             if (this.waitForTasksToCompleteOnShutdown) {
@@ -112,14 +107,12 @@ public abstract class DynamicExecutorConfigurationSupport extends ThreadPoolExec
             try {
                 if (!executor.awaitTermination(this.awaitTerminationMillis, TimeUnit.MILLISECONDS)) {
                     if (log.isWarnEnabled()) {
-                        log.warn("Timed out while waiting for executor" +
-                                (this.beanName != null ? " '" + this.beanName + "'" : "") + " to terminate");
+                        log.warn("Timed out while waiting for executor" + (this.threadPoolId != null ? " '" + this.threadPoolId + "'" : "") + " to terminate");
                     }
                 }
             } catch (InterruptedException ex) {
                 if (log.isWarnEnabled()) {
-                    log.warn("Interrupted while waiting for executor" +
-                            (this.beanName != null ? " '" + this.beanName + "'" : "") + " to terminate");
+                    log.warn("Interrupted while waiting for executor" + (this.threadPoolId != null ? " '" + this.threadPoolId + "'" : "") + " to terminate");
                 }
                 Thread.currentThread().interrupt();
             }

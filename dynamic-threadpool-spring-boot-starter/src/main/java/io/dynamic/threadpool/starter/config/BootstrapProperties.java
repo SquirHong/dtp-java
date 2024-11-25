@@ -14,7 +14,6 @@ public class BootstrapProperties {
 
     public static final String PREFIX = "spring.dynamic.thread-pool";
 
-
     /**
      * 服务地址
      */
@@ -29,10 +28,5 @@ public class BootstrapProperties {
      * 项目 Id
      */
     private String itemId;
-
-    /**
-     * Alarm interval
-     */
-    private Long alarmInterval;
 
 }

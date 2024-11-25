@@ -23,6 +23,8 @@ public class MessageAlarmConfig {
 
     private ConfigurableEnvironment environment;
 
+    public static final String ACTIVE_DEFAULT = "unknown";
+
     public static final String SEND_MESSAGE_BEAN_NAME = "dtpSendMessageService";
 
     @DependsOn("dtpApplicationContextHolder")
@@ -40,14 +42,14 @@ public class MessageAlarmConfig {
     // 注入钉钉消息通知处理器
     @Bean
     public SendMessageHandler dingSendMessageHandler() {
-        String active = environment.getProperty("spring.profiles.active", Strings.EMPTY);
+        String active = environment.getProperty("spring.profiles.active", ACTIVE_DEFAULT);
         return new DingSendMessageHandler(active, instanceInfo);
     }
 
     // 注入lark消息通知处理器
     @Bean
     public SendMessageHandler larkSendMessageHandler() {
-        String active = environment.getProperty("spring.profiles.active", Strings.EMPTY);
+        String active = environment.getProperty("spring.profiles.active", ACTIVE_DEFAULT);
         return new LarkSendMessageHandler(active, instanceInfo);
     }
 
