@@ -218,7 +218,10 @@ public class ClientWorker {
         try {
             long readTimeoutMs = timeout + (long) Math.round(timeout >> 1);
             Result result = agent.httpPostByConfig(Constants.LISTENER_PATH, headers, params, readTimeoutMs);
-
+            if (isInitializingCacheList){
+                log.info("第一次接收到的数据为 result :: {}", result);
+            }
+            log.info("其他次接收到的数据为 result :: {}", result);
             setHealthServer(true);
 
             if (result != null && result.isSuccess()) {

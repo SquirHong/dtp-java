@@ -46,4 +46,10 @@ public class ApplicationController {
         return Results.success();
     }
 
+    @PostMapping("/remove")
+    public Result remove(@RequestBody InstanceInfo instanceInfo) {
+        instanceRegistry.remove(instanceInfo);
+        return Results.success();
+    }
+
 }

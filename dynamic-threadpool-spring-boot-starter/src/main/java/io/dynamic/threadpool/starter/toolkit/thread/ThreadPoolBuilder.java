@@ -312,7 +312,7 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
 
         if (builder.isDynamicPool) {
             initParam.setThreadPoolId(Optional.ofNullable(builder.threadPoolId).orElse(builder.threadNamePrefix));
-            ThreadPoolAlarm threadPoolAlarm = new ThreadPoolAlarm(builder.isAlarm, builder.capacityAlarm, builder.livenessAlarm);
+            ThreadPoolAlarm threadPoolAlarm = new ThreadPoolAlarm(builder.isAlarm, builder.livenessAlarm, builder.capacityAlarm);
             initParam.setThreadPoolAlarm(threadPoolAlarm);
             initParam.setWaitForTasksToCompleteOnShutdown(builder.waitForTasksToCompleteOnShutdown);
             initParam.setAwaitTerminationMillis(builder.awaitTerminationMillis);

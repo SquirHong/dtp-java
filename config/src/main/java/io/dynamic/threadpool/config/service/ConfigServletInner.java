@@ -23,6 +23,7 @@ public class ConfigServletInner {
         log.info("收到客户端长轮询请求，url={},clientMd5Map={},probeRequestSize={}", request.getRequestURI(), clientMd5Map.keySet(), probeRequestSize);
         if (LongPollingService.isSupportLongPolling(request)) {
             longPollingService.addLongPollingClient(request, response, clientMd5Map, probeRequestSize);
+            log.info("controller层返回数据");
             return HttpServletResponse.SC_OK + "";
         }
         return HttpServletResponse.SC_OK + "";
