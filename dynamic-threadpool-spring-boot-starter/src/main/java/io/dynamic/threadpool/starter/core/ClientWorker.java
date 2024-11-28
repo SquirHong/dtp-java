@@ -180,7 +180,9 @@ public class ClientWorker {
             sb.append(cacheData.tpId).append(WORD_SEPARATOR);
             sb.append(cacheData.itemId).append(WORD_SEPARATOR);
             sb.append(cacheData.tenantId).append(WORD_SEPARATOR);
+
             sb.append(identification).append(WORD_SEPARATOR);
+
             sb.append(cacheData.getMd5()).append(LINE_SEPARATOR);
 
             if (cacheData.isInitializing()) {
@@ -247,6 +249,8 @@ public class ClientWorker {
         params.put("tenantId", tenantId);
         params.put("itemId", itemId);
         params.put("tpId", tpId);
+        params.put("instanceId", identification);
+
         log.info("[get-server-config] tenantId :: {}, itemId :: {}, tpId :: {}, readTimeOut :: {}", tenantId, itemId, tpId, readTimeout);
         Result result = agent.httpGetByConfig(Constants.CONFIG_CONTROLLER_PATH, null, params, readTimeout);
         log.info("[get-server-config] result :: {}", result);

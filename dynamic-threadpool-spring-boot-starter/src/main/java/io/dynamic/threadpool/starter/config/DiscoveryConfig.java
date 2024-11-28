@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import io.dynamic.threadpool.common.model.InstanceInfo;
 import io.dynamic.threadpool.starter.core.DiscoveryClient;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
+import io.dynamic.threadpool.starter.toolkit.IdentifyUtil;
 import io.dynamic.threadpool.starter.toolkit.InetUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -30,8 +31,8 @@ public class DiscoveryConfig {
     @SneakyThrows
     public InstanceInfo instanceConfig() {
         InstanceInfo instanceInfo = new InstanceInfo();
-        instanceInfo.setInstanceId(getDefaultInstanceId(environment))
-                .setIpApplicationName(getIpApplicationName(environment))
+        instanceInfo.setInstanceId(getDefaultInstanceId(environment, inetUtils))
+                .setIpApplicationName(getIpApplicationName(environment, inetUtils))
                 .setHostName(InetAddress.getLocalHost().getHostAddress())
                 .setGroupKey(properties.getItemId() + "+" + properties.getTenantId())
                 .setAppName(environment.getProperty("spring.application.name"))
@@ -44,10 +45,9 @@ public class DiscoveryConfig {
                 .toString();
         instanceInfo.setCallBackUrl(callBackUrl);
 
-        String ip = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
-        String port = environment.getProperty("server.port");
-        String identification = StrUtil.builder(ip, ":", port).toString();
-        instanceInfo.setIdentify(identification);
+        String identify = IdentifyUtil.generate(environment, inetUtils);
+        instanceInfo.setIdentify(identify);
+
         return instanceInfo;
     }
 

@@ -60,7 +60,7 @@ public class ConfigController {
     @SneakyThrows
     @PostMapping("/listener")
     public void listener(HttpServletRequest request, HttpServletResponse response) {
-        log.debug("request : {}", request);
+        log.info("request : {}", request);
         request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
 
         String probeModify = request.getParameter(Constants.LISTENING_CONFIGS);

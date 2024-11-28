@@ -1,5 +1,6 @@
 package io.dynamic.threadpool.starter.config;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import io.dynamic.threadpool.common.config.ApplicationContextHolder;
 import io.dynamic.threadpool.starter.controller.PoolRunStateController;
@@ -9,6 +10,7 @@ import io.dynamic.threadpool.starter.core.ThreadPoolConfigService;
 import io.dynamic.threadpool.starter.core.ThreadPoolOperation;
 import io.dynamic.threadpool.starter.enable.MarkerConfiguration;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
+import io.dynamic.threadpool.starter.toolkit.IdentifyUtil;
 import io.dynamic.threadpool.starter.toolkit.InetUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +43,8 @@ public class DynamicThreadPoolAutoConfiguration {
 
     private final ConfigurableEnvironment environment;
 
+    public static final String CLIENT_IDENTIFICATION_VALUE = IdUtil.simpleUUID();
+
     @Bean
     public ApplicationContextHolder dtpApplicationContextHolder() {
         return new ApplicationContextHolder();
@@ -48,12 +52,9 @@ public class DynamicThreadPoolAutoConfiguration {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public ConfigService configService(HttpAgent httpAgent, InetUtils dtpInetUtils) {
-        String ip = dtpInetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
-        String port = environment.getProperty("server.port");
-        String identification = StrUtil.builder(ip, ":", port).toString();
-        log.info("Dynamic thread pool identification: {}", identification);
-        return new ThreadPoolConfigService(httpAgent, identification);
+    public ConfigService configService(HttpAgent httpAgent, InetUtils inetUtils) {
+        String identify = IdentifyUtil.generate(environment, inetUtils);
+        return new ThreadPoolConfigService(httpAgent, identify);
     }
 
     @Bean

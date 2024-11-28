@@ -1,6 +1,7 @@
 package io.dynamic.threadpool.console.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
 import io.dynamic.threadpool.common.constant.Constants;
@@ -19,6 +20,7 @@ import io.dynamic.threadpool.console.model.ThreadPoolInstanceInfo;
 import io.dynamic.threadpool.registry.core.BaseInstanceRegistry;
 import io.dynamic.threadpool.registry.core.Lease;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +34,7 @@ import static io.dynamic.threadpool.common.toolkit.ContentUtil.getGroupKey;
 @RestController
 @AllArgsConstructor
 @RequestMapping(Constants.BASE_PATH + "/thread/pool")
+@Slf4j
 public class ThreadPoolController {
 
     private final ThreadPoolService threadPoolService;
@@ -71,7 +74,9 @@ public class ThreadPoolController {
         List<ThreadPoolInstanceInfo> returnThreadPool = Lists.newArrayList();
 
         content.forEach((key, val) -> {
+            log.info("listInstance content key: {}, val: {}", key, val);
             ThreadPoolInstanceInfo threadPoolInstanceInfo = BeanUtil.convert(val.configAllInfo, ThreadPoolInstanceInfo.class);
+            threadPoolInstanceInfo.setClientAddress(StrUtil.subBefore(key, Constants.IDENTIFY_SLICER_SYMBOL, false));
             threadPoolInstanceInfo.setIdentify(key);
             threadPoolInstanceInfo.setClientBasePath(holder.getClientBasePath());
             returnThreadPool.add(threadPoolInstanceInfo);

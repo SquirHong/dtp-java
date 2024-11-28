@@ -10,15 +10,15 @@ public class CloudCommonIdUtil {
     private static final String SEPARATOR = ":";
 
     @SneakyThrows
-    public static String getDefaultInstanceId(PropertyResolver resolver) {
-        String namePart = getIpApplicationName(resolver);
+    public static String getDefaultInstanceId(PropertyResolver resolver, InetUtils inetUtils) {
+        String namePart = getIpApplicationName(resolver, inetUtils);
         String indexPart = resolver.getProperty("spring.application.instance_id", resolver.getProperty("server.port"));
         return combineParts(namePart, SEPARATOR, indexPart);
     }
 
     @SneakyThrows
-    public static String getIpApplicationName(PropertyResolver resolver) {
-        String hostname = InetAddress.getLocalHost().getHostAddress();
+    public static String getIpApplicationName(PropertyResolver resolver, InetUtils inetUtils) {
+        String hostname = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
         String appName = resolver.getProperty("spring.application.name");
         return combineParts(hostname, SEPARATOR, appName);
     }

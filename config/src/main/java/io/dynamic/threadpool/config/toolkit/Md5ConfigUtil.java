@@ -68,6 +68,7 @@ public class Md5ConfigUtil {
     }
 
     // Key: tpid1+itemid1+tenantid1+identif1, Value: md51
+    // Key: message-produce+dtp+common+10.92.60.133:8088_54dc32c2a33b4a5bb3c5a55c1fa28b17, Value: 151a6256369caeb4453264191455fe4a
     public static Map<String, String> getClientMd5Map(String configKeysString) {
         Map<String, String> md5Map = new HashMap();
 
