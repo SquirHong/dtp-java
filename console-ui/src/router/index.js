@@ -178,12 +178,21 @@ export const asyncRoutes = [
         name: 'instanceList',
         component: () => import('@/views/dtp/instance/index'),
         meta: { title: '线程池实例' }
-      },
+      }
+    ]
+  },
+  {
+    path: '/dtp/notify',
+    component: Layout,
+    redirect: '/dtp/notifyList',
+    name: 'notify',
+    meta: { title: '报警通知', icon: 'work' },
+    children: [
       {
         path: 'notifyList',
         name: 'notifyList',
         component: () => import('@/views/dtp/notify/index'),
-        meta: { title: '报警通知' }
+        meta: { title: '报警通知', icon: 'password' }
       }
     ]
   },
