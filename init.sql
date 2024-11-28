@@ -174,10 +174,10 @@ CREATE TABLE `notify`
 
 
 /******************************************/
-/*   表名称 = config_instance   */
+/*   表名称 = inst_config   */
 /******************************************/
-DROP TABLE IF EXISTS `config_instance`;
-CREATE TABLE `config_instance` (
+DROP TABLE IF EXISTS `inst_config`;
+CREATE TABLE `inst_config` (
                                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
                                    `tenant_id` varchar(128) DEFAULT NULL COMMENT '租户ID',
                                    `item_id` varchar(256) DEFAULT NULL COMMENT '项目ID',
@@ -186,6 +186,7 @@ CREATE TABLE `config_instance` (
                                    `content` longtext COMMENT '线程池内容',
                                    `md5` varchar(32) NOT NULL COMMENT 'MD5',
                                    `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                   `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
                                    PRIMARY KEY (`id`),
                                    UNIQUE KEY `id` (`id`),
                                    KEY `idx_config_instance` (`tenant_id`,`item_id`,`tp_id`,`instance_id`) USING BTREE,

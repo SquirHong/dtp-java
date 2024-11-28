@@ -35,8 +35,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 @ImportAutoConfiguration({HttpClientConfig.class,
         DiscoveryConfig.class,
         MessageAlarmConfig.class,
-        UtilAutoConfiguration.class,
-        CorsConfig.class})
+        UtilAutoConfiguration.class})
 public class DynamicThreadPoolAutoConfiguration {
 
     private final BootstrapProperties properties;

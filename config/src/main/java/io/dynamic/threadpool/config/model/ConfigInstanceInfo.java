@@ -9,7 +9,7 @@ import java.util.Date;
  * Config instance info.
  */
 @Data
-@TableName("config_instance")
+@TableName("inst_config")
 public class ConfigInstanceInfo {
 
     /**

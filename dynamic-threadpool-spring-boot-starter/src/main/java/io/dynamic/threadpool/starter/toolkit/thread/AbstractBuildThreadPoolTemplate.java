@@ -50,6 +50,7 @@ public class AbstractBuildThreadPoolTemplate {
                         initParam.getWorkQueue(),
                         initParam.getThreadFactory(),
                         initParam.rejectedExecutionHandler);
+        executorService.allowCoreThreadTimeOut(initParam.allowCoreThreadTimeOut);
         return executorService;
     }
 
@@ -79,6 +80,7 @@ public class AbstractBuildThreadPoolTemplate {
                         initParam.getThreadFactory(),
                         initParam.rejectedExecutionHandler);
         taskQueue.setExecutor(fastThreadPoolExecutor);
+        fastThreadPoolExecutor.allowCoreThreadTimeOut(initParam.allowCoreThreadTimeOut);
         return fastThreadPoolExecutor;
     }
 
@@ -104,6 +106,7 @@ public class AbstractBuildThreadPoolTemplate {
                         initParam.getRejectedExecutionHandler());
 
         executorService.setTaskDecorator(initParam.getTaskDecorator());
+        executorService.allowCoreThreadTimeOut(initParam.allowCoreThreadTimeOut);
         return executorService;
     }
 
@@ -175,6 +178,11 @@ public class AbstractBuildThreadPoolTemplate {
          * 等待任务在关机时完成
          */
         private Boolean waitForTasksToCompleteOnShutdown;
+
+        /**
+         * 允许核心线程超时
+         */
+        private Boolean allowCoreThreadTimeOut = false;
 
         public ThreadPoolInitParam(String threadNamePrefix, boolean isDaemon) {
             this.threadPoolId = threadNamePrefix;
