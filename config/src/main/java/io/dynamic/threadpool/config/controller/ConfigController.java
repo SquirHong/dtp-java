@@ -1,11 +1,13 @@
 package io.dynamic.threadpool.config.controller;
 
+import cn.hutool.core.util.StrUtil;
 import io.dynamic.threadpool.common.constant.Constants;
 import io.dynamic.threadpool.common.web.base.Result;
 import io.dynamic.threadpool.common.web.base.Results;
 
 import io.dynamic.threadpool.config.model.ConfigAllInfo;
 import io.dynamic.threadpool.config.model.ConfigInfoBase;
+import io.dynamic.threadpool.config.service.ConfigCacheService;
 import io.dynamic.threadpool.config.service.ConfigServletInner;
 import io.dynamic.threadpool.config.service.biz.ConfigService;
 import io.dynamic.threadpool.config.toolkit.Md5ConfigUtil;
@@ -39,9 +41,13 @@ public class ConfigController {
      * 获取指定线程池配置
      */
     @GetMapping
-    public Result<ConfigInfoBase> detailConfigInfo(@RequestParam("tpId") String tpId, @RequestParam("itemId") String itemId, @RequestParam(value = "tenantId", required = false) String tenantId) {
+    public Result<ConfigInfoBase> detailConfigInfo(@RequestParam("tpId") String tpId,
+                                                   @RequestParam("itemId") String itemId,
+                                                   @RequestParam(value = "tenantId") String tenantId,
+                                                   @RequestParam(value = "instanceId", required = false) String instanceId) {
 
-        return Results.success(configService.findConfigAllInfo(tpId, itemId, tenantId));
+        ConfigAllInfo configAllInfo = configService.findConfigRecentInfo(tpId, itemId, tenantId, instanceId);
+        return Results.success(configAllInfo);
     }
 
     @PostMapping
@@ -75,6 +81,16 @@ public class ConfigController {
         }
 
         configServletInner.doPollingConfig(request, response, clientMd5Map, probeModify.length());
+    }
+
+    @PostMapping("/remove/config/cache")
+    public Result removeConfigCache(@RequestBody Map<String, String> bodyMap) {
+        String groupKey = bodyMap.get(Constants.GROUP_KEY);
+        if (StrUtil.isNotBlank(groupKey)) {
+            ConfigCacheService.removeConfigCache(groupKey);
+        }
+
+        return Results.success();
     }
 
 }

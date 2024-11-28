@@ -1,6 +1,7 @@
 package io.dynamic.threadpool.config.service;
 
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import io.dynamic.threadpool.common.config.ApplicationContextHolder;
 import io.dynamic.threadpool.common.constant.Constants;
@@ -53,13 +54,8 @@ public class ConfigCacheService {
         if (configService == null) {
             configService = ApplicationContextHolder.getBean(ConfigService.class);
         }
-        String[] split = groupKey.split("\\+");
-        if (split.length == 3) {
-            if ("null".equals(split[2])) {
-                split[2] = "";
-            }
-        }
-        ConfigAllInfo config = configService.findConfigAllInfo(split[0], split[1], split[2]);
+        String[] params = groupKey.split("\\+");
+        ConfigAllInfo config = configService.findConfigRecentInfo(params);
         if (config != null && !StringUtils.isEmpty(config.getTpId())) {
             cacheItem = new CacheItem(groupKey, config);
             cacheItemMap.put(ip, cacheItem);
@@ -74,10 +70,10 @@ public class ConfigCacheService {
             configService = ApplicationContextHolder.getBean(ConfigService.class);
         }
 
-        String[] split = groupKey.split("\\+");
-        ConfigAllInfo config = configService.findConfigAllInfo(split[0], split[1], split[2]);
+        String[] params = groupKey.split("\\+");
+        ConfigAllInfo config = configService.findConfigRecentInfo(params);
         if (config == null || StringUtils.isEmpty(config.getTpId())) {
-            String errorMessage = String.format("config is null. tpId :: %s, itemId :: %s, tenantId :: %s", split[0], split[1], split[2]);
+            String errorMessage = String.format("config is null. tpId :: %s, itemId :: %s, tenantId :: %s", params[0], params[1], params[2]);
             throw new RuntimeException(errorMessage);
         }
 
@@ -88,8 +84,8 @@ public class ConfigCacheService {
         CacheItem cache = makeSure(groupKey, ip);
         if (cache.md5 == null || !cache.md5.equals(md5)) {
             cache.md5 = md5;
-            String[] split = groupKey.split("\\+");
-            ConfigAllInfo config = configService.findConfigAllInfo(split[0], split[1], split[2]);
+            String[] params = groupKey.split("\\+");
+            ConfigAllInfo config = configService.findConfigRecentInfo(params);
             cache.configAllInfo = config;
             cache.lastModifiedTs = System.currentTimeMillis();
             NotifyCenter.publishEvent(new LocalDataChangeEvent(ip, groupKey));
@@ -119,6 +115,20 @@ public class ConfigCacheService {
         Map<String, CacheItem> returnStrCacheItemMap = Maps.newHashMap();
         identificationList.forEach(each -> returnStrCacheItemMap.putAll(CACHE.get(each)));
         return returnStrCacheItemMap;
+    }
+
+    /**
+     * Remove config cache.
+     *
+     * @param groupKey 项目+租户+IP
+     */
+    public synchronized static void removeConfigCache(String groupKey) {
+        // 模糊搜索
+        List<String> identificationList = MapUtil.parseMapForFilter(CACHE, groupKey);
+        for (String cacheMapKey : identificationList) {
+            Map<String, CacheItem> removeCacheItem = CACHE.remove(cacheMapKey);
+            log.info("Remove invalidated config cache. config info :: {}", JSON.toJSONString(removeCacheItem));
+        }
     }
 
 }

@@ -262,7 +262,7 @@ public class LongPollingService {
                         if (clientSub.clientMd5Map.containsKey(each)) {
                             getRetainIps().put(clientSub.ip, System.currentTimeMillis());
 
-                            ConfigCacheService.updateMd5(each, clientSub.ip, ConfigCacheService.getContentMd5(groupKey));
+                            ConfigCacheService.updateMd5(each, clientSub.ip, ConfigCacheService.getContentMd5(identity));
 
                             iter.remove();
                             log.info("移除客户端长轮询，groupKey :: {}", groupKey);

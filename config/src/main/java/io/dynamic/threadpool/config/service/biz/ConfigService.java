@@ -17,6 +17,13 @@ public interface ConfigService {
      */
     ConfigAllInfo findConfigAllInfo(String tpId, String itemId, String tenantId);
 
+    /**
+     * Find config recent info.
+     *
+     * @param params
+     * @return
+     */
+    ConfigAllInfo findConfigRecentInfo(String... params);
 
     /**
      * 新增或修改

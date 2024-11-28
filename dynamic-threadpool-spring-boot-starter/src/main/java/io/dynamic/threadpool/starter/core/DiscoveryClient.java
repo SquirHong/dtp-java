@@ -1,6 +1,8 @@
 package io.dynamic.threadpool.starter.core;
 
 
+import cn.hutool.core.text.StrBuilder;
+import com.google.common.collect.Maps;
 import io.dynamic.threadpool.common.constant.Constants;
 import io.dynamic.threadpool.common.model.InstanceInfo;
 import io.dynamic.threadpool.common.web.base.Result;
@@ -10,11 +12,16 @@ import io.dynamic.threadpool.starter.remote.HttpAgent;
 import io.dynamic.threadpool.starter.toolkit.thread.ThreadFactoryBuilder;
 import io.dynamic.threadpool.starter.toolkit.thread.ThreadPoolBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.*;
 
+import static io.dynamic.threadpool.common.constant.Constants.GROUP_KEY;
+
 @Slf4j
-public class DiscoveryClient {
+public class DiscoveryClient implements DisposableBean {
 
     private final ThreadPoolExecutor heartbeatExecutor;
 
@@ -80,6 +87,39 @@ public class DiscoveryClient {
      */
     private void initScheduledTasks() {
         scheduler.scheduleWithFixedDelay(new HeartbeatThread(), 10, 30, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        log.info("{}{} - destroy service...", PREFIX, appPathIdentifier);
+        // 删除服务端配置缓存
+        String removeConfigCacheUrlPath = Constants.CONFIG_CONTROLLER_PATH + "/remove/config/cache";
+        Result removeConfigCacheResult;
+        try {
+            // 项目+租户+ip
+            String groupKeyIp = StrBuilder.create().append(instanceInfo.getGroupKey()).append(Constants.GROUP_KEY_DELIMITER).append(instanceInfo.getIdentify()).toString();
+            Map<String, String> bodyMap = Maps.newHashMap();
+            bodyMap.put(GROUP_KEY, groupKeyIp);
+            removeConfigCacheResult = httpAgent.httpPostByDiscovery(removeConfigCacheUrlPath, bodyMap);
+            if (removeConfigCacheResult.isSuccess()) {
+                log.info("{}{} - remove config cache success.", PREFIX, appPathIdentifier);
+            }
+        } catch (Throwable ex) {
+            log.error("{}{} - remove config cache fail.", PREFIX, appPathIdentifier, ex);
+        }
+
+        String removeNodeUrlPath = Constants.BASE_PATH + "/apps/remove";
+        Result removeNodeResult;
+        try {
+            removeNodeResult = httpAgent.httpPostByDiscovery(removeNodeUrlPath, instanceInfo);
+            if (removeNodeResult.isSuccess()) {
+                log.info("{}{} - destroy service success.", PREFIX, appPathIdentifier);
+            }
+        } catch (Throwable ex) {
+            log.error("{}{} - destroy service fail.", PREFIX, appPathIdentifier, ex);
+        }
+
+        Optional.ofNullable(scheduler).ifPresent((each) -> each.shutdown());
     }
 
 

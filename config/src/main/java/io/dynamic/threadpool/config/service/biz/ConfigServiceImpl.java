@@ -1,5 +1,7 @@
 package io.dynamic.threadpool.config.service.biz;
 
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -10,8 +12,11 @@ import io.dynamic.threadpool.common.toolkit.Md5Util;
 import io.dynamic.threadpool.common.toolkit.UserContext;
 import io.dynamic.threadpool.config.event.LocalDataChangeEvent;
 import io.dynamic.threadpool.config.mapper.ConfigInfoMapper;
+import io.dynamic.threadpool.config.mapper.ConfigInstanceMapper;
 import io.dynamic.threadpool.config.model.ConfigAllInfo;
+import io.dynamic.threadpool.config.model.ConfigInstanceInfo;
 import io.dynamic.threadpool.config.service.ConfigChangePublisher;
+import io.dynamic.threadpool.config.toolkit.BeanUtil;
 import io.dynamic.threadpool.logrecord.annotation.LogRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +39,9 @@ public class ConfigServiceImpl implements ConfigService {
     @Resource
     private ConfigInfoMapper configInfoMapper;
 
+    @Resource
+    private ConfigInstanceMapper configInstanceMapper;
+
     @Override
     public ConfigAllInfo findConfigAllInfo(String tpId, String itemId, String tenantId) {
         LambdaQueryWrapper<ConfigAllInfo> wrapper = Wrappers.lambdaQuery(ConfigAllInfo.class)
@@ -42,6 +50,41 @@ public class ConfigServiceImpl implements ConfigService {
                 .eq(!StringUtils.isBlank(tenantId), ConfigAllInfo::getTenantId, tenantId);
         ConfigAllInfo configAllInfo = configInfoMapper.selectOne(wrapper);
         return configAllInfo;
+    }
+
+    @Override
+    public ConfigAllInfo findConfigRecentInfo(String... params) {
+        ConfigAllInfo resultConfig;
+        ConfigAllInfo configInstance = null;
+        LambdaQueryWrapper<ConfigInstanceInfo> instanceQueryWrapper = Wrappers.lambdaQuery(ConfigInstanceInfo.class)
+                .eq(ConfigInstanceInfo::getInstanceId, params[3])
+                .orderByDesc(ConfigInstanceInfo::getGmtCreate)
+                .last("LIMIT 1");
+        ConfigInstanceInfo instanceInfo = configInstanceMapper.selectOne(instanceQueryWrapper);
+
+        if (instanceInfo != null) {
+            String content = instanceInfo.getContent();
+            configInstance = JSON.parseObject(content, ConfigAllInfo.class);
+            configInstance.setContent(content);
+            configInstance.setGmtCreate(instanceInfo.getGmtCreate());
+            configInstance.setMd5(Md5Util.getTpContentMd5(configInstance));
+        }
+
+        ConfigAllInfo configAllInfo = findConfigAllInfo(params[0], params[1], params[2]);
+        if (configAllInfo != null && configInstance == null) {
+            resultConfig = configAllInfo;
+        } else if (configAllInfo == null && configInstance != null) {
+            resultConfig = configInstance;
+        } else {
+            if (configAllInfo.getGmtModified().before(configInstance.getGmtCreate())) {
+                resultConfig = configInstance;
+            } else {
+                resultConfig = configAllInfo;
+            }
+        }
+
+        return resultConfig;
+
     }
 
     @Override
@@ -55,7 +98,7 @@ public class ConfigServiceImpl implements ConfigService {
             addConfigInfo(configAllInfo);
             log.info("发布配置成功，即将发布LocalDataChangeEvent identify::{} content :: {}", identify, configAllInfo.getContent());
         } catch (Exception ex) {
-            updateConfigInfo(userName, configAllInfo);
+            updateConfigInfo(identify, userName, configAllInfo);
             log.info("修改配置成功，即将发布LocalDataChangeEvent identify::{} content :: {}", identify, configAllInfo.getContent());
         }
         ConfigChangePublisher
@@ -83,7 +126,7 @@ public class ConfigServiceImpl implements ConfigService {
             success = "核心线程: {{#config.coreSize}}, 最大线程: {{#config.maxSize}}, 队列类型: {{#config.queueType}}, 队列容量: {{#config.capacity}}, 拒绝策略: {{#config.rejectedType}}",
             detail = "{{#config.toString()}}"
     )
-    public void updateConfigInfo(String operator, ConfigAllInfo config) {
+    public void updateConfigInfo(String identify, String operator, ConfigAllInfo config) {
         LambdaUpdateWrapper<ConfigAllInfo> wrapper = Wrappers.lambdaUpdate(ConfigAllInfo.class)
                 .eq(ConfigAllInfo::getTpId, config.getTpId())
                 .eq(ConfigAllInfo::getItemId, config.getItemId())
@@ -92,6 +135,14 @@ public class ConfigServiceImpl implements ConfigService {
         config.setContent(ContentUtil.getPoolContent(config));
         config.setMd5(Md5Util.getTpContentMd5(config));
         try {
+            // 创建线程池配置实例 临时!配置，也可以当作历史配置，不过针对的是单节点
+            if (StrUtil.isNotBlank(identify)) {
+                ConfigInstanceInfo instanceInfo = BeanUtil.convert(config, ConfigInstanceInfo.class);
+                instanceInfo.setInstanceId(identify);
+                configInstanceMapper.insert(instanceInfo);
+                return;
+            }
+
             configInfoMapper.update(config, wrapper);
         } catch (Exception ex) {
             log.error("[db-error] message :: {}", ex.getMessage(), ex);
