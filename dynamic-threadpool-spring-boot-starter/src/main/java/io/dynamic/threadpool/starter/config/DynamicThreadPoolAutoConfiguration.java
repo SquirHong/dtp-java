@@ -9,6 +9,10 @@ import io.dynamic.threadpool.starter.core.DynamicThreadPoolPostProcessor;
 import io.dynamic.threadpool.starter.core.ThreadPoolConfigService;
 import io.dynamic.threadpool.starter.core.ThreadPoolOperation;
 import io.dynamic.threadpool.starter.enable.MarkerConfiguration;
+import io.dynamic.threadpool.starter.handle.ThreadPoolRunStateHandler;
+import io.dynamic.threadpool.starter.monitor.HttpMvcSender;
+import io.dynamic.threadpool.starter.monitor.MessageSender;
+import io.dynamic.threadpool.starter.monitor.ReportingEventExecutor;
 import io.dynamic.threadpool.starter.remote.HttpAgent;
 import io.dynamic.threadpool.starter.toolkit.IdentifyUtil;
 import io.dynamic.threadpool.starter.toolkit.InetUtils;
@@ -69,7 +73,24 @@ public class DynamicThreadPoolAutoConfiguration {
     }
 
     @Bean
-    public PoolRunStateController poolRunStateController() {
-        return new PoolRunStateController();
+    public ThreadPoolRunStateHandler threadPoolRunStateHandler() {
+        return new ThreadPoolRunStateHandler();
     }
+
+    @Bean
+    public PoolRunStateController poolRunStateController(ThreadPoolRunStateHandler threadPoolRunStateHandler) {
+        return new PoolRunStateController(threadPoolRunStateHandler);
+    }
+
+    @Bean
+    public HttpMvcSender httpMvcSender() {
+        return new HttpMvcSender();
+    }
+
+    @Bean
+    public ReportingEventExecutor reportingEventExecutor() {
+        return new ReportingEventExecutor();
+    }
+
+
 }

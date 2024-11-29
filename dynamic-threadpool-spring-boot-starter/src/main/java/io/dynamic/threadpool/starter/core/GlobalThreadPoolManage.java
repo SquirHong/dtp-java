@@ -45,7 +45,7 @@ public class GlobalThreadPoolManage {
     }
 
     public static List<String> listThreadPoolId() {
-        return Lists.newArrayList(POOL_PARAMETER.keySet());
+        return Lists.newArrayList(EXECUTOR_MAP.keySet());
     }
 
     private static void startPeriodicPrinting() {
@@ -65,5 +65,12 @@ public class GlobalThreadPoolManage {
         for (Map.Entry<String, DynamicThreadPoolWrapper> entry : EXECUTOR_MAP.entrySet()) {
             System.out.println("Thread Pool ID: " + entry.getKey() + ", Executor: " + entry.getValue());
         }
+    }
+
+    /**
+     * 获取动态线程池数量.
+     */
+    public static Integer getThreadPoolNum() {
+        return listThreadPoolId().size();
     }
 }

@@ -27,6 +27,15 @@ public interface HttpAgent {
     String getEncode();
 
     /**
+     * Http post.
+     *
+     * @param path
+     * @param body
+     * @return
+     */
+    Result httpPost(String path, Object body);
+
+    /**
      * @param path
      * @param body
      * @return

@@ -4,6 +4,10 @@ import io.dynamic.threadpool.common.constant.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
+import java.util.StringJoiner;
+
+import static io.dynamic.threadpool.common.constant.Constants.GROUP_KEY_DELIMITER;
+
 /**
  * Group Key
  */
@@ -21,13 +25,21 @@ public class GroupKey {
         return doGetKey(dataId, group, tenant);
     }
 
+    public static String getKey(String... params) {
+        StringJoiner groupKey = new StringJoiner(GROUP_KEY_DELIMITER);
+        for (String param : params) {
+            groupKey.add(param);
+        }
+        return groupKey.toString();
+    }
+
     private static String doGetKey(String dataId, String group, String datumStr) {
         StringBuilder sb = new StringBuilder(dataId);
 //        urlEncode(dataId, sb);
-        sb.append('+');
+        sb.append(GROUP_KEY_DELIMITER);
         urlEncode(group, sb);
         if (!StringUtils.isEmpty(datumStr)) {
-            sb.append('+');
+            sb.append(GROUP_KEY_DELIMITER);
             urlEncode(datumStr, sb);
         }
 

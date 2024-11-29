@@ -25,14 +25,14 @@ public class ThreadPoolConfig {
      *
      * @return
      */
-//    @Bean
-//    public DynamicThreadPoolWrapper messageCenterConsumeThreadPool() {
-//        ThreadPoolExecutor customExecutor = ThreadPoolBuilder.builder()
-//                .dynamicPool()
-//                .threadFactory(MESSAGE_CONSUME)
-//                .build();
-//        return new DynamicThreadPoolWrapper(MESSAGE_CONSUME, customExecutor);
-//    }
+    @Bean
+    public DynamicThreadPoolWrapper messageCenterConsumeThreadPool() {
+        ThreadPoolExecutor customExecutor = ThreadPoolBuilder.builder()
+                .dynamicPool()
+                .threadFactory(MESSAGE_CONSUME)
+                .build();
+        return new DynamicThreadPoolWrapper(MESSAGE_CONSUME, customExecutor);
+    }
 
     /**
      * 通过 {@link DynamicThreadPool} 修饰 {@link DynamicThreadPoolExecutor} 完成 Server 端订阅配置功能.

@@ -29,7 +29,7 @@ public class ServerListManager {
     public ServerListManager(BootstrapProperties dynamicThreadPoolProperties) {
         this.properties = dynamicThreadPoolProperties;
         serverAddrsStr = properties.getServerAddr();
-
+        log.info("Server list manager init, serverAddrsStr: {}", serverAddrsStr);
         if (!StringUtils.isEmpty(serverAddrsStr)) {
             List<String> serverAddrs = new ArrayList();
             String[] serverAddrsArr = this.serverAddrsStr.split(",");
