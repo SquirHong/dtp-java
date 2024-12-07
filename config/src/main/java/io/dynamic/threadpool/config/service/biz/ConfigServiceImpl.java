@@ -14,6 +14,7 @@ import io.dynamic.threadpool.config.event.LocalDataChangeEvent;
 import io.dynamic.threadpool.config.mapper.ConfigInfoMapper;
 import io.dynamic.threadpool.config.mapper.ConfigInstanceMapper;
 import io.dynamic.threadpool.config.model.ConfigAllInfo;
+import io.dynamic.threadpool.config.model.ConfigInfoBase;
 import io.dynamic.threadpool.config.model.ConfigInstanceInfo;
 import io.dynamic.threadpool.config.service.ConfigChangePublisher;
 import io.dynamic.threadpool.config.toolkit.BeanUtil;
@@ -54,11 +55,15 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public ConfigAllInfo findConfigRecentInfo(String... params) {
+        log.info("开始打印findConfigRecentInfo参数");
+        for (String param : params) {
+            log.info("param :: {}", param);
+        }
         ConfigAllInfo resultConfig;
         ConfigAllInfo configInstance = null;
         LambdaQueryWrapper<ConfigInstanceInfo> instanceQueryWrapper = Wrappers.lambdaQuery(ConfigInstanceInfo.class)
                 .eq(ConfigInstanceInfo::getInstanceId, params[3])
-                .orderByDesc(ConfigInstanceInfo::getGmtCreate)
+                .orderByDesc(ConfigInstanceInfo::getGmtModified)
                 .last("LIMIT 1");
         ConfigInstanceInfo instanceInfo = configInstanceMapper.selectOne(instanceQueryWrapper);
 
@@ -67,6 +72,7 @@ public class ConfigServiceImpl implements ConfigService {
             configInstance = JSON.parseObject(content, ConfigAllInfo.class);
             configInstance.setContent(content);
             configInstance.setGmtCreate(instanceInfo.getGmtCreate());
+            configInstance.setGmtModified(instanceInfo.getGmtModified());
             configInstance.setMd5(Md5Util.getTpContentMd5(configInstance));
         }
 
@@ -76,7 +82,7 @@ public class ConfigServiceImpl implements ConfigService {
         } else if (configAllInfo == null && configInstance != null) {
             resultConfig = configInstance;
         } else {
-            if (configAllInfo.getGmtModified().before(configInstance.getGmtCreate())) {
+            if (configAllInfo.getGmtModified().before(configInstance.getGmtModified())) {
                 resultConfig = configInstance;
             } else {
                 resultConfig = configAllInfo;
@@ -89,17 +95,29 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void insertOrUpdate(String identify, ConfigAllInfo configAllInfo) {
+        LambdaQueryWrapper<ConfigAllInfo> queryWrapper = Wrappers.lambdaQuery(ConfigAllInfo.class)
+                .eq(ConfigInfoBase::getTenantId, configAllInfo.getTenantId())
+                .eq(ConfigInfoBase::getItemId, configAllInfo.getItemId())
+                .eq(ConfigInfoBase::getTpId, configAllInfo.getTpId());
+        ConfigAllInfo existConfig = configInfoMapper.selectOne(queryWrapper);
 
+        // 做LogRecord
         String userName = UserContext.getUserName();
 
         configAllInfo.setCapacity(getQueueCapacityByType(configAllInfo));
 
+
         try {
-            addConfigInfo(configAllInfo);
-            log.info("发布配置成功，即将发布LocalDataChangeEvent identify::{} content :: {}", identify, configAllInfo.getContent());
+            if (existConfig == null) {
+                addConfigInfo(configAllInfo);
+                log.info("发布配置成功，即将发布LocalDataChangeEvent identify::{} content :: {}", identify, configAllInfo.getContent());
+            } else {
+                updateConfigInfo(identify, userName, configAllInfo);
+                log.info("修改配置成功，即将发布LocalDataChangeEvent identify::{} content :: {}", identify, configAllInfo.getContent());
+            }
         } catch (Exception ex) {
-            updateConfigInfo(identify, userName, configAllInfo);
-            log.info("修改配置成功，即将发布LocalDataChangeEvent identify::{} content :: {}", identify, configAllInfo.getContent());
+            log.error("[db-error] message :: {}", ex.getMessage(), ex);
+            throw ex;
         }
         ConfigChangePublisher
                 .notifyConfigChange(new LocalDataChangeEvent(identify, ContentUtil.getGroupKey(configAllInfo)));
@@ -138,8 +156,12 @@ public class ConfigServiceImpl implements ConfigService {
             // 创建线程池配置实例 临时!配置，也可以当作历史配置，不过针对的是单节点
             if (StrUtil.isNotBlank(identify)) {
                 ConfigInstanceInfo instanceInfo = BeanUtil.convert(config, ConfigInstanceInfo.class);
+                // 特殊处理，BeanUtil.convert 会将 配置的create和modified时间也转换过去
+                instanceInfo.setGmtCreate(null);
+                instanceInfo.setGmtModified(null);
                 instanceInfo.setInstanceId(identify);
                 configInstanceMapper.insert(instanceInfo);
+                log.info("新增差异化配置成功，instanceInfo :: {}", JSON.toJSONString(instanceInfo));
                 return;
             }
 

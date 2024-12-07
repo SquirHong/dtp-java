@@ -2,6 +2,7 @@ package io.dynamic.threadpool.console.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
 import io.dynamic.threadpool.common.constant.Constants;
@@ -60,6 +61,7 @@ public class ThreadPoolController {
 
     @GetMapping("/list/instance/{itemId}/{tpId}")
     public Result<List<ThreadPoolInstanceInfo>> listInstance(@PathVariable("itemId") String itemId, @PathVariable("tpId") String tpId) {
+        log.info("ThreadPoolController listInstance item :{}，tpId :{}", itemId, tpId);
         List<Lease<InstanceInfo>> leases = baseInstanceRegistry.listInstance(itemId);
         Lease<InstanceInfo> first = CollUtil.getFirst(leases);
         if (first == null) {
@@ -74,7 +76,7 @@ public class ThreadPoolController {
         List<ThreadPoolInstanceInfo> returnThreadPool = Lists.newArrayList();
 
         content.forEach((key, val) -> {
-            log.info("listInstance content key: {}, val: {}", key, val);
+            log.info("listInstance content key: {}, val: {}", key, JSON.toJSONString(val));
             ThreadPoolInstanceInfo threadPoolInstanceInfo = BeanUtil.convert(val.configAllInfo, ThreadPoolInstanceInfo.class);
             threadPoolInstanceInfo.setClientAddress(StrUtil.subBefore(key, Constants.IDENTIFY_SLICER_SYMBOL, false));
             threadPoolInstanceInfo.setIdentify(key);

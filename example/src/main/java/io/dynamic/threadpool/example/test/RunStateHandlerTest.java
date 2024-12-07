@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Component
 public class RunStateHandlerTest {
 
-    @PostConstruct
+//    @PostConstruct
     @SuppressWarnings("all")
     public void runStateHandlerTest() {
         log.info("测试线程池运行时状态接口, 30s 后开始触发拒绝策略...");

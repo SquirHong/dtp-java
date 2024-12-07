@@ -54,4 +54,10 @@ public class ConfigInstanceInfo {
     @TableField(fill = FieldFill.INSERT)
     private Date gmtCreate;
 
+    /**
+     * gmtModified
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date gmtModified;
+
 }
