@@ -114,7 +114,7 @@
 
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="核心线程" prop="coreSize">
+            <el-form-item label="核心线程">
               <el-input v-model="runTimeTemp.coreSize" :disabled="true"/>
             </el-form-item>
           </el-col>
@@ -155,7 +155,7 @@
 
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="阻塞队列" prop="queueType">
+            <el-form-item label="阻塞队列">
               <el-input v-model="runTimeTemp.queueType" :disabled="true"/>
             </el-form-item>
           </el-col>
@@ -198,6 +198,15 @@
             </el-form-item>
           </el-col>
         </el-row>
+
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="最后更新时间" prop="clientLastRefreshTime">
+              <el-input v-model="runTimeTemp.clientLastRefreshTime" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="instanceDialogFormVisible = false">

@@ -105,6 +105,7 @@ public class ClientWorker {
 
         @SneakyThrows
         private void checkStatus() {
+            log.info("开始检查服务端状态");
             if (Objects.equals(isHealthServerTemp.get(), Boolean.FALSE)
                     && Objects.equals(isHealthServer.get(), Boolean.TRUE)) {
                 isHealthServerTemp.set(Boolean.TRUE);
